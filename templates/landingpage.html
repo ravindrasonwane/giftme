@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GiftFlix — Turn Your Memories Into Beautiful Digital Gifts</title>
+<meta name="description" content="Create personalized Netflix-style love stories, birthday surprises, wedding invitations, and unforgettable digital gift experiences in minutes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FCFBFE;
+    --surface:#FFFFFF;
+    --surface-soft:#F6F3FC;
+    --ink:#1D1830;
+    --ink-soft:#635C78;
+    --ink-faint:#9891AC;
+    --lavender:#C4B5FD;
+    --purple:#8B5CF6;
+    --purple-deep:#7C3AED;
+    --pink:#F472B6;
+    --blue:#60A5FA;
+    --border:rgba(124,58,237,0.10);
+    --success:#16A34A;
+    --danger:#E11D48;
+    --shadow-sm:0 2px 8px rgba(88,28,135,0.06);
+    --shadow-md:0 8px 30px rgba(88,28,135,0.09);
+    --shadow-lg:0 24px 60px rgba(88,28,135,0.14);
+    --radius:24px;
+    --radius-sm:16px;
+    --radius-lg:28px;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+  }
+
+  a{color:inherit; text-decoration:none;}
+  ul{list-style:none;}
+  img{max-width:100%; display:block;}
+  button{font-family:inherit; cursor:pointer; border:none; background:none;}
+
+  ::selection{background:var(--lavender); color:var(--ink);}
+
+  :focus-visible{outline:2.5px solid var(--purple-deep); outline-offset:3px; border-radius:6px;}
+
+  .wrap{max-width:1240px; margin:0 auto; padding:0 32px;}
+  @media (max-width:640px){ .wrap{padding:0 20px;} }
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:12.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--purple-deep);
+    background:linear-gradient(135deg, rgba(196,181,253,0.35), rgba(244,114,182,0.25));
+    padding:7px 16px 7px 12px;
+    border-radius:999px;
+    border:1px solid rgba(124,58,237,0.14);
+  }
+  .eyebrow .dot{width:6px; height:6px; border-radius:50%; background:var(--purple-deep); box-shadow:0 0 0 3px rgba(124,58,237,0.18);}
+
+  h1,h2,h3{font-weight:800; letter-spacing:-0.03em; line-height:1.06;}
+  .section-title{font-size:clamp(30px,4vw,46px); color:var(--ink);}
+  .section-sub{color:var(--ink-soft); font-size:17px; line-height:1.65; max-width:560px;}
+  .section-head{display:flex; flex-direction:column; gap:14px; margin-bottom:56px;}
+  .section-head.center{align-items:center; text-align:center; margin-left:auto; margin-right:auto;}
+  .section-head.center .section-sub{margin-left:auto; margin-right:auto;}
+
+  .grad-text{
+    background:linear-gradient(100deg, var(--purple-deep), var(--pink) 55%, var(--blue));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    background-size:200% auto;
+    animation:gradShift 6s ease-in-out infinite;
+  }
+  @keyframes gradShift{0%,100%{background-position:0% 50%;} 50%{background-position:100% 50%;}}
+
+  section{position:relative; padding:120px 0;}
+  @media (max-width:768px){ section{padding:76px 0;} }
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    position:relative; display:inline-flex; align-items:center; justify-content:center; gap:9px;
+    padding:16px 30px; border-radius:999px; font-weight:700; font-size:15.5px;
+    transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease;
+    white-space:nowrap; overflow:hidden; isolation:isolate;
+  }
+  .btn-primary{
+    color:#fff;
+    background:linear-gradient(120deg, var(--purple-deep), var(--pink));
+    box-shadow:0 10px 30px -6px rgba(139,92,246,0.55);
+  }
+  .btn-primary:hover{ box-shadow:0 16px 40px -6px rgba(139,92,246,0.7); }
+  .btn-ghost {
+    color: #ffffff;
+    background: #000000;
+    border: 1.5px solid var(--border);
+    box-shadow: var(--shadow-sm);
+}
+  .btn-ghost:hover{ border-color:var(--purple); }
+  .btn .ripple{
+    position:absolute; border-radius:50%; background:rgba(255,255,255,0.55);
+    transform:scale(0); animation:rippleAnim .65s ease-out forwards; pointer-events:none;
+  }
+  .btn-ghost .ripple{ background:rgba(139,92,246,0.18); }
+  @keyframes rippleAnim{ to{ transform:scale(3); opacity:0; } }
+
+  /* magnetic wrapper just needs inline-block */
+  .magnetic{ display:inline-block; will-change:transform; }
+
+  /* ---------- Scroll reveal ---------- */
+  .reveal{ opacity:0; transform:translateY(28px); transition:opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+  .reveal-scale{ opacity:0; transform:scale(.92); transition:opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+  .reveal-scale.in{ opacity:1; transform:scale(1); }
+  .stagger > *{ transition-delay:calc(var(--i,0) * 90ms); }
+
+  /* ---------- Nav ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    padding:18px 0;
+    transition:background .4s ease, box-shadow .4s ease, padding .4s ease;
+  }
+  header.scrolled{
+    background:rgba(252,251,254,0.75);
+    backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+    box-shadow:0 1px 0 rgba(29,24,48,0.06);
+    padding:12px 0;
+  }
+  .nav-inner{display:flex; align-items:center; justify-content:space-between; gap:24px;}
+  .logo{display:flex; align-items:center; gap:9px; font-weight:800; font-size:19px; letter-spacing:-0.02em;}
+  .logo-mark{
+    width:32px; height:32px; border-radius:10px;
+    background:linear-gradient(135deg, var(--purple-deep), var(--pink));
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 16px -4px rgba(139,92,246,0.6);
+  }
+  .nav-links{display:flex; align-items:center; gap:34px; font-size:14.5px; font-weight:600; color:var(--ink-soft);}
+  .nav-links a{ position:relative; transition:color .25s ease; }
+  .nav-links a::after{
+    content:''; position:absolute; left:0; bottom:-6px; width:0; height:2px;
+    background:linear-gradient(90deg,var(--purple),var(--pink)); transition:width .3s ease; border-radius:2px;
+  }
+  .nav-links a:hover{ color:var(--ink); }
+  .nav-links a:hover::after{ width:100%; }
+  .nav-cta{display:flex; align-items:center; gap:14px;}
+  .nav-cta .btn{ padding:11px 22px; font-size:14px; }
+  .hamburger{ display:none; }
+  @media (max-width:900px){
+    .nav-links{ display:none; }
+    .hamburger{ display:flex; flex-direction:column; gap:4px; padding:6px; }
+    .hamburger span{ width:20px; height:2px; background:var(--ink); border-radius:2px; }
+  }
+
+  /* ---------- Ambient background ---------- */
+  .mesh-bg{ position:absolute; inset:0; overflow:hidden; z-index:0; pointer-events:none; }
+  .blob{ position:absolute; border-radius:50%; filter:blur(70px); opacity:.55; will-change:transform; }
+  @keyframes floatSlow{ 0%,100%{ transform:translate(0,0) scale(1);} 50%{ transform:translate(24px,-34px) scale(1.06);} }
+  @keyframes floatSlow2{ 0%,100%{ transform:translate(0,0) scale(1);} 50%{ transform:translate(-30px,26px) scale(0.95);} }
+
+  .cursor-glow{
+    position:fixed; width:420px; height:420px; border-radius:50%; pointer-events:none; z-index:1;
+    background:radial-gradient(circle, rgba(139,92,246,0.10), transparent 70%);
+    transform:translate(-50%,-50%); transition:opacity .3s ease; opacity:0;
+  }
+
+  /* ================= HERO ================= */
+  .hero{ padding:172px 0 90px; overflow:hidden; }
+  .hero-grid{ display:grid; grid-template-columns:1.05fr 1fr; gap:56px; align-items:center; position:relative; z-index:2; }
+  @media (max-width:980px){ .hero-grid{ grid-template-columns:1fr; } }
+  .hero h1{ font-size:clamp(38px,5.2vw,64px); margin:22px 0 20px; }
+  .hero p.lead{ font-size:18.5px; color:var(--ink-soft); line-height:1.7; max-width:520px; margin-bottom:34px; }
+  .hero-ctas{ display:flex; gap:16px; flex-wrap:wrap; align-items:center; }
+  .btn-watch{ display:inline-flex; align-items:center; gap:10px; font-weight:700; color:var(--ink); }
+  .play-circle{
+    width:46px; height:46px; border-radius:50%; background:var(--surface); border:1.5px solid var(--border);
+    display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-sm);
+    transition:transform .3s ease, box-shadow .3s ease;
+  }
+  .btn-watch:hover .play-circle{ transform:scale(1.08); box-shadow:var(--shadow-md); }
+
+  .hero-trust{ display:flex; align-items:center; gap:14px; margin-top:40px; }
+  .avatar-stack{ display:flex; }
+  .avatar-stack span{
+    width:34px; height:34px; border-radius:50%; border:2.5px solid var(--bg);
+    margin-left:-10px; background:linear-gradient(135deg,var(--lavender),var(--pink));
+    display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff;
+  }
+  .avatar-stack span:first-child{ margin-left:0; }
+  .hero-trust p{ font-size:13.5px; color:var(--ink-soft); font-weight:600; }
+  .hero-trust strong{ color:var(--ink); }
+
+  /* ----- Hero mockup: signature living screen ----- */
+  .mock-stage{ position:relative; perspective:1400px; }
+  .mock-frame{
+    position:relative; border-radius:26px; background:#120E24;
+    box-shadow:0 40px 90px -24px rgba(30,15,60,0.45), 0 0 0 1px rgba(255,255,255,0.06) inset;
+    overflow:hidden; transform:rotateY(-8deg) rotateX(3deg);
+    transition:transform .4s ease;
+    aspect-ratio:5/3.6;
+  }
+  .mock-stage:hover .mock-frame{ transform:rotateY(-3deg) rotateX(1deg); }
+  .mock-noise{ position:absolute; inset:0; background:radial-gradient(circle at 30% 20%, rgba(139,92,246,0.35), transparent 55%), radial-gradient(circle at 80% 80%, rgba(244,114,182,0.3), transparent 55%); }
+  .mock-top{ display:flex; align-items:center; justify-content:space-between; padding:16px 20px 8px; position:relative; z-index:2; }
+  .mock-logo{ color:#fff; font-weight:800; font-size:15px; letter-spacing:-0.01em; display:flex; align-items:center; gap:6px; }
+  .mock-logo .dotmark{ width:8px; height:8px; border-radius:2px; background:linear-gradient(135deg,var(--pink),var(--purple)); }
+  .mock-profiles{ display:flex; gap:8px; }
+  .mock-profiles span{ width:24px; height:24px; border-radius:7px; background:linear-gradient(135deg,var(--lavender),var(--blue)); opacity:.9; }
+
+  .mock-hero-row{ position:relative; z-index:2; padding:6px 20px 10px; }
+  .mock-hero-row h4{ color:#fff; font-size:19px; font-weight:800; margin-bottom:6px; letter-spacing:-0.01em; }
+  .mock-hero-row p{ color:rgba(255,255,255,0.65); font-size:11.5px; max-width:260px; line-height:1.5; }
+  .mock-tags{ display:flex; gap:6px; margin-top:10px; }
+  .mock-tags span{ font-size:9.5px; font-weight:700; color:#fff; background:rgba(255,255,255,0.12); padding:4px 9px; border-radius:999px; }
+
+  .mock-rail-label{ color:rgba(255,255,255,0.55); font-size:10.5px; font-weight:700; padding:0 20px; margin-top:12px; letter-spacing:.02em; position:relative; z-index:2;}
+  .mock-rail{ display:flex; gap:10px; padding:8px 20px 4px; overflow:hidden; position:relative; z-index:2; }
+  .mock-card{
+    flex:0 0 auto; width:78px; height:104px; border-radius:10px; position:relative; overflow:hidden;
+    background:linear-gradient(155deg, var(--c1,#8B5CF6), var(--c2,#F472B6));
+    box-shadow:0 8px 18px -6px rgba(0,0,0,0.4);
+    transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease;
+  }
+  .mock-card:hover{ transform:translateY(-8px) scale(1.06); box-shadow:0 16px 30px -8px rgba(0,0,0,0.55); z-index:5; }
+  .mock-card .glow{ position:absolute; inset:0; background:radial-gradient(circle at 50% 20%, rgba(255,255,255,0.35), transparent 60%); opacity:0; transition:opacity .35s ease; }
+  .mock-card:hover .glow{ opacity:1; }
+  .mock-card .prog{ position:absolute; left:6px; right:6px; bottom:6px; height:3px; border-radius:2px; background:rgba(255,255,255,0.25); overflow:hidden; }
+  .mock-card .prog i{ display:block; height:100%; background:#fff; border-radius:2px; }
+  .mock-card .lbl{ position:absolute; top:6px; left:6px; font-size:8px; font-weight:800; color:#fff; opacity:.85; }
+
+  .float-card{
+    position:absolute; background:var(--surface); border-radius:18px; box-shadow:var(--shadow-lg);
+    padding:12px 16px; display:flex; align-items:center; gap:10px; border:1px solid var(--border);
+    animation:floaty 5s ease-in-out infinite;
+  }
+  @keyframes floaty{ 0%,100%{ transform:translateY(0px);} 50%{ transform:translateY(-12px);} }
+  .float-card .ic{ width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .float-card b{ font-size:13px; display:block; }
+  .float-card span{ font-size:11px; color:var(--ink-soft); }
+  .float-1{ top:-6%; left:-9%; animation-delay:.2s; }
+  .float-2{ bottom:6%; right:-10%; animation-delay:1.1s; }
+  .float-3{ bottom:-8%; left:8%; animation-delay:2s; }
+  @media (max-width:980px){ .float-1,.float-2,.float-3{ display:none; } }
+
+  .deco-blob{ position:absolute; border-radius:50%; z-index:1; filter:blur(2px); opacity:.7; }
+
+  /* ================= STATS ================= */
+  .stats-bar{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow-md); padding:44px 20px; }
+  .stats-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:20px; text-align:center; }
+  @media (max-width:768px){ .stats-grid{ grid-template-columns:repeat(2,1fr); gap:34px; } }
+  .stat-num{ font-size:clamp(30px,4vw,42px); font-weight:900; letter-spacing:-0.02em;
+    background:linear-gradient(120deg,var(--purple-deep),var(--pink)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .stat-label{ font-size:13.5px; color:var(--ink-soft); font-weight:600; margin-top:6px; }
+
+  /* ================= HOW IT WORKS ================= */
+  .steps{ position:relative; }
+  .steps-line{ position:absolute; top:46px; left:12%; right:12%; height:2px; background:linear-gradient(90deg,var(--lavender),var(--pink),var(--blue)); opacity:.5; z-index:0; }
+  @media (max-width:900px){ .steps-line{ display:none; } }
+  .steps-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:32px; position:relative; z-index:1; }
+  @media (max-width:900px){ .steps-grid{ grid-template-columns:1fr; } }
+  .step-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:34px 28px;
+    box-shadow:var(--shadow-sm); transition:transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease;
+  }
+  .step-card:hover{ transform:translateY(-8px); box-shadow:var(--shadow-lg); }
+  .step-num{
+    width:52px; height:52px; border-radius:16px; display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:18px; color:#fff; margin-bottom:20px;
+    background:linear-gradient(135deg,var(--purple-deep),var(--pink));
+    box-shadow:0 10px 22px -6px rgba(139,92,246,0.5);
+  }
+  .step-card h3{ font-size:20px; margin-bottom:8px; }
+  .step-card p{ color:var(--ink-soft); font-size:14.5px; line-height:1.6; }
+
+  /* ================= CATEGORIES ================= */
+  .cat-grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:18px; }
+  @media (max-width:1024px){ .cat-grid{ grid-template-columns:repeat(3,1fr);} }
+  @media (max-width:640px){ .cat-grid{ grid-template-columns:repeat(2,1fr); gap:14px;} }
+  .cat-card{
+    position:relative; border-radius:20px; padding:1.5px; overflow:hidden;
+    background:linear-gradient(140deg, rgba(139,92,246,0.35), rgba(244,114,182,0.15), rgba(96,165,250,0.3));
+    transition:transform .4s cubic-bezier(.2,.8,.2,1);
+  }
+  .cat-card:hover{ transform:translateY(-6px) rotate(-1deg); }
+  .cat-card-inner{
+    background:var(--surface); border-radius:18.5px; padding:22px 18px; height:100%;
+    display:flex; flex-direction:column; gap:14px; box-shadow:var(--shadow-sm);
+  }
+  .cat-thumb{
+    height:74px; border-radius:12px; background:linear-gradient(140deg,var(--c1),var(--c2));
+    position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center;
+  }
+  .cat-thumb svg{ width:26px; height:26px; color:#fff; position:relative; z-index:2; }
+  .cat-thumb::after{ content:''; position:absolute; inset:0; background:radial-gradient(circle at 30% 20%, rgba(255,255,255,0.35), transparent 60%); opacity:0; transition:opacity .35s ease; }
+  .cat-card:hover .cat-thumb::after{ opacity:1; }
+  .cat-name{ font-weight:700; font-size:14.5px; }
+  .cat-desc{ font-size:12px; color:var(--ink-faint); }
+
+  /* ================= INTERACTIVE PREVIEW ================= */
+  .preview-tabs{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:40px; }
+  .ptab{
+    padding:11px 22px; border-radius:999px; font-weight:700; font-size:14px; color:var(--ink-soft);
+    background:var(--surface); border:1.5px solid var(--border); transition:all .3s ease;
+  }
+  .ptab.active{ color:#fff; background:linear-gradient(120deg,var(--purple-deep),var(--pink)); border-color:transparent; box-shadow:0 10px 24px -8px rgba(139,92,246,0.55); }
+  .ptab:hover:not(.active){ border-color:var(--purple); }
+  .preview-stage{
+    border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-lg); border:1px solid var(--border);
+    aspect-ratio:16/8; position:relative; background:#120E24;
+  }
+  .preview-panel{
+    position:absolute; inset:0; padding:36px 40px; display:flex; flex-direction:column; justify-content:flex-end;
+    opacity:0; transform:scale(1.03); transition:opacity .5s ease, transform .5s ease; pointer-events:none;
+  }
+  .preview-panel.active{ opacity:1; transform:scale(1); pointer-events:auto; }
+  .preview-panel .p-eyebrow{ color:rgba(255,255,255,.65); font-weight:700; font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:10px; }
+  .preview-panel h3{ color:#fff; font-size:clamp(20px,2.4vw,28px); margin-bottom:10px; }
+  .preview-panel p{ color:rgba(255,255,255,0.7); font-size:14px; max-width:420px; line-height:1.6; margin-bottom:16px;}
+  .preview-thumbs{ display:flex; gap:10px; }
+  .preview-thumbs div{ width:56px; height:76px; border-radius:8px; background:linear-gradient(150deg,var(--c1),var(--c2)); box-shadow:0 6px 14px -4px rgba(0,0,0,.4); }
+
+  /* ================= FEATURES BENTO ================= */
+  .bento{ display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:150px; gap:18px; }
+  @media (max-width:1024px){ .bento{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:560px){ .bento{ grid-template-columns:1fr; grid-auto-rows:auto; } }
+  .bento-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:22px;
+    display:flex; flex-direction:column; justify-content:space-between; box-shadow:var(--shadow-sm);
+    transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease, border-color .35s ease;
+    position:relative; overflow:hidden;
+  }
+  .bento-card:hover{ transform:translateY(-6px); box-shadow:var(--shadow-md); border-color:var(--purple); }
+  .bento-card .bic{
+    width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(135deg,var(--c1,var(--lavender)),var(--c2,var(--pink))); flex-shrink:0;
+  }
+  .bento-card .bic svg{ width:20px; height:20px; color:#fff; }
+  .bento-card h4{ font-size:15.5px; font-weight:700; margin-top:14px; }
+  .bento-card p{ font-size:12.5px; color:var(--ink-faint); margin-top:4px; }
+  .bento-card.wide{ grid-column:span 2; }
+  @media (max-width:560px){ .bento-card.wide{ grid-column:span 1; } }
+
+  /* ================= WHY GIFTFLIX ================= */
+  .why-grid{ display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center; }
+  @media (max-width:900px){ .why-grid{ grid-template-columns:1fr; gap:44px; } }
+  .why-illustration{ position:relative; aspect-ratio:1/1; border-radius:var(--radius-lg);
+    background:linear-gradient(150deg, rgba(196,181,253,0.5), rgba(244,114,182,0.35), rgba(96,165,250,0.4));
+    display:flex; align-items:center; justify-content:center; overflow:hidden;
+  }
+  .why-illustration .ring{ position:absolute; border-radius:50%; border:1.5px dashed rgba(124,58,237,0.35); }
+  .why-illustration .core{
+    width:38%; aspect-ratio:1/1; border-radius:50%; background:var(--surface); box-shadow:var(--shadow-lg);
+    display:flex; align-items:center; justify-content:center; z-index:2;
+  }
+  .why-illustration .core svg{ width:42%; height:42%; color:var(--purple-deep); }
+  .orbit-item{ position:absolute; width:52px; height:52px; border-radius:14px; background:var(--surface); box-shadow:var(--shadow-md); display:flex; align-items:center; justify-content:center; }
+  .orbit-item svg{ width:22px; height:22px; }
+
+  .compare-table{ width:100%; border-collapse:separate; border-spacing:0 10px; margin-top:26px; }
+  .compare-table th{ text-align:left; font-size:12.5px; color:var(--ink-faint); font-weight:700; text-transform:uppercase; letter-spacing:.05em; padding:0 16px 6px; }
+  .compare-table th:last-child, .compare-table td:last-child{ text-align:center; }
+  .compare-table td{ background:var(--surface); padding:14px 16px; font-size:14px; font-weight:600; border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+  .compare-table tr td:first-child{ border-left:1px solid var(--border); border-radius:14px 0 0 14px; color:var(--ink-soft); font-weight:500;}
+  .compare-table tr td:last-child{ border-right:1px solid var(--border); border-radius:0 14px 14px 0; }
+  .check-ic{ color:var(--success); }
+  .cross-ic{ color:var(--danger); }
+
+  /* ================= TESTIMONIALS ================= */
+  .test-scroll{ overflow:hidden; position:relative; -webkit-mask-image:linear-gradient(90deg, transparent, black 6%, black 94%, transparent); mask-image:linear-gradient(90deg, transparent, black 6%, black 94%, transparent); }
+  .test-track{ display:flex; gap:20px; width:max-content; animation:scrollX 42s linear infinite; }
+  .test-scroll:hover .test-track{ animation-play-state:paused; }
+  @keyframes scrollX{ from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
+  .test-card{
+    width:320px; flex:0 0 auto; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:26px; box-shadow:var(--shadow-sm);
+  }
+  .test-top{ display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+  .test-avatar{ width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,var(--c1),var(--c2)); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:15px; }
+  .test-name{ font-weight:700; font-size:14.5px; }
+  .test-gift{ font-size:12px; color:var(--ink-faint); }
+  .stars{ display:flex; gap:2px; margin-bottom:10px; }
+  .stars svg{ width:14px; height:14px; color:#F5A623; }
+  .test-card p{ font-size:14px; color:var(--ink-soft); line-height:1.65; }
+
+  /* ================= PRICING ================= */
+  .price-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; align-items:stretch; }
+  @media (max-width:900px){ .price-grid{ grid-template-columns:1fr; max-width:400px; margin:0 auto;} }
+  .price-card{
+    background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius-lg); padding:36px 30px;
+    display:flex; flex-direction:column; box-shadow:var(--shadow-sm); transition:transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease;
+    position:relative;
+  }
+  .price-card:hover{ transform:translateY(-8px); box-shadow:var(--shadow-lg); }
+  .price-card.featured{
+    border:1.5px solid transparent;
+    background:linear-gradient(var(--surface),var(--surface)) padding-box, linear-gradient(135deg,var(--purple-deep),var(--pink)) border-box;
+    transform:scale(1.04);
+    box-shadow:0 30px 60px -18px rgba(139,92,246,0.4);
+  }
+  .price-card.featured:hover{ transform:scale(1.04) translateY(-8px); }
+  .price-badge{ position:absolute; top:-14px; left:50%; transform:translateX(-50%); background:linear-gradient(120deg,var(--purple-deep),var(--pink)); color:#fff; font-size:11.5px; font-weight:800; padding:6px 16px; border-radius:999px; letter-spacing:.02em; box-shadow:0 8px 18px -4px rgba(139,92,246,0.6);}
+  .price-plan{ font-weight:700; font-size:15px; color:var(--ink-soft); margin-bottom:10px; }
+  .price-amt{ font-size:44px; font-weight:900; letter-spacing:-0.02em; margin-bottom:4px; }
+  .price-amt span{ font-size:15px; font-weight:600; color:var(--ink-faint); }
+  .price-desc{ font-size:13px; color:var(--ink-faint); margin-bottom:24px; }
+  .price-feats{ display:flex; flex-direction:column; gap:12px; margin-bottom:30px; flex:1; }
+  .price-feats li{ display:flex; align-items:center; gap:10px; font-size:13.5px; color:var(--ink-soft); }
+  .price-feats svg{ width:16px; height:16px; color:var(--success); flex-shrink:0; }
+  .price-card .btn{ width:100%; }
+
+  /* ================= FAQ ================= */
+  .faq-list{ max-width:760px; margin:0 auto; display:flex; flex-direction:column; gap:12px; }
+  .faq-item{ background:var(--surface); border:1px solid var(--border); border-radius:18px; overflow:hidden; box-shadow:var(--shadow-sm); }
+  .faq-q{ width:100%; display:flex; align-items:center; justify-content:space-between; padding:20px 24px; font-weight:700; font-size:15.5px; text-align:left; }
+  .faq-q .plus{ width:22px; height:22px; flex-shrink:0; position:relative; }
+  .faq-q .plus::before, .faq-q .plus::after{ content:''; position:absolute; background:var(--purple-deep); border-radius:2px; transition:transform .35s ease; }
+  .faq-q .plus::before{ width:14px; height:2px; top:10px; left:4px; }
+  .faq-q .plus::after{ width:2px; height:14px; left:10px; top:4px; }
+  .faq-item.open .plus::after{ transform:rotate(90deg); opacity:0; }
+  .faq-a{ max-height:0; overflow:hidden; transition:max-height .4s cubic-bezier(.2,.8,.2,1); }
+  .faq-a p{ padding:0 24px 22px; color:var(--ink-soft); font-size:14px; line-height:1.65; }
+
+  /* ================= FINAL CTA ================= */
+  .final-cta{
+    border-radius:36px; padding:80px 40px; text-align:center; position:relative; overflow:hidden;
+    background:linear-gradient(135deg,var(--purple-deep),var(--pink) 60%,var(--blue));
+  }
+  .final-cta h2{ color:#fff; font-size:clamp(30px,4.4vw,48px); margin-bottom:16px; }
+  .final-cta p{ color:rgba(255,255,255,0.85); font-size:17px; margin-bottom:34px; }
+  .final-cta .btn-primary{ background:#fff; color:var(--purple-deep); box-shadow:0 14px 34px -8px rgba(0,0,0,0.3); }
+  .final-blob{ position:absolute; border-radius:50%; background:rgba(255,255,255,0.14); filter:blur(40px); }
+
+  /* ================= FOOTER ================= */
+  footer{ padding:64px 0 34px; border-top:1px solid var(--border); }
+  .foot-grid{ display:grid; grid-template-columns:1.4fr repeat(3,1fr); gap:40px; margin-bottom:44px; }
+  @media (max-width:768px){ .foot-grid{ grid-template-columns:1fr 1fr; } }
+  .foot-col h5{ font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-faint); margin-bottom:16px; }
+  .foot-col ul{ display:flex; flex-direction:column; gap:11px; }
+  .foot-col a{ font-size:14px; color:var(--ink-soft); transition:color .25s ease; }
+  .foot-col a:hover{ color:var(--purple-deep); }
+  .foot-brand p{ color:var(--ink-faint); font-size:13.5px; margin-top:14px; max-width:260px; line-height:1.6; }
+  .foot-bottom{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; padding-top:28px; border-top:1px solid var(--border); }
+  .foot-bottom p{ font-size:13px; color:var(--ink-faint); }
+  .social-row{ display:flex; gap:10px; }
+  .social-row a{ width:36px; height:36px; border-radius:10px; background:var(--surface-soft); display:flex; align-items:center; justify-content:center; transition:background .3s ease, transform .3s ease; }
+  .social-row a:hover{ background:var(--lavender); transform:translateY(-3px); }
+  .social-row svg{ width:16px; height:16px; color:var(--purple-deep); }
+</style>
+</head>
+<body>
+
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- ============ NAV ============ -->
+<header id="siteHeader">
+  <div class="wrap nav-inner">
+    <a href="#" class="logo">
+      <span class="logo-mark">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.6-10-9.3C.6 8 2.2 4 6 4c2.2 0 3.7 1.1 4.5 2.4C11.3 5.1 12.8 4 15 4c3.8 0 5.4 4 4 7.7C19.5 16.4 12 21 12 21z" fill="white"/></svg>
+      </span>
+      GiftFlix
+    </a>
+    <nav class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#categories">Gift types</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="#pricing" class="btn btn-primary magnetic" data-magnetic data-ripple>Create Your Gift</a>
+    <a href="/login" class="btn btn-ghost magnetic" data-magnetic id="loginBtn">Log in</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="mesh-bg">
+    <div class="blob" style="width:520px;height:520px;top:-140px;left:-120px;background:radial-gradient(circle,var(--lavender),transparent 70%);animation:floatSlow 13s ease-in-out infinite;"></div>
+    <div class="blob" style="width:460px;height:460px;top:60px;right:-140px;background:radial-gradient(circle,var(--pink),transparent 70%);animation:floatSlow2 15s ease-in-out infinite;"></div>
+    <div class="blob" style="width:380px;height:380px;bottom:-160px;left:30%;background:radial-gradient(circle,var(--blue),transparent 70%);animation:floatSlow 17s ease-in-out infinite;"></div>
+  </div>
+
+  <div class="wrap hero-grid">
+    <div class="reveal in" id="heroText">
+      <span class="eyebrow"><span class="dot"></span> Now with 120+ templates</span>
+      <h1>Turn Your Memories Into <span class="grad-text">Beautiful Digital Gifts</span> ❤️</h1>
+      <p class="lead">Create personalized Netflix-style love stories, birthday surprises, wedding invitations, anniversary websites, and unforgettable digital experiences — in minutes, not hours.</p>
+      <div class="hero-ctas">
+        <a href="#pricing" class="btn btn-primary magnetic" data-magnetic data-ripple>Create Your Gift</a>
+        <a href="#preview" class="btn-watch magnetic" data-magnetic>
+          <span class="play-circle">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7L8 5z" fill="#7C3AED"/></svg>
+          </span>
+          Watch Demo
+        </a>
+      </div>
+      <div class="hero-trust">
+        <div class="avatar-stack">
+          <span>SK</span><span>PM</span><span>RJ</span><span>+</span>
+        </div>
+        <p><strong>50,000+</strong> gifts made this year</p>
+      </div>
+    </div>
+
+    <div class="mock-stage reveal-scale in" id="heroMock">
+      <div class="mock-frame" id="tiltFrame">
+        <div class="mock-noise"></div>
+        <div class="mock-top">
+          <div class="mock-logo"><span class="dotmark"></span>GiftFlix</div>
+          <div class="mock-profiles"><span></span><span></span><span></span></div>
+        </div>
+        <div class="mock-hero-row">
+          <h4>For Priya, With Love</h4>
+          <p>A story made of every Tuesday coffee, every road trip, every "just one more episode."</p>
+          <div class="mock-tags"><span>7 Seasons</span><span>2019–2026</span><span>♥ Anniversary</span></div>
+        </div>
+        <div class="mock-rail-label">Continue Watching</div>
+        <div class="mock-rail">
+          <div class="mock-card" style="--c1:#8B5CF6;--c2:#EC4899;"><span class="lbl">S1</span><div class="glow"></div><div class="prog"><i style="width:70%"></i></div></div>
+          <div class="mock-card" style="--c1:#60A5FA;--c2:#8B5CF6;"><span class="lbl">S2</span><div class="glow"></div><div class="prog"><i style="width:45%"></i></div></div>
+          <div class="mock-card" style="--c1:#F472B6;--c2:#F5A623;"><span class="lbl">S3</span><div class="glow"></div><div class="prog"><i style="width:90%"></i></div></div>
+          <div class="mock-card" style="--c1:#34D399;--c2:#60A5FA;"><span class="lbl">S4</span><div class="glow"></div><div class="prog"><i style="width:20%"></i></div></div>
+          <div class="mock-card" style="--c1:#A78BFA;--c2:#F472B6;"><span class="lbl">S5</span><div class="glow"></div><div class="prog"><i style="width:60%"></i></div></div>
+        </div>
+      </div>
+
+      <div class="float-card float-1">
+        <div class="ic" style="background:linear-gradient(135deg,#FDE68A,#F472B6);">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M9 18V5l12-2v13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3" stroke="white" stroke-width="2"/><circle cx="18" cy="16" r="3" stroke="white" stroke-width="2"/></svg>
+        </div>
+        <div><b>Music added</b><span>golden-hour.mp3</span></div>
+      </div>
+      <div class="float-card float-2">
+        <div class="ic" style="background:linear-gradient(135deg,#60A5FA,#8B5CF6);">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M3 8l9-5 9 5-9 5-9-5z" stroke="white" stroke-width="2" stroke-linejoin="round"/><path d="M3 8v8l9 5 9-5V8" stroke="white" stroke-width="2" stroke-linejoin="round"/></svg>
+        </div>
+        <div><b>Link ready</b><span>giftflix.co/priya</span></div>
+      </div>
+      <div class="float-card float-3">
+        <div class="ic" style="background:linear-gradient(135deg,#34D399,#60A5FA);">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div><b>98% love it</b><span>customer rating</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STATS ============ -->
+<section style="padding:0 0 100px;">
+  <div class="wrap">
+    <div class="stats-bar reveal">
+      <div class="stats-grid">
+        <div>
+          <div class="stat-num" data-count="50000" data-suffix="+">0</div>
+          <div class="stat-label">Gifts Created</div>
+        </div>
+        <div>
+          <div class="stat-num" data-count="120" data-suffix="+">0</div>
+          <div class="stat-label">Templates</div>
+        </div>
+        <div>
+          <div class="stat-num" data-count="98" data-suffix="%">0</div>
+          <div class="stat-label">Customer Satisfaction</div>
+        </div>
+        <div>
+          <div class="stat-num" data-count="15" data-suffix="+">0</div>
+          <div class="stat-label">Countries</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section id="how">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow"><span class="dot"></span> Simple by design</span>
+      <h2 class="section-title">From idea to <span class="grad-text">unforgettable</span>, in three steps</h2>
+      <p class="section-sub">No design skills, no code — just your memories and a few minutes.</p>
+    </div>
+    <div class="steps">
+      <div class="steps-line"></div>
+      <div class="steps-grid stagger">
+        <div class="step-card reveal" style="--i:0">
+          <div class="step-num">1</div>
+          <h3>Choose a Template</h3>
+          <p>Browse beautifully designed templates for every occasion — from love stories to graduations.</p>
+        </div>
+        <div class="step-card reveal" style="--i:1">
+          <div class="step-num">2</div>
+          <h3>Personalize It</h3>
+          <p>Upload photos, videos, music, and messages to make it truly one of a kind.</p>
+        </div>
+        <div class="step-card reveal" style="--i:2">
+          <div class="step-num">3</div>
+          <h3>Share the Magic</h3>
+          <p>Receive a unique link and surprise your loved one — anywhere, on any device.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CATEGORIES ============ -->
+<section id="categories" style="background:var(--surface-soft);">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow"><span class="dot"></span> 120+ templates</span>
+      <h2 class="section-title">A gift for every <span class="grad-text">moment</span></h2>
+      <p class="section-sub">Every category is fully customizable — swap colors, layouts, and content in a click.</p>
+    </div>
+    <div class="cat-grid stagger" id="catGrid"></div>
+  </div>
+</section>
+
+<!-- ============ INTERACTIVE PREVIEW ============ -->
+<section id="preview">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow"><span class="dot"></span> See it live</span>
+      <h2 class="section-title">Pick a <span class="grad-text">style</span>, see it come alive</h2>
+      <p class="section-sub">Every template adapts its look to the platform your gift is inspired by.</p>
+    </div>
+    <div class="preview-tabs reveal" id="previewTabs"></div>
+    <div class="preview-stage reveal-scale" id="previewStage"></div>
+  </div>
+</section>
+
+<!-- ============ FEATURES BENTO ============ -->
+<section id="features" style="background:var(--surface-soft);">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow"><span class="dot"></span> Everything included</span>
+      <h2 class="section-title">Built for <span class="grad-text">every detail</span> that matters</h2>
+      <p class="section-sub">No plugins, no add-ons — every feature comes standard on every plan.</p>
+    </div>
+    <div class="bento stagger" id="bentoGrid"></div>
+  </div>
+</section>
+
+<!-- ============ WHY GIFTFLIX ============ -->
+<section>
+  <div class="wrap why-grid">
+    <div class="why-illustration reveal-scale">
+      <div class="ring" style="width:88%;height:88%;"></div>
+      <div class="ring" style="width:64%;height:64%;"></div>
+      <div class="core">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.6-10-9.3C.6 8 2.2 4 6 4c2.2 0 3.7 1.1 4.5 2.4C11.3 5.1 12.8 4 15 4c3.8 0 5.4 4 4 7.7C19.5 16.4 12 21 12 21z" fill="#7C3AED"/></svg>
+      </div>
+      <div class="orbit-item" style="top:6%;left:14%;"><svg viewBox="0 0 24 24" fill="none"><path d="M23 7l-7 5 7 5V7z" fill="#F472B6"/><rect x="1" y="5" width="15" height="14" rx="2" stroke="#F472B6" stroke-width="2"/></svg></div>
+      <div class="orbit-item" style="top:10%;right:10%;"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18V5l12-2v13" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round"/><circle cx="6" cy="18" r="3" stroke="#8B5CF6" stroke-width="2"/><circle cx="18" cy="16" r="3" stroke="#8B5CF6" stroke-width="2"/></svg></div>
+      <div class="orbit-item" style="bottom:8%;left:22%;"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.6-10-9.3C.6 8 2.2 4 6 4c2.2 0 3.7 1.1 4.5 2.4C11.3 5.1 12.8 4 15 4c3.8 0 5.4 4 4 7.7C19.5 16.4 12 21 12 21z" fill="#60A5FA"/></svg></div>
+      <div class="orbit-item" style="bottom:14%;right:16%;"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3" stroke="#F5A623" stroke-width="2"/><path d="M4 8h16" stroke="#F5A623" stroke-width="2"/></svg></div>
+    </div>
+
+    <div class="reveal">
+      <span class="eyebrow"><span class="dot"></span> Why GiftFlix</span>
+      <h2 class="section-title" style="margin:18px 0 12px;">Instead of a boring greeting card…</h2>
+      <p class="section-sub" style="margin-bottom:0;">Create an unforgettable digital experience they'll actually remember — and revisit.</p>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Feature</th><th>Card</th><th>GiftFlix</th></tr>
+        </thead>
+        <tbody id="compareBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section style="background:var(--surface-soft); padding-left:0; padding-right:0;">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow"><span class="dot"></span> Loved by thousands</span>
+      <h2 class="section-title">Stories from <span class="grad-text">real gifters</span></h2>
+    </div>
+  </div>
+  <div class="test-scroll reveal">
+    <div class="test-track" id="testTrack"></div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section id="pricing">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow"><span class="dot"></span> Simple pricing</span>
+      <h2 class="section-title">Choose your <span class="grad-text">plan</span></h2>
+      <p class="section-sub">One-time payment per gift. No subscriptions, no surprises.</p>
+    </div>
+    <div class="price-grid stagger" id="priceGrid"></div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq" style="background:var(--surface-soft);">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow"><span class="dot"></span> Questions</span>
+      <h2 class="section-title">Frequently asked <span class="grad-text">questions</span></h2>
+    </div>
+    <div class="faq-list reveal" id="faqList"></div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section>
+  <div class="wrap">
+    <div class="final-cta reveal-scale">
+      <div class="final-blob" style="width:280px;height:280px;top:-100px;left:-60px;"></div>
+      <div class="final-blob" style="width:220px;height:220px;bottom:-90px;right:-40px;"></div>
+      <h2>Make Someone Smile Today ❤️</h2>
+      <p>Create a personalized digital gift in less than five minutes.</p>
+      <a href="#pricing" class="btn btn-primary magnetic" data-magnetic data-ripple>Start Creating</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="#" class="logo">
+          <span class="logo-mark"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.6-10-9.3C.6 8 2.2 4 6 4c2.2 0 3.7 1.1 4.5 2.4C11.3 5.1 12.8 4 15 4c3.8 0 5.4 4 4 7.7C19.5 16.4 12 21 12 21z" fill="white"/></svg></span>
+          GiftFlix
+        </a>
+        <p>Personalized digital gift experiences for the people who matter most.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Product</h5>
+        <ul><li><a href="#categories">Templates</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#preview">Live Preview</a></li></ul>
+      </div>
+      <div class="foot-col">
+        <h5>Company</h5>
+        <ul><li><a href="#">About</a></li><li><a href="#">Careers</a></li><li><a href="#">Contact</a></li></ul>
+      </div>
+      <div class="foot-col">
+        <h5>Legal</h5>
+        <ul><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li></ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <p>© 2026 GiftFlix. All rights reserved.</p>
+      <div class="social-row">
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+        <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="none"><path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></a>
+        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none"><path d="M14 9h3V6h-3c-1.7 0-3 1.3-3 3v2H9v3h2v6h3v-6h2.5l.5-3H14V9z" fill="currentColor"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ================= DATA ================= */
+const categories = [
+  {name:"Netflix Love Story", desc:"Episode-style memories", c1:"#8B5CF6", c2:"#EC4899", icon:'<path d="M9 18V5l12-2v13" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="6" cy="18" r="3" stroke="white" stroke-width="2"/><circle cx="18" cy="16" r="3" stroke="white" stroke-width="2"/>'},
+  {name:"Birthday Surprise", desc:"Countdown + confetti", c1:"#F5A623", c2:"#F472B6", icon:'<path d="M12 2v6M8 8l4-4 4 4M4 12h16v8H4z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'},
+  {name:"Wedding Invitation", desc:"RSVP built in", c1:"#F472B6", c2:"#A78BFA", icon:'<path d="M12 21s-7.5-4.6-10-9.3C.6 8 2.2 4 6 4c2.2 0 3.7 1.1 4.5 2.4C11.3 5.1 12.8 4 15 4c3.8 0 5.4 4 4 7.7C19.5 16.4 12 21 12 21z" fill="white"/>'},
+  {name:"Anniversary Timeline", desc:"Year-by-year story", c1:"#60A5FA", c2:"#8B5CF6", icon:'<circle cx="12" cy="12" r="9" stroke="white" stroke-width="2"/><path d="M12 7v5l3 3" stroke="white" stroke-width="2" stroke-linecap="round"/>'},
+  {name:"Baby Shower", desc:"Gentle pastel themes", c1:"#93C5FD", c2:"#F9A8D4", icon:'<path d="M12 3c-3 3-6 6-6 10a6 6 0 0012 0c0-4-3-7-6-10z" stroke="white" stroke-width="2"/>'},
+  {name:"Friendship Memories", desc:"Inside jokes included", c1:"#34D399", c2:"#60A5FA", icon:'<circle cx="9" cy="8" r="3" stroke="white" stroke-width="2"/><circle cx="17" cy="10" r="2.5" stroke="white" stroke-width="2"/><path d="M4 19c0-3 2.5-5 5-5s5 2 5 5" stroke="white" stroke-width="2"/>'},
+  {name:"Graduation", desc:"Milestone highlight reel", c1:"#7C3AED", c2:"#F5A623", icon:'<path d="M2 8l10-4 10 4-10 4-10-4z" stroke="white" stroke-width="2" stroke-linejoin="round"/><path d="M6 11v5c2 2 10 2 12 0v-5" stroke="white" stroke-width="2"/>'},
+  {name:"Parents Tribute", desc:"A thank-you archive", c1:"#F472B6", c2:"#8B5CF6", icon:'<path d="M12 21s-7.5-4.6-10-9.3C.6 8 2.2 4 6 4c2.2 0 3.7 1.1 4.5 2.4C11.3 5.1 12.8 4 15 4c3.8 0 5.4 4 4 7.7C19.5 16.4 12 21 12 21z" fill="white"/>'},
+  {name:"Proposal Website", desc:"Say yes, in style", c1:"#EC4899", c2:"#F5A623", icon:'<path d="M12 2l2.4 5 5.6.6-4.2 3.9 1.2 5.5L12 14l-5 3 1.2-5.5L4 7.6 9.6 7 12 2z" stroke="white" stroke-width="1.6" stroke-linejoin="round"/>'},
+  {name:"Farewell Gift", desc:"Goodbyes, done warmly", c1:"#60A5FA", c2:"#A78BFA", icon:'<path d="M5 12h14M13 6l6 6-6 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'}
+];
+
+const bentoFeatures = [
+  {t:"Unlimited Photos", d:"Add every memory, no caps.", c1:"#8B5CF6", c2:"#EC4899", wide:true, icon:'<rect x="3" y="3" width="18" height="18" rx="3" stroke="white" stroke-width="2"/><circle cx="8.5" cy="8.5" r="1.5" fill="white"/><path d="M21 15l-5-5L5 21" stroke="white" stroke-width="2"/>'},
+  {t:"Video Memories", d:"Play clips inline.", c1:"#F472B6", c2:"#F5A623", icon:'<path d="M23 7l-7 5 7 5V7z" fill="white"/><rect x="1" y="5" width="15" height="14" rx="2" stroke="white" stroke-width="2"/>'},
+  {t:"Background Music", d:"Set the mood.", c1:"#60A5FA", c2:"#8B5CF6", icon:'<path d="M9 18V5l12-2v13" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="6" cy="18" r="3" stroke="white" stroke-width="2"/><circle cx="18" cy="16" r="3" stroke="white" stroke-width="2"/>'},
+  {t:"QR Code Sharing", d:"Print or scan instantly.", c1:"#34D399", c2:"#60A5FA", icon:'<rect x="3" y="3" width="7" height="7" stroke="white" stroke-width="2"/><rect x="14" y="3" width="7" height="7" stroke="white" stroke-width="2"/><rect x="3" y="14" width="7" height="7" stroke="white" stroke-width="2"/><path d="M14 14h3v3h-3zM19 14h2M14 19h2M19 19h2" stroke="white" stroke-width="2"/>'},
+  {t:"Private Links", d:"Only they can see it.", c1:"#A78BFA", c2:"#F472B6", icon:'<rect x="5" y="11" width="14" height="9" rx="2" stroke="white" stroke-width="2"/><path d="M8 11V7a4 4 0 018 0v4" stroke="white" stroke-width="2"/>'},
+  {t:"Mobile Friendly", d:"Perfect on any screen.", c1:"#F5A623", c2:"#EC4899", icon:'<rect x="6" y="2" width="12" height="20" rx="2" stroke="white" stroke-width="2"/><path d="M11 18h2" stroke="white" stroke-width="2" stroke-linecap="round"/>'},
+  {t:"Instant Hosting", d:"Live the moment you publish.", c1:"#7C3AED", c2:"#60A5FA", wide:true, icon:'<path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" fill="white"/>'},
+  {t:"AI Message Generator", d:"Never stare at a blank page.", c1:"#EC4899", c2:"#8B5CF6", icon:'<path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3z" fill="white"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15z" fill="white"/>'},
+  {t:"Beautiful Animations", d:"Every scroll feels alive.", c1:"#60A5FA", c2:"#F472B6", icon:'<path d="M3 12h4l3-8 4 16 3-8h4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'},
+  {t:"Countdown Timers", d:"Build anticipation.", c1:"#F5A623", c2:"#8B5CF6", icon:'<circle cx="12" cy="13" r="8" stroke="white" stroke-width="2"/><path d="M12 9v4l3 2" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M9 2h6" stroke="white" stroke-width="2" stroke-linecap="round"/>'},
+  {t:"Memory Timeline", d:"Chronological storytelling.", c1:"#34D399", c2:"#7C3AED", icon:'<path d="M4 6h16M4 12h16M4 18h10" stroke="white" stroke-width="2" stroke-linecap="round"/>'},
+  {t:"Guest Book", d:"Let others leave notes.", c1:"#F472B6", c2:"#60A5FA", icon:'<path d="M4 4h13a3 3 0 013 3v13H7a3 3 0 01-3-3V4z" stroke="white" stroke-width="2"/><path d="M4 4v13a3 3 0 003 3" stroke="white" stroke-width="2"/>'}
+];
+
+const previewData = [
+  {tab:"Netflix", eyebrow:"Streaming Style", title:"For Priya, With Love", desc:"A love story told as episodes — every memory a season finale.", c:[["#8B5CF6","#EC4899"],["#60A5FA","#8B5CF6"],["#F472B6","#F5A623"]]},
+  {tab:"Spotify", eyebrow:"Playlist Style", title:"Our Soundtrack, 2019–2026", desc:"Every memory paired with the song that was playing.", c:[["#34D399","#60A5FA"],["#1DB954","#111"],["#A78BFA","#F472B6"]]},
+  {tab:"Prime Video", eyebrow:"Cinematic Style", title:"The Johnson Family Reunion", desc:"A blockbuster trailer for your family's biggest moments.", c:[["#60A5FA","#1D4ED8"],["#F5A623","#EC4899"],["#8B5CF6","#60A5FA"]]},
+  {tab:"Love Story", eyebrow:"Romantic Style", title:"To the Moon and Back", desc:"A dreamy chapter-by-chapter journey through your romance.", c:[["#F472B6","#F5A623"],["#A78BFA","#F472B6"],["#EC4899","#8B5CF6"]]},
+  {tab:"Wedding", eyebrow:"Elegant Style", title:"Sarah & James — Save the Date", desc:"An elegant invitation with RSVP and event details.", c:[["#F5D0FE","#F472B6"],["#FBCFE8","#A78BFA"],["#F9A8D4","#8B5CF6"]]},
+  {tab:"Birthday", eyebrow:"Celebration Style", title:"30 Reasons We Love Maya", desc:"A joyful countdown of memories leading to the big day.", c:[["#F5A623","#EC4899"],["#F472B6","#8B5CF6"],["#60A5FA","#F5A623"]]}
+];
+
+const compareRows = [
+  ["Personalized story", false, true],
+  ["Photos & videos included", false, true],
+  ["Custom music", false, true],
+  ["Reusable & revisitable", false, true],
+  ["Shareable link + QR", false, true],
+  ["Delivered in minutes", true, true]
+];
+
+const testimonials = [
+  {name:"Sarah K.", gift:"Wedding Invitation", initials:"SK", c1:"#F472B6", c2:"#A78BFA", text:"Our guests still talk about the invitation site — it felt like our own little movie premiere."},
+  {name:"Rahul J.", gift:"Anniversary Timeline", initials:"RJ", c1:"#60A5FA", c2:"#8B5CF6", text:"I built a 5-year timeline in one evening. My wife watched it three times before she said a word."},
+  {name:"Priya M.", gift:"Netflix Love Story", initials:"PM", c1:"#8B5CF6", c2:"#EC4899", text:"The 'episode' format made our story actually fun to scroll through. Genuinely better than a card."},
+  {name:"Daniel O.", gift:"Farewell Gift", initials:"DO", c1:"#34D399", c2:"#60A5FA", text:"Our whole team contributed messages before my coworker's last day. She cried, in the best way."},
+  {name:"Ana T.", gift:"Birthday Surprise", initials:"AT", c1:"#F5A623", c2:"#F472B6", text:"The countdown timer had my sister refreshing the link for a week. Worth every minute setting it up."},
+  {name:"Marcus B.", gift:"Proposal Website", initials:"MB", c1:"#EC4899", c2:"#7C3AED", text:"I proposed by sending the link mid-flight. She said yes before we landed. Enough said."}
+];
+
+const pricingPlans = [
+  {name:"Starter", price:"₹99", desc:"One beautiful gift, done simply.", feats:["1 gift website","Up to 20 photos","Basic templates","7-day link access"], cta:"Choose Starter"},
+  {name:"Premium", price:"₹299", desc:"Our most-loved plan for special occasions.", feats:["1 gift website","Unlimited photos & videos","All 120+ templates","Background music","1-year link access","QR code sharing"], cta:"Choose Premium", featured:true, badge:"Most Popular"},
+  {name:"Ultimate", price:"₹599", desc:"For the gift that needs to last forever.", feats:["Everything in Premium","AI message generator","Guest book","Lifetime link access","Priority support"], cta:"Choose Ultimate"}
+];
+
+const faqs = [
+  {q:"How long does it take to create a gift?", a:"Most people finish their gift in 5–15 minutes. Pick a template, add your photos and message, and you're ready to share."},
+  {q:"Do I need any design experience?", a:"None at all. Every template is pre-designed — you just personalize the content. GiftFlix handles the layout, animation, and hosting."},
+  {q:"Can the recipient view it on any device?", a:"Yes. Every gift is fully responsive and works on phones, tablets, and desktops without an app download."},
+  {q:"How long does my gift stay online?", a:"It depends on your plan — Starter links stay live for 7 days, Premium for a year, and Ultimate links never expire."},
+  {q:"Can I edit my gift after publishing?", a:"Yes, you can go back and update photos, music, or text at any time before or after sharing the link."},
+  {q:"Is my gift private?", a:"Yes. Every gift gets a unique, unlisted link. Only people you share it with can view it."}
+];
+
+/* ================= RENDER HELPERS ================= */
+function svgIcon(paths, size=24){ return `<svg viewBox="0 0 24 24" fill="none" width="${size}" height="${size}">${paths}</svg>`; }
+
+// Categories
+const catGrid = document.getElementById('catGrid');
+categories.forEach((c,i)=>{
+  const el = document.createElement('div');
+  el.className = 'cat-card reveal';
+  el.style.setProperty('--i', i%5);
+  el.innerHTML = `
+    <div class="cat-card-inner">
+      <div class="cat-thumb" style="--c1:${c.c1};--c2:${c.c2};">${svgIcon(c.icon)}</div>
+      <div>
+        <div class="cat-name">${c.name}</div>
+        <div class="cat-desc">${c.desc}</div>
+      </div>
+    </div>`;
+  catGrid.appendChild(el);
+});
+
+// Bento
+const bentoGrid = document.getElementById('bentoGrid');
+bentoFeatures.forEach(f=>{
+  const el = document.createElement('div');
+  el.className = 'bento-card reveal' + (f.wide ? ' wide' : '');
+  el.innerHTML = `
+    <div class="bic" style="--c1:${f.c1};--c2:${f.c2};">${svgIcon(f.icon,20)}</div>
+    <div><h4>${f.t}</h4><p>${f.d}</p></div>`;
+  bentoGrid.appendChild(el);
+});
+
+// Preview tabs + stage
+const previewTabs = document.getElementById('previewTabs');
+const previewStage = document.getElementById('previewStage');
+previewData.forEach((p,i)=>{
+  const tabBtn = document.createElement('button');
+  tabBtn.className = 'ptab' + (i===0?' active':'');
+  tabBtn.textContent = p.tab;
+  tabBtn.addEventListener('click', ()=>{
+    document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));
+    tabBtn.classList.add('active');
+    document.querySelectorAll('.preview-panel').forEach(pn=>pn.classList.remove('active'));
+    document.getElementById('panel-'+i).classList.add('active');
+  });
+  previewTabs.appendChild(tabBtn);
+
+  const panel = document.createElement('div');
+  panel.className = 'preview-panel' + (i===0?' active':'');
+  panel.id = 'panel-'+i;
+  panel.innerHTML = `
+    <div class="p-eyebrow">${p.eyebrow}</div>
+    <h3>${p.title}</h3>
+    <p>${p.desc}</p>
+    <div class="preview-thumbs">
+      ${p.c.map(pair=>`<div style="--c1:${pair[0]};--c2:${pair[1]}"></div>`).join('')}
+    </div>`;
+  previewStage.appendChild(panel);
+});
+
+// Comparison table
+const compareBody = document.getElementById('compareBody');
+const check = `<svg class="check-ic" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const cross = `<svg class="cross-ic" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>`;
+compareRows.forEach(r=>{
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${r[0]}</td><td>${r[1]?check:cross}</td><td>${r[2]?check:cross}</td>`;
+  compareBody.appendChild(tr);
+});
+
+// Testimonials (duplicated for seamless scroll)
+const testTrack = document.getElementById('testTrack');
+const starIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6 6.6.7-5 4.4 1.5 6.5L12 16.3 6 19.6l1.5-6.5-5-4.4L9.1 8 12 2z"/></svg>`;
+[...testimonials, ...testimonials].forEach(t=>{
+  const el = document.createElement('div');
+  el.className = 'test-card';
+  el.innerHTML = `
+    <div class="test-top">
+      <div class="test-avatar" style="background:linear-gradient(135deg,${t.c1},${t.c2})">${t.initials}</div>
+      <div><div class="test-name">${t.name}</div><div class="test-gift">${t.gift}</div></div>
+    </div>
+    <div class="stars">${starIcon.repeat(5)}</div>
+    <p>${t.text}</p>`;
+  testTrack.appendChild(el);
+});
+
+// Pricing
+const priceGrid = document.getElementById('priceGrid');
+pricingPlans.forEach(p=>{
+  const el = document.createElement('div');
+  el.className = 'price-card reveal' + (p.featured?' featured':'');
+  el.innerHTML = `
+    ${p.badge?`<div class="price-badge">${p.badge}</div>`:''}
+    <div class="price-plan">${p.name}</div>
+    <div class="price-amt">${p.price}<span> / gift</span></div>
+    <div class="price-desc">${p.desc}</div>
+    <ul class="price-feats">${p.feats.map(f=>`<li>${check}${f}</li>`).join('')}</ul>
+    <a href="#" class="btn ${p.featured?'btn-primary':'btn-ghost'} magnetic" data-magnetic data-ripple>${p.cta}</a>`;
+  priceGrid.appendChild(el);
+});
+
+// FAQ
+const faqList = document.getElementById('faqList');
+faqs.forEach(f=>{
+  const item = document.createElement('div');
+  item.className = 'faq-item';
+  item.innerHTML = `
+    <button class="faq-q"><span>${f.q}</span><span class="plus"></span></button>
+    <div class="faq-a"><p>${f.a}</p></div>`;
+  const btn = item.querySelector('.faq-q');
+  const answer = item.querySelector('.faq-a');
+  btn.addEventListener('click', ()=>{
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(fi=>{ fi.classList.remove('open'); fi.querySelector('.faq-a').style.maxHeight = null; });
+    if(!isOpen){ item.classList.add('open'); answer.style.maxHeight = answer.scrollHeight + 'px'; }
+  });
+  faqList.appendChild(item);
+});
+
+/* ================= SCROLL REVEAL ================= */
+const revealEls = document.querySelectorAll('.reveal, .reveal-scale');
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){ entry.target.classList.add('in'); io.unobserve(entry.target); }
+  });
+}, {threshold:0.15});
+revealEls.forEach(el=>io.observe(el));
+
+/* ================= HEADER SCROLL STATE ================= */
+const header = document.getElementById('siteHeader');
+window.addEventListener('scroll', ()=>{
+  header.classList.toggle('scrolled', window.scrollY > 20);
+}, {passive:true});
+
+/* ================= ANIMATED COUNTERS ================= */
+const counters = document.querySelectorAll('.stat-num');
+const counterIO = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const el = entry.target;
+      const target = parseInt(el.dataset.count, 10);
+      const suffix = el.dataset.suffix || '';
+      const duration = 1600;
+      const start = performance.now();
+      function tick(now){
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(eased * target).toLocaleString() + suffix;
+        if(progress < 1) requestAnimationFrame(tick);
+        else el.textContent = target.toLocaleString() + suffix;
+      }
+      requestAnimationFrame(tick);
+      counterIO.unobserve(el);
+    }
+  });
+}, {threshold:0.5});
+counters.forEach(c=>counterIO.observe(c));
+
+/* ================= CURSOR GLOW ================= */
+const glow = document.getElementById('cursorGlow');
+let glowActive = false;
+window.addEventListener('mousemove', (e)=>{
+  glow.style.left = e.clientX + 'px';
+  glow.style.top = e.clientY + 'px';
+  if(!glowActive){ glow.style.opacity = '1'; glowActive = true; }
+});
+window.addEventListener('mouseleave', ()=>{ glow.style.opacity = '0'; glowActive = false; });
+
+/* ================= MAGNETIC BUTTONS ================= */
+document.querySelectorAll('[data-magnetic]').forEach(btn=>{
+  btn.addEventListener('mousemove', (e)=>{
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width/2;
+    const y = e.clientY - rect.top - rect.height/2;
+    btn.style.transform = `translate(${x*0.25}px, ${y*0.35}px)`;
+  });
+  btn.addEventListener('mouseleave', ()=>{ btn.style.transform = 'translate(0,0)'; });
+});
+
+/* ================= RIPPLE EFFECT ================= */
+document.querySelectorAll('[data-ripple]').forEach(btn=>{
+  btn.addEventListener('click', function(e){
+    const rect = btn.getBoundingClientRect();
+    const ripple = document.createElement('span');
+    const size = Math.max(rect.width, rect.height);
+    ripple.className = 'ripple';
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+    ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+    btn.appendChild(ripple);
+    setTimeout(()=>ripple.remove(), 700);
+  });
+});
+
+/* ================= HERO MOCKUP PARALLAX TILT ================= */
+const tiltFrame = document.getElementById('tiltFrame');
+const heroMock = document.getElementById('heroMock');
+if(tiltFrame && window.matchMedia('(min-width: 981px)').matches){
+  heroMock.addEventListener('mousemove', (e)=>{
+    const rect = heroMock.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    tiltFrame.style.transform = `rotateY(${-8 + x*10}deg) rotateX(${3 - y*10}deg)`;
+  });
+  heroMock.addEventListener('mouseleave', ()=>{
+    tiltFrame.style.transform = 'rotateY(-8deg) rotateX(3deg)';
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Create Gift</title>
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<h1>Create Your Gift</h1>
+<form action="/gift/create" method="post" enctype="multipart/form-data">
+<input name="title" placeholder="Gift Title"><br>
+<input name="recipient_name" placeholder="Recipient"><br>
+<input name="sender_name" placeholder="Sender"><br>
+<textarea name="description" placeholder="Message"></textarea><br>
+<label>Images</label><input type="file" name="images" multiple><br>
+<label>Videos</label><input type="file" name="videos" multiple><br>
+<label>Music</label><input type="file" name="music"><br>
+<button>Create Gift</button>
+</form>
+</body>
+</html>

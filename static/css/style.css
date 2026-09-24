@@ -1,0 +1,45 @@
+body{margin:0;font-family:Arial,sans-serif;background:#09090b;color:#fff}
+header{padding:20px}
+.hero{padding:80px 10%;text-align:center}
+.btn{display:inline-block;padding:12px 24px;background:#7c3aed;color:#fff;text-decoration:none;border-radius:8px}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;padding:20px}
+.gallery img{width:100%;border-radius:12px}
+video{display:block;margin:20px auto;border-radius:12px;max-width:100%}
+.diary-description{
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    max-width:100%;
+}
+.diary-title{
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+.diary-note{
+    width:340px;
+    max-width:340px;
+    overflow:hidden;
+}
+.diary-grid{
+    display:flex;
+    flex-wrap:wrap;
+    gap:30px;
+    justify-content:flex-start;
+}
+.diary-note p{
+    max-width:100%;
+    overflow-wrap:break-word;
+    word-break:break-word;
+    white-space:pre-wrap;
+}
+.note-description{
+    font-family:"Caveat", cursive;
+    font-size:32px;
+
+    white-space:pre-wrap;
+    overflow-wrap:break-word;
+    word-break:break-word;
+    width:100%;
+}

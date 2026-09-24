@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LoveFlix — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   TOKENS
+   ===================================================================== */
+:root{
+  --bg:#ffffff;
+  --bg-deep:#080808;
+  --surface:#121214;
+  --surface-2:#18181B;
+  --border:rgba(247,247,248,0.08);
+  --border-soft:rgba(247,247,248,0.05);
+  --red:#E6395A;
+  --red-deep:#B32541;
+  --gold:#F2B84B;
+  --cream:#F5EBDD;
+  --muted:#9C9CA3;
+  --ink:#F7F7F8;
+  --shadow-lg:0 30px 70px -24px rgba(0,0,0,0.65);
+  --shadow-glow:0 24px 60px -16px rgba(230,57,90,0.35);
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --sidebar-w:240px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:#ffffff; color:var(--ink); font-family:'Inter',sans-serif;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+@media (prefers-reduced-motion: reduce){*{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important;}}
+img{max-width:100%; display:block;}
+button{font-family:inherit; cursor:pointer; border:none; background:none; color:inherit;}
+a{color:inherit; text-decoration:none;}
+::selection{background:var(--red); color:#fff;}
+:focus-visible{outline:2px solid var(--gold); outline-offset:2px; border-radius:4px;}
+
+.serif{font-family:'Playfair Display',serif;}
+.label{font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted);}
+
+/* =====================================================================
+   REVEAL
+   ===================================================================== */
+.reveal{opacity:0; transform:translateY(20px); transition:opacity .7s var(--ease), transform .7s var(--ease);}
+.reveal.in{opacity:1; transform:translateY(0);}
+
+/* =====================================================================
+   SIDEBAR
+   ===================================================================== */
+.sidebar{
+  position:fixed; top:0; left:0; bottom:0; width:var(--sidebar-w); background:var(--bg);
+  border-right:1px solid var(--border); display:flex; flex-direction:column; z-index:80;
+  opacity:0; animation:sidebarIn .7s var(--ease) forwards .1s;
+  transition:transform .4s var(--ease);
+}
+@keyframes sidebarIn{to{opacity:1;}}
+.sb-logo{display:flex; color: black;align-items:center; gap:9px; padding:26px 24px 22px; font-family:'Playfair Display',serif; font-weight:700; font-size:20px; letter-spacing:.01em;}
+.sb-logo svg{width:20px; height:20px; flex-shrink:0;}
+.sb-nav{flex:1; overflow-y:auto; padding:6px 14px;}
+.sb-group{margin-bottom:22px;}
+.sb-group .label{padding:0 12px; margin-bottom:8px; display:block;}
+.sb-link{
+  display:flex; align-items:center; gap:11px; padding:10px 12px; border-radius:9px; font-size:14px; font-weight:500;
+  color:var(--muted); position:relative; transition:background .25s ease, color .25s ease;
+}
+.sb-link svg{width:17px; height:17px; flex-shrink:0; opacity:.8;}
+.sb-link:hover{background:var(--surface); color:var(--ink);}
+.sb-link.active{background:var(--surface-2); color:var(--ink);}
+.sb-link.active::before{content:''; position:absolute; left:-14px; top:50%; transform:translateY(-50%); width:3px; height:16px; border-radius:2px; background:linear-gradient(180deg,var(--red),var(--gold));}
+.sb-foot{padding:16px 18px 22px; border-top:1px solid var(--border); display:flex; align-items:center; gap:11px;}
+.sb-avatar{width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--red),var(--gold)); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; color:#fff; flex-shrink:0;}
+.sb-user{flex:1; min-width:0;}
+.sb-user .name{font-size:13.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.sb-user .mail{font-size:11.5px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.sb-logout{width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--muted); transition:background .25s ease, color .25s ease; flex-shrink:0;}
+.sb-logout:hover{background:var(--surface); color:var(--red);}
+
+.sb-backdrop{position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:70; opacity:0; visibility:hidden; transition:opacity .35s ease, visibility .35s ease;}
+.sb-backdrop.open{opacity:1; visibility:visible;}
+.mobile-toggle{display:none; width:38px; height:38px; border-radius:9px; background:var(--surface); border:1px solid var(--border); align-items:center; justify-content:center; flex-shrink:0;}
+.mobile-toggle svg{width:17px; height:17px;}
+
+@media (max-width:1024px){
+  :root{--sidebar-w:220px;}
+}
+@media (max-width:860px){
+  .sidebar{transform:translateX(-100%); box-shadow:var(--shadow-lg);}
+  .sidebar.open{transform:translateX(0);}
+  .mobile-toggle{display:flex;}
+  :root{--sidebar-w:0px;}
+}
+
+/* =====================================================================
+   MAIN LAYOUT
+   ===================================================================== */
+.main{margin-left:var(--sidebar-w); min-height:100vh; position:relative;}
+.main::before{
+  content:''; position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background:
+    radial-gradient(circle at top left, rgba(230,57,90,0.10), transparent 35%),
+    radial-gradient(circle at 85% 8%, rgba(242,184,75,0.08), transparent 40%),
+    radial-gradient(circle at 20% 90%, rgba(230,57,90,0.06), transparent 45%);
+}
+.container{max-width:1360px; margin:0 auto; padding:0 40px;}
+@media (max-width:640px){ .container{padding:0 20px;} }
+
+/* =====================================================================
+   TOPBAR
+   ===================================================================== */
+.topbar{display:flex; align-items:center; justify-content:space-between; gap:24px; padding:26px 40px 10px;}
+@media (max-width:640px){ .topbar{padding:20px 20px 6px;} }
+.topbar-left{display:flex; align-items:center; gap:14px;}
+.greeting h1{font-size:22px;    color: black; font-weight:700; letter-spacing:-0.01em;}
+.greeting p{font-size:13px; color:var(--muted); margin-top:2px;}
+.topbar-right{display:flex; align-items:center; gap:14px;}
+.search-box{
+  display:flex; align-items:center; gap:9px; background:var(--surface); border:1px solid var(--border);
+  border-radius:10px; padding:9px 14px; width:230px; transition:border-color .25s ease, width .3s ease;
+}
+.search-box:focus-within{border-color:var(--red);}
+.search-box svg{width:15px; height:15px; color:var(--muted); flex-shrink:0;}
+.search-box input{background:none; border:none; color:var(--ink); font-size:13.5px; width:100%; outline:none;}
+.search-box input::placeholder{color:var(--muted);}
+@media (max-width:760px){ .search-box{width:150px;} }
+@media (max-width:560px){ .search-box{display:none;} }
+.icon-btn{width:38px; height:38px; border-radius:10px; background:var(--surface); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; position:relative; transition:background .25s ease;}
+.icon-btn:hover{background:var(--surface-2);}
+.icon-btn svg{width:16px; height:16px;}
+.icon-btn .dot{position:absolute; top:8px; right:8px; width:6px; height:6px; border-radius:50%; background:var(--red); box-shadow:0 0 0 2px var(--bg-deep);}
+.topbar-avatar{width:38px; height:38px; border-radius:10px; background:linear-gradient(135deg,var(--red),var(--gold)); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; color:#fff;}
+
+/* =====================================================================
+   HERO
+   ===================================================================== */
+.hero-wrap{padding:22px 40px 0;}
+@media (max-width:640px){ .hero-wrap{padding:16px 20px 0;} }
+.hero{
+  position:relative; border-radius:24px; overflow:hidden; min-height:400px; display:flex; align-items:flex-end;
+  padding:46px; background:
+    linear-gradient(100deg, rgba(8,8,8,0.92) 15%, rgba(8,8,8,0.35) 65%, rgba(8,8,8,0.15)),
+    radial-gradient(circle at 80% 30%, rgba(230,57,90,0.35), transparent 55%),
+    radial-gradient(circle at 60% 90%, rgba(242,184,75,0.22), transparent 50%),
+    linear-gradient(135deg, #1c0f16, #241018 45%, #150c14);
+}
+.hero::after{
+  content:''; position:absolute; inset:0; z-index:0; opacity:.5; mix-blend-mode:overlay; pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.hero-glow{position:absolute; width:420px; height:420px; border-radius:50%; top:-140px; right:-60px; background:radial-gradient(circle, rgba(230,57,90,0.4), transparent 70%); filter:blur(30px); animation:heroFloat 9s ease-in-out infinite;}
+@keyframes heroFloat{0%,100%{transform:translateY(0);} 50%{transform:translateY(24px);}}
+.hero-content{position:relative; z-index:2; max-width:600px;}
+.hero-badge{display:inline-flex; align-items:center; gap:8px; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold); background:rgba(242,184,75,0.1); border:1px solid rgba(242,184,75,0.25); padding:7px 14px; border-radius:999px; margin-bottom:20px;}
+.hero-badge::before{content:''; width:6px; height:6px; border-radius:50%; background:var(--gold);}
+.hero h2{font-family:'Playfair Display',serif; font-weight:700; font-size:clamp(32px,4.6vw,54px); line-height:1.12; color:var(--cream); letter-spacing:-0.01em;}
+.hero p.desc{margin-top:18px; color:rgba(247,247,248,0.72); font-size:15.5px; line-height:1.7; max-width:480px;}
+.hero-ctas{display:flex; gap:14px; margin-top:28px; flex-wrap:wrap;}
+.btn{display:inline-flex; align-items:center; gap:9px; padding:14px 26px; border-radius:10px; font-weight:600; font-size:14.5px; transition:transform .35s var(--ease), box-shadow .35s ease, background .3s ease;}
+.btn svg{width:16px; height:16px;}
+.btn-primary{background:linear-gradient(120deg,var(--red),var(--red-deep)); color:#fff; box-shadow:var(--shadow-glow);}
+.btn-primary:hover{box-shadow:0 30px 70px -14px rgba(230,57,90,0.55);}
+.btn-ghost{background:rgba(247,247,248,0.06); border:1px solid rgba(247,247,248,0.16); color:var(--ink); backdrop-filter:blur(6px);}
+.btn-ghost:hover{background:rgba(247,247,248,0.12);}
+.hero-tagline{margin-top:22px; font-size:12.5px; font-style:italic; font-family:'Playfair Display',serif; color:rgba(247,247,248,0.5);}
+
+/* =====================================================================
+   QUICK STATS
+   ===================================================================== */
+.stats-row{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; padding:28px 40px 0;}
+@media (max-width:760px){ .stats-row{grid-template-columns:1fr; padding:22px 20px 0;} }
+@media (min-width:761px) and (max-width:1023px){ .stats-row{padding:22px 24px 0;} }
+.stat-card{
+  display:flex; align-items:center; gap:16px; background:#120a0a;
+  border:1px solid var(--border-soft); border-radius:16px; padding:20px 22px; backdrop-filter:blur(8px);
+  transition:transform .35s var(--ease), border-color .35s ease;
+}
+.stat-card:hover{transform:translateY(-4px); border-color:rgba(230,57,90,0.3);}
+.stat-ic{width:42px; height:42px; border-radius:11px; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:linear-gradient(135deg, rgba(230,57,90,0.16), rgba(242,184,75,0.12));}
+.stat-ic svg{width:19px; height:19px; color:var(--gold);}
+.stat-num{font-family:'Playfair Display',serif; font-size:26px; font-weight:700; color:var(--cream);}
+.stat-label{font-size:12.5px; color:var(--muted); margin-top:1px;}
+
+/* =====================================================================
+   SECTION HEADERS
+   ===================================================================== */
+.section{padding:56px 40px 0;}
+@media (max-width:640px){ .section{padding:40px 20px 0;} }
+.section-head{display:flex; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:26px; flex-wrap:wrap;}
+.section-head h3{font-family:'Playfair Display',serif;     color: black;font-size:clamp(22px,2.6vw,30px); font-weight:700;}
+.section-head p{font-size:13.5px; color:var(--muted); margin-top:6px;}
+
+/* =====================================================================
+   FILTER PILLS
+   ===================================================================== */
+.filter-row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:28px;}
+.pill{padding:9px 18px; border-radius:999px; font-size:13px; font-weight:600; color:var(--muted); background:var(--surface); border:1px solid var(--border); transition:all .3s ease;}
+.pill:hover{color:var(--ink); border-color:rgba(247,247,248,0.2);}
+.pill.active{color:#fff; background:linear-gradient(120deg,var(--red),var(--red-deep)); border-color:transparent;}
+
+/* =====================================================================
+   TEMPLATE GRID
+   ===================================================================== */
+.template-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+@media (min-width:1280px){ .template-grid{grid-template-columns:repeat(4,1fr);} }
+@media (max-width:1023px){ .template-grid{grid-template-columns:repeat(2,1fr);} }
+@media (max-width:640px){ .template-grid{grid-template-columns:1fr;} }
+
+.t-card{
+  border-radius:18px; overflow:hidden; background:var(--surface); border:1px solid var(--border-soft);
+  transition:transform .4s var(--ease), box-shadow .4s var(--ease), border-color .4s ease; cursor:pointer;
+  display:flex; flex-direction:column;
+}
+.t-card:hover{transform:translateY(-7px); box-shadow:var(--shadow-lg); border-color:rgba(247,247,248,0.14);}
+.t-visual{position:relative; aspect-ratio:16/10; overflow:hidden;}
+.t-visual .art{position:absolute; inset:0; transition:transform .45s var(--ease);}
+.t-card:hover .t-visual .art{transform:scale(1.06);}
+.t-visual::after{content:''; position:absolute; inset:0; background:linear-gradient(180deg, transparent 40%, rgba(8,8,8,0.75) 100%); transition:opacity .4s ease;}
+.t-card:hover .t-visual::after{opacity:1;}
+.t-badge{position:absolute; top:12px; left:12px; z-index:2; font-size:10px; font-weight:800; letter-spacing:.9px; text-transform:uppercase; color:#1a1a1a; background:linear-gradient(120deg,var(--gold),#f7d68a); padding:5px 10px; border-radius:999px;}
+.t-icon{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:1;}
+.t-icon svg{width:46px; height:46px; opacity:.85; filter:drop-shadow(0 6px 18px rgba(0,0,0,0.35));}
+.t-info{padding:18px 20px 20px; display:flex; flex-direction:column; gap:6px; flex:1;}
+.t-cat{font-size:10.5px; font-weight:700; letter-spacing:1.1px; text-transform:uppercase; color:var(--gold);}
+.t-title{font-family:'Playfair Display',serif; font-size:19px; font-weight:600; color:var(--ink); transition:transform .3s ease;}
+.t-card:hover .t-title{transform:translateY(-2px);}
+.t-desc{font-size:13.5px; color:var(--muted); line-height:1.55;}
+.t-cta{
+  display:inline-flex; align-items:center; gap:7px; font-size:12.5px; font-weight:700; color:var(--red);
+  margin-top:10px; opacity:0; transform:translateY(6px); transition:opacity .3s ease, transform .3s ease;
+}
+.t-card:hover .t-cta{opacity:1; transform:translateY(0);}
+.t-cta svg{width:13px; height:13px;}
+
+/* =====================================================================
+   FEATURED COLLECTION
+   ===================================================================== */
+.collection-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+@media (max-width:1023px){ .collection-grid{grid-template-columns:1fr;} }
+.c-card{position:relative; border-radius:20px; overflow:hidden; aspect-ratio:4/3; cursor:pointer; border:1px solid var(--border-soft);}
+.c-visual{position:absolute; inset:0; transition:transform .5s var(--ease);}
+.c-card:hover .c-visual{transform:scale(1.05);}
+.c-card::after{content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(8,8,8,0.1) 30%, rgba(8,8,8,0.9)); z-index:1;}
+.c-info{position:absolute; left:0; right:0; bottom:0; z-index:2; padding:26px;}
+.c-cat{font-size:10.5px; font-weight:700; letter-spacing:1.1px; text-transform:uppercase; color:var(--gold); margin-bottom:8px;}
+.c-title{font-family:'Playfair Display',serif; font-size:23px; font-weight:700; color:var(--cream);}
+.c-desc{font-size:13px; color:rgba(247,247,248,0.65); margin-top:8px; max-width:260px; line-height:1.55;}
+
+/* =====================================================================
+   YOUR GIFTS
+   ===================================================================== */
+.gift-list{display:flex; flex-direction:column; gap:14px;}
+.gift-row{
+  display:flex; align-items:center; gap:18px; background:var(--surface); border:1px solid var(--border-soft);
+  border-radius:14px; padding:18px 22px; transition:border-color .3s ease, transform .3s ease;
+}
+.gift-row:hover{border-color:rgba(247,247,248,0.16); transform:translateY(-2px);}
+.gift-thumb{width:64px; height:64px; border-radius:11px; flex-shrink:0; background:linear-gradient(135deg, rgba(230,57,90,0.25), rgba(242,184,75,0.2)); display:flex; align-items:center; justify-content:center;}
+.gift-thumb svg{width:22px; height:22px; color:var(--gold);}
+.gift-body{flex:1; min-width:0;}
+.gift-title{font-size:15px; font-weight:600; font-family:'Playfair Display',serif;}
+.gift-meta{font-size:12.5px; color:var(--muted); margin-top:3px;}
+.gift-status{font-size:11px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; padding:5px 11px; border-radius:999px; flex-shrink:0;}
+.gift-status.published{color:#8FE0B0; background:rgba(143,224,176,0.12);}
+.gift-status.draft{color:var(--gold); background:rgba(242,184,75,0.12);}
+.gift-actions{display:flex; gap:8px; flex-shrink:0;}
+.gift-btn{font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:8px; background:var(--surface-2); color:var(--ink-soft,var(--ink)); border:1px solid var(--border); transition:background .25s ease;}
+.gift-btn:hover{background:rgba(247,247,248,0.1);}
+.gift-btn.danger:hover{background:rgba(230,57,90,0.14); color:#ff8fa3;}
+@media (max-width:700px){ .gift-row{flex-wrap:wrap;} .gift-actions{width:100%; justify-content:flex-end;} }
+
+.empty-state{display:none; flex-direction:column; align-items:center; text-align:center; gap:16px; padding:60px 20px; border:1px dashed var(--border); border-radius:18px;}
+.empty-state svg{width:40px; height:40px; color:var(--muted);}
+.empty-state p{font-family:'Playfair Display',serif; font-size:18px; color:var(--ink);}
+
+/* =====================================================================
+   FLOATING CREATE BUTTON
+   ===================================================================== */
+.floating-cta{
+  position:fixed; bottom:28px; right:28px; z-index:60; display:flex; align-items:center; gap:9px;
+  background:linear-gradient(120deg,var(--red),var(--red-deep)); color:#fff; padding:15px 24px; border-radius:999px;
+  font-weight:700; font-size:14px; box-shadow:0 20px 46px -12px rgba(230,57,90,0.6); transition:transform .35s var(--ease), box-shadow .35s ease;
+}
+.floating-cta:hover{transform:scale(1.06); box-shadow:0 26px 58px -12px rgba(230,57,90,0.75);}
+.floating-cta svg{width:16px; height:16px;}
+@media (max-width:640px){ .floating-cta span{display:none;} .floating-cta{padding:15px; border-radius:50%;} }
+
+footer.dash-footer{padding:60px 40px 40px; text-align:center; color:var(--muted); font-size:12.5px; border-top:1px solid var(--border-soft); margin-top:60px;}
+@media (max-width:640px){ footer.dash-footer{padding:50px 20px 34px;} }
+</style>
+</head>
+<body>
+
+<!-- ============ SIDEBAR ============ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-logo">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.2-4.5-9.8-9.1C.4 7.8 2 3.8 5.8 3.8c2.1 0 3.6 1.1 4.3 2.3.7-1.2 2.2-2.3 4.3-2.3 3.8 0 5.4 4 3.6 8.1C19.2 16.5 12 21 12 21z" fill="#E6395A"/></svg>
+    LOVEFLIX
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-group">
+      <span class="label">Main</span>
+      <a href="#" class="sb-link active" data-nav="dashboard">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="9" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="14" y="3" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="14" y="12" width="7" height="9" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="3" y="16" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
+        Dashboard
+      </a>
+      <a href="#" class="sb-link" data-nav="generate">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        Generate Gift
+      </a>
+      <a href="#" class="sb-link" data-nav="yourgifts">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M20 12v8a1 1 0 01-1 1H5a1 1 0 01-1-1v-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M22 7H2v5h20V7z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 22V7M12 7c0-2-1.5-4-3.5-4S5 4.5 5 6.5 6.5 7 12 7zM12 7c0-2 1.5-4 3.5-4S19 4.5 19 6.5 17.5 7 12 7z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        Your Gifts
+      </a>
+    </div>
+    <div class="sb-group">
+      <span class="label">Explore</span>
+      <a href="#" class="sb-link" data-nav="all">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="13" y="3" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="3" y="13" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="13" y="13" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
+        All Templates
+      </a>
+      <a href="#" class="sb-link" data-nav="couples">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="9" r="3.2" stroke="currentColor" stroke-width="1.6"/><circle cx="16" cy="9" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 20c.5-3 2.7-5 5.5-5s5 2 5.5 5M10.5 20c.5-3 2.7-5 5.5-5s5 2 5.5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        For Couples
+      </a>
+      <a href="#" class="sb-link" data-nav="birthday">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 21h16v-8H4v8zM4 13l1-4h14l1 4M9 9V5m3 4V4m3 5V5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Birthday
+      </a>
+      <a href="#" class="sb-link" data-nav="anniversary">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="9" r="6" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 14.5L7 21l5-2.5L17 21l-1.5-6.5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        Anniversary
+      </a>
+      <a href="#" class="sb-link" data-nav="valentine">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 20s-7-4.3-9.3-8.7C1.2 8 2.6 4.5 6 4.5c1.9 0 3.3 1 4 2.1.7-1.1 2.1-2.1 4-2.1 3.4 0 4.8 3.5 3.3 6.8C19 15.7 12 20 12 20z" stroke="currentColor" stroke-width="1.6"/></svg>
+        Valentine's Day
+      </a>
+    </div>
+    <div class="sb-group">
+      <span class="label">Account</span>
+      <a href="#" class="sb-link" data-nav="profile">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.6"/><path d="M4.5 20c1.2-4 4-6 7.5-6s6.3 2 7.5 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        Profile
+      </a>
+      <a href="#" class="sb-link" data-nav="settings">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M19.4 13.5a7.9 7.9 0 000-3l2-1.5-2-3.5-2.4.7a8 8 0 00-2.6-1.5L14 2h-4l-.4 2.7a8 8 0 00-2.6 1.5l-2.4-.7-2 3.5 2 1.5a7.9 7.9 0 000 3l-2 1.5 2 3.5 2.4-.7a8 8 0 002.6 1.5L10 22h4l.4-2.7a8 8 0 002.6-1.5l2.4.7 2-3.5-2-1.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        Settings
+      </a>
+    </div>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-avatar">R</div>
+    <div class="sb-user">
+      <div class="name">Ravindra</div>
+      <div class="mail">ravindra@gmail.com</div>
+    </div>
+    <button class="sb-logout" title="Log out">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M15 17l5-5-5-5M20 12H9M13 4H6a2 2 0 00-2 2v12a2 2 0 002 2h7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</aside>
+<div class="sb-backdrop" id="sbBackdrop"></div>
+
+<!-- ============ MAIN ============ -->
+<div class="main">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <div class="greeting">
+        <h1>Good evening, Ravindra ❤️</h1>
+        <p>Ready to create something unforgettable?</p>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input type="text" id="searchInput" placeholder="Search templates">
+      </div>
+      <button class="icon-btn" title="Notifications"><svg viewBox="0 0 24 24" fill="none"><path d="M6 8a6 6 0 0112 0c0 4 1.5 5.5 2 6H4c.5-.5 2-2 2-6z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M10 20a2 2 0 004 0" stroke="currentColor" stroke-width="1.7"/></svg><span class="dot"></span></button>
+      <div class="topbar-avatar">R</div>
+    </div>
+  </div>
+
+  <!-- ============ HERO ============ -->
+  <div class="hero-wrap">
+    <div class="hero reveal" id="heroBanner">
+      <div class="hero-glow"></div>
+      <div class="hero-content">
+        <span class="hero-badge">Featured Experience</span>
+        <h2 class="serif">Turn your memories into something Special.</h2>
+        <p class="desc">Create an interactive digital gift filled with your photos, videos, music, memories and everything that makes your story yours.</p>
+        <div class="hero-ctas">
+          <button class="btn btn-primary" onclick="createGift('loveflix')">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7L8 5z" fill="#fff"/></svg>
+            Create a Gift
+          </button>
+          <button class="btn btn-ghost" onclick="scrollToStore()">Explore Templates</button>
+        </div>
+        <p class="hero-tagline">Made with your memories. Designed to feel unforgettable.</p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============ TEMPLATE STORE ============ -->
+  <div class="section" id="store">
+    <div class="section-head reveal">
+      <div>
+        <h3>Create Something Special</h3>
+        <p>Choose an experience and make it completely yours.</p>
+      </div>
+    </div>
+    <div class="filter-row reveal">
+      <button class="pill active" data-filter="all">All</button>
+      <button class="pill" data-filter="couples">Couples</button>
+      <button class="pill" data-filter="anniversary">Anniversary</button>
+      <button class="pill" data-filter="birthday">Birthday</button>
+      <button class="pill" data-filter="valentine">Valentine</button>
+      <button class="pill" data-filter="just-because">Just Because</button>
+    </div>
+    <div class="template-grid" id="templateGrid"></div>
+  </div>
+
+  <!-- ============ FEATURED COLLECTION ============ -->
+  <div class="section">
+    <div class="section-head reveal">
+      <div>
+        <h3>Made for Two ❤</h3>
+        <p>Our most romantic experiences for couples.</p>
+      </div>
+    </div>
+    <div class="collection-grid" id="collectionGrid"></div>
+  </div>
+
+  <!-- ============ YOUR GIFTS ============ -->
+  <div class="section" id="yourgifts-section" style="padding-bottom:20px;">
+    <div class="section-head reveal">
+      <div>
+        <h3>Your Gifts</h3>
+        <p>Everything you've created, all in one place.</p>
+      </div>
+    </div>
+    <div class="gift-list reveal" id="giftList">
+      <div class="gift-row">
+        <div class="gift-thumb"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18V5l12-2v13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="6" cy="18" r="3" stroke="currentColor" stroke-width="1.8"/><circle cx="18" cy="16" r="3" stroke="currentColor" stroke-width="1.8"/></svg></div>
+        <div class="gift-body">
+          <div class="gift-title">Our Story</div>
+          <div class="gift-meta">Created July 24, 2026 · For: Neha</div>
+        </div>
+        <span class="gift-status published">Published</span>
+        <div class="gift-actions">
+          <button class="gift-btn">View</button>
+          <button class="gift-btn">Edit</button>
+          <button class="gift-btn">Copy Link</button>
+        </div>
+      </div>
+      <div class="gift-row">
+        <div class="gift-thumb"><svg viewBox="0 0 24 24" fill="none"><path d="M4 21h16v-8H4v8zM4 13l1-4h14l1 4M9 9V5m3 4V4m3 5V5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="gift-body">
+          <div class="gift-title">Birthday Surprise</div>
+          <div class="gift-meta">Last edited 2 days ago</div>
+        </div>
+        <span class="gift-status draft">Draft</span>
+        <div class="gift-actions">
+          <button class="gift-btn">Continue Editing</button>
+          <button class="gift-btn danger">Delete</button>
+        </div>
+      </div>
+    </div>
+    <div class="empty-state" id="emptyState">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 20s-7-4.3-9.3-8.7C1.2 8 2.6 4.5 6 4.5c1.9 0 3.3 1 4 2.1.7-1.1 2.1-2.1 4-2.1 3.4 0 4.8 3.5 3.3 6.8C19 15.7 12 20 12 20z" stroke="currentColor" stroke-width="1.6"/></svg>
+      <p>You haven't created your first LoveFlix yet.</p>
+      <button class="btn btn-primary" onclick="createGift('loveflix')">Create Your First Gift</button>
+    </div>
+  </div>
+
+  <footer class="dash-footer">
+    <p>© 2026 LoveFlix. Made for the people you love.</p>
+  </footer>
+</div>
+
+<button class="floating-cta" id="floatingCta" onclick="createGift('loveflix')">
+  <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg>
+  <span>Create Gift</span>
+</button>
+
+<script>
+/* =====================================================================
+   TEMPLATE DATA
+   ===================================================================== */
+const TEMPLATES = [
+  { id:'loveflix', category:'couples', cat:'Cinematic Love Story', title:'Netflix Love Story',
+    desc:'Turn your relationship into a OTT streaming experience.', badge:'MOST LOVED', cta:'Create Story',
+    colors:['#7a1730','#2a0e16'], icon:'play' },
+  { id:'treasure', category:'just-because', cat:'Interactive Gift', title:'Our Treasure Box',
+    desc:'Unlock photos, letters, memories and hidden surprises one by one.', badge:null, cta:'Open the Experience',
+    colors:['#5c4415','#241a0a'], icon:'chest' },
+  // { id:'valentine', category:'valentine', cat:'Valentine', title:'Be My Valentine',
+  //   desc:'A romantic interactive experience made for February 14th.', badge:'VALENTINE SPECIAL', cta:'Create Valentine',
+  //   colors:['#7a1730','#1c0a10'], icon:'heart' },
+  // { id:'stream-love', category:'couples', cat:'OTT Experience', title:'Stream Our Love',
+  //   desc:'Your relationship, redesigned as your own private streaming platform.', badge:null, cta:'Start Streaming',
+  //   colors:['#33122a','#160a16'], icon:'stream' },
+  // { id:'memory-vault', category:'just-because', cat:'Memories', title:'The Memory Vault',
+  //   desc:'Hide your favorite moments inside a beautiful digital vault.', badge:null, cta:'Create Vault',
+  //   colors:['#4a3010','#1c1408'], icon:'vault' },
+  // { id:'love-letter', category:'couples', cat:'Classic Romance', title:'A Letter For You',
+  //   desc:'Turn everything you\'ve wanted to say into an unforgettable digital letter.', badge:null, cta:'Write a Letter',
+  //   colors:['#5c1c28','#211014'], icon:'letter' },
+  // { id:'timeline', category:'couples', cat:'Couples', title:'From Then to Forever',
+  //   desc:'Tell your relationship story from the first hello to today.', badge:null, cta:'Build Timeline',
+  //   colors:['#3a1c30','#160c16'], icon:'timeline' },
+  // { id:'birthday', category:'birthday', cat:'Birthday', title:'Your Birthday Story',
+  //   desc:'A personalized birthday experience filled with memories and surprises.', badge:null, cta:'Create Surprise',
+  //   colors:['#5c2a14','#211008'], icon:'cake' },
+  // { id:'anniversary', category:'anniversary', cat:'Anniversary', title:'Another Year of Us',
+  //   desc:'Celebrate every chapter you\'ve written together.', badge:'ANNIVERSARY', cta:'Celebrate Us',
+  //   colors:['#4a2a10','#1c1206'], icon:'dinner' },
+  // { id:'reasons', category:'just-because', cat:'Interactive', title:'100 Reasons',
+  //   desc:'Let them discover every little reason they mean so much to you.', badge:null, cta:'Create Reasons',
+  //   colors:['#5c1c34','#210c18'], icon:'cards' },
+  // { id:'scrapbook', category:'just-because', cat:'Memories', title:'Our Little Book',
+  //   desc:'Photos, notes and moments beautifully arranged into your own digital scrapbook.', badge:null, cta:'Create Scrapbook',
+  //   colors:['#4a2418','#1c0f0a'], icon:'book' },
+  // { id:'mystery', category:'just-because', cat:'Mystery', title:'Unlock Your Surprise',
+  //   desc:'Make them solve clues before revealing their final gift.', badge:'INTERACTIVE', cta:'Create Mystery',
+  //   colors:['#241c4a','#0e0c1c'], icon:'lock' },
+];
+
+const COLLECTIONS = [
+  { id:'date-night', cat:'Couples', title:'Date Night', desc:'Plan the perfect evening, wrapped as a gift.', colors:['#5c1c28','#1c0a10'] },
+  { id:'long-distance', cat:'Long Distance', title:'Long Distance Love', desc:'Close the miles with something they can hold onto.', colors:['#1c2a4a','#0a0e1c'] },
+  { id:'first-year', cat:'Milestones', title:'Our First Year', desc:'Everything that made the first year unforgettable.', colors:['#4a2a10','#1c1206'] },
+];
+
+const ICONS = {
+  play:'<path d="M9 18V5l12-2v13" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><circle cx="6" cy="18" r="3" stroke="#fff" stroke-width="1.6"/><circle cx="18" cy="16" r="3" stroke="#fff" stroke-width="1.6"/>',
+  chest:'<rect x="3" y="10" width="18" height="10" rx="2" stroke="#fff" stroke-width="1.6"/><path d="M3 10a9 5 0 0118 0" stroke="#fff" stroke-width="1.6"/><path d="M12 10v10M8 14h8" stroke="#fff" stroke-width="1.6"/>',
+  heart:'<path d="M12 20s-7-4.3-9.3-8.7C1.2 8 2.6 4.5 6 4.5c1.9 0 3.3 1 4 2.1.7-1.1 2.1-2.1 4-2.1 3.4 0 4.8 3.5 3.3 6.8C19 15.7 12 20 12 20z" stroke="#fff" stroke-width="1.6"/>',
+  stream:'<rect x="2" y="4" width="20" height="13" rx="2" stroke="#fff" stroke-width="1.6"/><path d="M9 9l6 3-6 3V9z" fill="#fff"/><path d="M8 21h8" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>',
+  vault:'<circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="1.6"/><circle cx="12" cy="12" r="3.2" stroke="#fff" stroke-width="1.6"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>',
+  letter:'<rect x="3" y="5" width="18" height="14" rx="2" stroke="#fff" stroke-width="1.6"/><path d="M3.5 6.5L12 13l8.5-6.5" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>',
+  timeline:'<path d="M4 6h16M4 12h16M4 18h10" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><circle cx="4" cy="6" r="1.6" fill="#fff"/><circle cx="4" cy="12" r="1.6" fill="#fff"/><circle cx="4" cy="18" r="1.6" fill="#fff"/>',
+  cake:'<path d="M4 21h16v-8H4v8zM4 13l1-4h14l1 4M9 9V5m3 4V4m3 5V5" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',
+  dinner:'<path d="M7 3v7a3 3 0 003 3v8M7 3a2 2 0 00-2 2v3a2 2 0 002 2M7 3a2 2 0 012 2v3a2 2 0 01-2 2M17 3a3.5 3.5 0 00-3.5 3.5V13a1 1 0 001 1H17m0-11v18" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>',
+  cards:'<rect x="3" y="7" width="12" height="14" rx="2" stroke="#fff" stroke-width="1.6"/><path d="M8 4h12a1 1 0 011 1v12" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>',
+  book:'<path d="M4 4.5A2.5 2.5 0 016.5 2H20v18H6.5A2.5 2.5 0 004 17.5v-13z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 17.5A2.5 2.5 0 016.5 15H20" stroke="#fff" stroke-width="1.6"/>',
+  lock:'<rect x="4" y="10" width="16" height="10" rx="2" stroke="#fff" stroke-width="1.6"/><path d="M7 10V7a5 5 0 0110 0v3" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="15" r="1.6" fill="#fff"/>',
+};
+
+/* =====================================================================
+   RENDER TEMPLATE GRID
+   ===================================================================== */
+function artStyle(colors){
+  return `background:linear-gradient(150deg, ${colors[0]}, ${colors[1]});`;
+}
+
+function renderTemplates(list){
+  const grid = qs('#templateGrid');
+  grid.innerHTML = list.map((t,i) => `
+    <div class="t-card reveal" data-template="${t.id}" data-category="${t.category}" data-search="${(t.title+' '+t.desc+' '+t.cat).toLowerCase()}" style="transition-delay:${(i%4)*60}ms">
+      <div class="t-visual">
+        <div class="art" style="${artStyle(t.colors)}"></div>
+        <div class="t-icon"><svg viewBox="0 0 24 24" fill="none">${ICONS[t.icon]}</svg></div>
+        ${t.badge ? `<span class="t-badge">${t.badge}</span>` : ''}
+      </div>
+      <div class="t-info">
+        <span class="t-cat">${t.cat}</span>
+        <span class="t-title">${t.title}</span>
+        <p class="t-desc">${t.desc}</p>
+        <span class="t-cta">${t.cta} <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </div>
+    </div>`).join('');
+
+  qsa('.t-card', grid).forEach(card=>{
+    card.addEventListener('click', ()=> createGift(card.dataset.template));
+  });
+  observeReveal();
+}
+
+function renderCollections(){
+  const grid = qs('#collectionGrid');
+  grid.innerHTML = COLLECTIONS.map(c => `
+    <div class="c-card reveal" data-template="${c.id}">
+      <div class="c-visual" style="${artStyle(c.colors)}"></div>
+      <div class="c-info">
+        <div class="c-cat">${c.cat}</div>
+        <div class="c-title serif">${c.title}</div>
+        <p class="c-desc">${c.desc}</p>
+      </div>
+    </div>`).join('');
+  qsa('.c-card', grid).forEach(card=>{
+    card.addEventListener('click', ()=> createGift(card.dataset.template));
+  });
+  observeReveal();
+}
+
+/* =====================================================================
+   NAVIGATION / ACTIONS
+   ===================================================================== */
+function createGift(template){
+  window.location.href = `/creategift?template=${template}`;
+}
+function scrollToStore(){
+  qs('#store').scrollIntoView({behavior:'smooth'});
+}
+
+/* =====================================================================
+   FILTER + SEARCH
+   ===================================================================== */
+let activeFilter = 'all';
+let activeSearch = '';
+
+function applyFilters(){
+  const cards = qsa('.t-card');
+  cards.forEach(card=>{
+    const matchesFilter = activeFilter === 'all' || card.dataset.category === activeFilter;
+    const matchesSearch = !activeSearch || card.dataset.search.includes(activeSearch);
+    card.style.display = (matchesFilter && matchesSearch) ? '' : 'none';
+  });
+}
+
+function wireFilters(){
+  qsa('.pill').forEach(pill=>{
+    pill.addEventListener('click', ()=>{
+      qsa('.pill').forEach(p=>p.classList.remove('active'));
+      pill.classList.add('active');
+      activeFilter = pill.dataset.filter;
+      applyFilters();
+    });
+  });
+  qs('#searchInput').addEventListener('input', (e)=>{
+    activeSearch = e.target.value.trim().toLowerCase();
+    applyFilters();
+  });
+}
+
+/* =====================================================================
+   SIDEBAR MOBILE TOGGLE
+   ===================================================================== */
+function wireSidebar(){
+  const sidebar = qs('#sidebar'), backdrop = qs('#sbBackdrop'), toggle = qs('#mobileToggle');
+  function open(){ sidebar.classList.add('open'); backdrop.classList.add('open'); }
+  function close(){ sidebar.classList.remove('open'); backdrop.classList.remove('open'); }
+  toggle?.addEventListener('click', open);
+  backdrop.addEventListener('click', close);
+  qsa('.sb-link').forEach(link=>{
+    link.addEventListener('click', (e)=>{
+      e.preventDefault();
+      qsa('.sb-link').forEach(l=>l.classList.remove('active'));
+      link.classList.add('active');
+      close();
+    });
+  });
+}
+
+/* =====================================================================
+   SCROLL REVEAL
+   ===================================================================== */
+let revealIO;
+function observeReveal(){
+  if(!revealIO){
+    revealIO = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); revealIO.unobserve(e.target); } });
+    }, {threshold:0.12});
+  }
+  qsa('.reveal:not(.in)').forEach(el=>revealIO.observe(el));
+}
+
+/* =====================================================================
+   MAGNETIC BUTTONS
+   ===================================================================== */
+function wireMagnetic(){
+  qsa('.btn, .floating-cta').forEach(btn=>{
+    btn.addEventListener('mousemove', (e)=>{
+      const r = btn.getBoundingClientRect();
+      btn.style.transform = `translate(${(e.clientX-r.left-r.width/2)*0.12}px, ${(e.clientY-r.top-r.height/2)*0.18}px)`;
+    });
+    btn.addEventListener('mouseleave', ()=>{ btn.style.transform = 'translate(0,0)'; });
+  });
+}
+
+/* =====================================================================
+   UTIL
+   ===================================================================== */
+const qs = (s, el=document) => el.querySelector(s);
+const qsa = (s, el=document) => Array.from(el.querySelectorAll(s));
+
+/* =====================================================================
+   INIT
+   ===================================================================== */
+document.addEventListener('DOMContentLoaded', ()=>{
+  renderTemplates(TEMPLATES);
+  renderCollections();
+  wireFilters();
+  wireSidebar();
+  wireMagnetic();
+  observeReveal();
+  requestAnimationFrame(()=> qs('#heroBanner').classList.add('in'));
+});
+</script>
+</body>
+</html>

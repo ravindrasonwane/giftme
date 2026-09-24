@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{{ gift.title }}</title>
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<section class="hero">
+<h1>{{ gift.title }}</h1>
+<p>{{ gift.description }}</p>
+<h3>{{ gift.sender }} ❤️ {{ gift.recipient }}</h3>
+</section>
+
+<section>
+<h2>Gallery</h2>
+<div class="gallery">
+{% for img in gift.images %}
+<img src="/{{ img }}">
+{% endfor %}
+</div>
+</section>
+
+<section>
+<h2>Videos</h2>
+{% for video in gift.videos %}
+<video controls width="700">
+<source src="/{{ video }}">
+</video>
+{% endfor %}
+</section>
+
+{% if gift.music %}
+<audio controls autoplay loop>
+<source src="/{{ gift.music }}">
+</audio>
+{% endif %}
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>
