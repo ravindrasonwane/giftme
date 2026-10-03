@@ -747,7 +747,2145 @@ footer p{color:var(--ink-faint); font-size:12.5px;}
 .skeleton{background:linear-gradient(100deg, rgba(255,255,255,0.03) 30%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 70%); background-size:200% 100%; animation:shimmer 1.6s ease-in-out infinite;}
 @keyframes shimmer{0%{background-position:200% 0;} 100%{background-position:-200% 0;}}
 #confettiCanvas{position:fixed; inset:0; z-index:400; pointer-events:none;}
+
+/* =====================================================================
+   GIFTPiXEL — MASTER PREMIUM COUPLE CINEMATIC SYSTEM
+   Visual-only enhancement. Existing API + normalizeStory + renderers stay.
+   ===================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+
+:root{
+  --gp-red:#e50914;
+  --gp-red-deep:#b20710;
+  --gp-black:#050505;
+  --gp-surface:#0c0c0d;
+  --gp-surface-2:#151516;
+  --gp-white:#f5f5f5;
+  --gp-muted:#9a9a9f;
+  --gp-line:rgba(255,255,255,.10);
+  --gp-max:1360px;
+  --gp-radius:5px;
+}
+
+*{box-sizing:border-box}
+html{background:var(--gp-black);scroll-behavior:smooth}
+body{
+  background:var(--gp-black);
+  color:var(--gp-white);
+  font-family:"DM Sans",Inter,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+h1,h2,h3,h4,.brand,.hero-title{font-family:"DM Sans",Inter,Arial,sans-serif}
+button{font-family:inherit}
+img,video{max-width:100%}
+
+/* ---------- premium texture / cinematic depth ---------- */
+#app:after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:9998;
+  opacity:.028;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+  mix-blend-mode:screen;
+}
+.row-section{
+  position:relative;
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(229,9,20,.035),transparent 40%),
+    var(--gp-black);
+}
+.row-section:before{
+  content:"";
+  position:absolute;
+  left:0;right:0;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent);
+}
+
+/* ---------- consistent grid ---------- */
+.row-section>.wrap,
+#loveLetterSection>.wrap,
+#ending>.ending-inner{
+  width:min(var(--gp-max),calc(100% - 96px));
+  margin-inline:auto;
+}
+
+/* ---------- navigation: restrained, expensive ---------- */
+#mainNav{
+  height:76px;
+  padding:0 max(32px,calc((100vw - var(--gp-max))/2));
+  background:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.42),transparent)!important;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+#mainNav.scrolled{
+  height:68px;
+  background:rgba(5,5,5,.92)!important;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.brand{
+  font-size:24px!important;
+  font-weight:900;
+  letter-spacing:-.055em;
+}
+.brand span{color:var(--gp-red)}
+.nav-links a{
+  font-size:11px!important;
+  font-weight:600;
+  letter-spacing:.05em;
+  color:rgba(255,255,255,.62);
+  transition:color .25s;
+}
+.nav-links a:hover{color:#fff}
+
+/* ---------- profile selection: streaming-app entry ---------- */
+#profileSelect{
+  background:
+    radial-gradient(circle at 50% 42%,rgba(229,9,20,.09),transparent 25%),
+    #050505;
+}
+.ps-heading h1{
+  font-size:clamp(40px,6vw,72px)!important;
+  letter-spacing:-.065em;
+  font-weight:800;
+}
+.ps-heading .eyebrow{
+  letter-spacing:.24em;
+  color:#777;
+}
+.ps-grid{
+  width:min(1040px,100%);
+  margin:42px auto 0;
+  gap:18px;
+}
+.ps-tile{
+  background:#111!important;
+  border:1px solid rgba(255,255,255,.08)!important;
+  border-radius:4px!important;
+  box-shadow:0 25px 80px rgba(0,0,0,.35)!important;
+  overflow:hidden;
+}
+.ps-tile:hover{
+  border-color:rgba(255,255,255,.22)!important;
+  box-shadow:0 32px 100px rgba(0,0,0,.65)!important;
+}
+.ps-tile-img{aspect-ratio:16/10!important}
+.ps-tile-label{
+  font-size:12px!important;
+  font-weight:700!important;
+  letter-spacing:.01em;
+  padding:15px 16px!important;
+}
+
+/* ---------- hero: true cinematic composition ---------- */
+#hero{
+  min-height:clamp(680px,92svh,940px);
+}
+.hero-media:after{
+  background:
+    linear-gradient(90deg,rgba(0,0,0,.92) 0%,rgba(0,0,0,.60) 34%,rgba(0,0,0,.16) 66%,rgba(0,0,0,.56) 100%),
+    linear-gradient(0deg,#050505 0%,transparent 24%,transparent 70%,rgba(0,0,0,.42) 100%)!important;
+}
+.hero-content{
+  width:min(var(--gp-max),calc(100% - 96px));
+  margin-inline:auto;
+  padding-bottom:clamp(95px,13vh,150px);
+}
+#heroTitle{
+  max-width:940px!important;
+  font-size:clamp(54px,8vw,116px)!important;
+  line-height:.87!important;
+  letter-spacing:-.072em!important;
+  font-weight:800!important;
+  text-wrap:balance;
+}
+#heroDesc{
+  max-width:590px!important;
+  font-size:15px!important;
+  line-height:1.72!important;
+  color:rgba(255,255,255,.68)!important;
+}
+.hero-meta{
+  gap:14px!important;
+  margin:18px 0 16px!important;
+  color:#a4a4a7;
+  font-size:11px!important;
+  letter-spacing:.09em;
+}
+.hero-meta .match{display:none!important}
+.hero-meta .premium-meta{
+  color:#fff;
+  font-weight:800;
+}
+.hero-meta .tag{
+  border:1px solid rgba(255,255,255,.20)!important;
+  border-radius:2px!important;
+  padding:3px 7px!important;
+  font-size:9px!important;
+  letter-spacing:.12em;
+}
+.hero-actions .btn{
+  min-height:46px!important;
+  border-radius:4px!important;
+  padding:0 22px!important;
+  font-size:13px!important;
+  font-weight:800!important;
+}
+.hero-actions .btn-primary{
+  background:#fff!important;
+  color:#111!important;
+}
+.hero-actions .btn-primary:hover{background:#e6e6e6!important}
+.hero-actions .btn-ghost{
+  background:rgba(80,80,80,.7)!important;
+  border:0!important;
+}
+.hero-actions .btn-ghost:hover{background:rgba(100,100,100,.78)!important}
+
+/* ---------- section typography ---------- */
+.section-head{
+  margin-bottom:28px!important;
+}
+.section-head .eyebrow{
+  color:#777!important;
+  font-size:10px!important;
+  font-weight:800!important;
+  letter-spacing:.26em!important;
+}
+.section-head h2{
+  font-size:clamp(31px,4vw,52px)!important;
+  line-height:.98!important;
+  letter-spacing:-.055em!important;
+  font-weight:800!important;
+}
+.section-head .row-sub{
+  color:#777!important;
+  font-size:13px!important;
+}
+.section-head:after{
+  content:"";
+  display:block;
+  width:34px;
+  height:2px;
+  margin-top:15px;
+  background:var(--gp-red);
+  box-shadow:0 0 16px rgba(229,9,20,.35);
+}
+
+/* ---------- media rails: actual streaming UI ---------- */
+.rail-scroll{
+  gap:14px!important;
+  padding:8px 0 34px!important;
+  scrollbar-width:none;
+  scroll-snap-type:x proximity;
+}
+.rail-scroll::-webkit-scrollbar{display:none}
+.rail-card{
+  border-radius:4px!important;
+  scroll-snap-align:start;
+  transform-origin:center bottom;
+  transition:transform .42s cubic-bezier(.2,.8,.2,1),filter .3s,box-shadow .42s!important;
+}
+.rail-card:hover{
+  transform:translateY(-9px) scale(1.025)!important;
+  filter:brightness(1.05);
+  box-shadow:0 28px 70px rgba(0,0,0,.62);
+  z-index:20;
+}
+.card-still{
+  border-radius:4px!important;
+  background:#121212;
+}
+.card-basic-title{
+  font-size:12px!important;
+  font-weight:700!important;
+  letter-spacing:-.01em;
+}
+.card-hover-preview{
+  border-radius:5px!important;
+  box-shadow:0 35px 80px rgba(0,0,0,.8)!important;
+}
+.chp-meta .match{display:none!important}
+.chp-meta .premium-meta{
+  font-size:9px;
+  color:#fff;
+  font-weight:800;
+  letter-spacing:.12em;
+}
+
+/* ---------- episode featured module ---------- */
+.featured-episode{
+  border-radius:6px!important;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.09)!important;
+  box-shadow:0 35px 100px rgba(0,0,0,.45)!important;
+}
+.featured-episode:after{
+  background:linear-gradient(90deg,rgba(0,0,0,.95),rgba(0,0,0,.42),transparent)!important;
+}
+.featured-episode h3{
+  font-size:clamp(32px,5vw,66px)!important;
+  letter-spacing:-.055em!important;
+  line-height:.95!important;
+}
+.episode-card{
+  border-radius:4px!important;
+  border:1px solid rgba(255,255,255,.07)!important;
+  overflow:hidden;
+}
+.episode-card:hover{
+  border-color:rgba(255,255,255,.18)!important;
+}
+
+/* ---------- continue watching ---------- */
+#continueWatchingSection{
+  padding-top:82px!important;
+}
+#cwHeading{
+  font-size:clamp(30px,4vw,48px)!important;
+}
+.progress-bar{
+  background:rgba(255,255,255,.16)!important;
+}
+.progress-bar .fill{
+  background:var(--gp-red)!important;
+}
+
+/* ---------- gallery / photos ---------- */
+.gallery-grid{
+  column-gap:10px!important;
+}
+.gallery-item{
+  margin-bottom:10px!important;
+  border-radius:3px!important;
+  overflow:hidden;
+  background:#0d0d0d;
+}
+.gallery-item img{
+  transition:transform .7s cubic-bezier(.2,.8,.2,1),filter .4s!important;
+}
+.gallery-item:hover img{
+  transform:scale(1.045);
+  filter:brightness(1.07);
+}
+.photo-card{
+  border-radius:4px!important;
+  overflow:hidden;
+}
+
+/* ---------- timeline: editorial ---------- */
+.timeline{
+  max-width:980px!important;
+}
+.timeline:before{
+  background:linear-gradient(180deg,transparent,var(--gp-red) 12%,rgba(255,255,255,.15) 50%,var(--gp-red) 88%,transparent)!important;
+}
+.tl-item{
+  padding-bottom:78px!important;
+}
+.tl-date{
+  color:#777!important;
+  letter-spacing:.14em;
+  font-size:10px!important;
+}
+.tl-item h4{
+  font-size:24px!important;
+  letter-spacing:-.035em!important;
+}
+.tl-item p{
+  color:#929297!important;
+  line-height:1.75!important;
+  font-size:14px!important;
+}
+.tl-img{
+  border-radius:5px!important;
+  overflow:hidden;
+  box-shadow:0 24px 70px rgba(0,0,0,.4)!important;
+}
+
+/* ---------- diary ---------- */
+.diary-card{
+  width:330px!important;
+  flex:0 0 330px!important;
+  min-height:290px!important;
+  padding:30px!important;
+  border:1px solid rgba(255,255,255,.09)!important;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.018))!important;
+  border-radius:5px!important;
+  box-shadow:0 25px 60px rgba(0,0,0,.28);
+}
+.diary-date{
+  color:#777!important;
+  letter-spacing:.16em;
+  font-size:9px!important;
+}
+.diary-title{
+  font-family:"Playfair Display",Georgia,serif!important;
+  font-size:30px!important;
+  line-height:1.02!important;
+  letter-spacing:-.035em!important;
+}
+.diary-text{
+  color:#999!important;
+  font-size:14px!important;
+  line-height:1.75!important;
+}
+
+/* ---------- NEW: little things, diary-only ---------- */
+#littleThingsSection{
+  padding:100px 0;
+}
+.little-things-rail{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+.little-thing-card{
+  position:relative;
+  min-height:280px;
+  padding:30px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:5px;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(229,9,20,.11),transparent 35%),
+    linear-gradient(145deg,#111,#080808);
+  transition:transform .45s cubic-bezier(.2,.8,.2,1),border-color .3s,background .3s;
+}
+.little-thing-card:hover{
+  border-color:rgba(255,255,255,.18);
+  background:
+    radial-gradient(circle at 100% 0%,rgba(229,9,20,.16),transparent 38%),
+    linear-gradient(145deg,#151515,#080808);
+}
+.little-thing-index{
+  font-size:10px;
+  color:#555;
+  letter-spacing:.2em;
+  font-weight:800;
+}
+.little-thing-date{
+  margin-top:45px;
+  color:#777;
+  font-size:9px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+.little-thing-card h3{
+  margin:9px 0 0;
+  font-family:"Playfair Display",Georgia,serif;
+  font-size:28px;
+  line-height:1.05;
+  letter-spacing:-.025em;
+}
+.little-thing-card p{
+  margin:14px 0 0;
+  color:#999;
+  font-size:14px;
+  line-height:1.72;
+}
+.little-thing-line{
+  position:absolute;
+  left:30px;bottom:25px;
+  width:30px;height:2px;
+  background:var(--gp-red);
+}
+
+/* ---------- love letter: secret reveal, existing loveLetter only ---------- */
+#loveLetterSection{
+  min-height:78svh!important;
+  padding:110px 0!important;
+  background:
+    radial-gradient(circle at 50% 20%,rgba(229,9,20,.10),transparent 38%),
+    #050505!important;
+}
+.letter-card{
+  position:relative;
+  min-height:500px;
+  display:grid;
+  place-items:center;
+  padding:70px!important;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.10)!important;
+  border-radius:6px!important;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(255,255,255,.065),transparent 38%),
+    linear-gradient(145deg,#111,#070707)!important;
+  box-shadow:0 35px 100px rgba(0,0,0,.5);
+}
+.letter-lock{
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  transition:opacity .55s,transform .65s;
+}
+.letter-lock.opened{
+  opacity:0;
+  transform:scale(.94) translateY(-12px);
+  pointer-events:none;
+}
+.letter-lock-kicker{
+  font-size:9px;
+  font-weight:800;
+  color:#777;
+  letter-spacing:.28em;
+}
+.letter-lock-icon{
+  width:70px;height:70px;
+  display:grid;place-items:center;
+  margin:20px 0;
+  border:1px solid rgba(229,9,20,.42);
+  border-radius:50%;
+  color:var(--gp-red);
+  font-size:25px;
+  box-shadow:0 0 60px rgba(229,9,20,.10);
+}
+.letter-lock h3{
+  margin:0;
+  font-size:clamp(35px,5vw,65px)!important;
+  letter-spacing:-.055em!important;
+}
+.letter-lock p{color:#777;margin:12px 0 4px;font-size:14px}
+.letter-unlock-btn{
+  margin-top:24px;
+  border:0;
+  background:#fff;
+  color:#111;
+  padding:13px 21px;
+  border-radius:4px;
+  font-size:12px;
+  font-weight:800;
+  cursor:pointer;
+  transition:transform .25s,background .25s;
+}
+.letter-unlock-btn:hover{transform:translateY(-2px);background:#e8e8e8}
+.letter-reveal-content{
+  position:absolute;
+  inset:0;
+  z-index:3;
+  display:grid;
+  place-content:center;
+  padding:60px 12%;
+  text-align:center;
+  opacity:0;
+  transform:translateY(25px) scale(.98);
+  pointer-events:none;
+  transition:opacity .8s,transform .8s;
+}
+.letter-reveal-content.open{
+  opacity:1;
+  transform:none;
+  pointer-events:auto;
+}
+.letter-reveal-content .letter-text{
+  max-width:820px;
+  margin:22px auto 0;
+  font-family:"Playfair Display",Georgia,serif!important;
+  font-size:clamp(22px,3vw,37px)!important;
+  line-height:1.5!important;
+  color:#eee;
+}
+.letter-reveal-content .letter-sign{
+  margin-top:25px;
+  color:#888;
+}
+.wax-seal{z-index:5}
+
+/* ---------- guest messages ---------- */
+.guest-scroll{
+  scrollbar-width:none;
+}
+.guest-card{
+  width:340px!important;
+  flex:0 0 340px!important;
+  padding:28px!important;
+  border:1px solid rgba(255,255,255,.08)!important;
+  border-radius:5px!important;
+  background:rgba(255,255,255,.035)!important;
+  transition:transform .4s,border-color .3s,background .3s!important;
+}
+.guest-card:hover{
+  transform:translateY(-7px);
+  border-color:rgba(255,255,255,.17)!important;
+  background:rgba(255,255,255,.06)!important;
+}
+
+/* ---------- ending stats: use existing computed stats only ---------- */
+#ending{
+  min-height:88svh!important;
+  background:
+    radial-gradient(circle at 50% 40%,rgba(229,9,20,.11),transparent 30%),
+    #050505!important;
+}
+.ending-inner h2{
+  font-size:clamp(44px,7vw,90px)!important;
+  line-height:.9!important;
+  letter-spacing:-.07em!important;
+}
+.ending-stats{
+  margin-top:45px!important;
+  gap:35px 65px!important;
+}
+.ending-stat b{
+  font-size:46px!important;
+  letter-spacing:-.055em!important;
+}
+.ending-stat span{
+  color:#777!important;
+  letter-spacing:.13em!important;
+}
+
+/* ---------- music player ---------- */
+#musicPlayer{
+  border:1px solid rgba(255,255,255,.10)!important;
+  background:rgba(13,13,14,.92)!important;
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  box-shadow:0 25px 70px rgba(0,0,0,.6)!important;
+  border-radius:5px!important;
+}
+
+/* ---------- reveal animation system ---------- */
+.reveal{
+  opacity:0;
+  transform:translateY(28px);
+  transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1);
+}
+.reveal.in{opacity:1;transform:none}
+.reveal-scale{
+  opacity:0;
+  transform:scale(.92);
+  transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1);
+}
+.reveal-scale.in{opacity:1;transform:none}
+
+/* ---------- responsive master ---------- */
+@media(max-width:900px){
+  .row-section>.wrap,
+  #loveLetterSection>.wrap,
+  #ending>.ending-inner{
+    width:calc(100% - 36px);
+  }
+
+  #mainNav{
+    height:66px;
+    padding:0 18px;
+  }
+
+  #hero{
+    min-height:760px;
+    height:100svh;
+  }
+  .hero-content{
+    width:calc(100% - 36px);
+    padding-bottom:88px;
+  }
+  #heroTitle{
+    font-size:clamp(48px,13vw,78px)!important;
+    line-height:.9!important;
+  }
+  #heroDesc{
+    font-size:14px!important;
+    max-width:100%!important;
+  }
+
+  .nav-links{display:none}
+
+  .ps-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+    padding-inline:8px;
+  }
+
+  .little-things-rail{
+    display:flex;
+    overflow-x:auto;
+    gap:10px;
+    padding:4px 0 18px;
+    margin-inline:-18px;
+    padding-inline:18px;
+    scroll-snap-type:x mandatory;
+    scrollbar-width:none;
+  }
+  .little-things-rail::-webkit-scrollbar{display:none}
+  .little-thing-card{
+    min-width:78vw;
+    max-width:330px;
+    min-height:270px;
+    scroll-snap-align:start;
+  }
+
+  .letter-card{
+    min-height:520px;
+    padding:40px 22px!important;
+  }
+  .letter-reveal-content{padding:45px 22px}
+  .letter-reveal-content .letter-text{
+    font-size:22px!important;
+    line-height:1.55!important;
+  }
+
+  .diary-card{
+    width:78vw!important;
+    flex-basis:78vw!important;
+    max-width:330px;
+  }
+
+  .guest-card{
+    width:80vw!important;
+    flex-basis:80vw!important;
+  }
+
+  .gallery-grid{
+    column-count:2!important;
+    column-gap:7px!important;
+  }
+
+  .timeline:before{
+    left:8px!important;
+    transform:none!important;
+  }
+  .tl-item,.tl-item:nth-child(odd),.tl-item:nth-child(even){
+    width:100%!important;
+    left:0!important;
+    text-align:left!important;
+    padding-left:31px!important;
+    padding-bottom:48px!important;
+  }
+  .tl-item:nth-child(odd) .tl-dot,
+  .tl-item:nth-child(even) .tl-dot{
+    left:3px!important;
+    right:auto!important;
+  }
+
+  #ending{
+    min-height:90svh!important;
+  }
+  .ending-inner{
+    width:calc(100% - 36px)!important;
+  }
+  .ending-stats{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:24px 12px!important;
+  }
+}
+
+@media(max-width:520px){
+  .row-section>.wrap,
+  #loveLetterSection>.wrap,
+  #ending>.ending-inner{
+    width:calc(100% - 28px);
+  }
+
+  #hero{
+    min-height:700px;
+  }
+  .hero-content{
+    width:calc(100% - 28px);
+  }
+  #heroTitle{
+    font-size:44px!important;
+    max-width:350px!important;
+  }
+  #heroDesc{
+    -webkit-line-clamp:4;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .hero-actions{
+    display:grid!important;
+    grid-template-columns:1fr 1fr;
+    gap:8px!important;
+  }
+  .hero-actions .btn{width:100%!important}
+
+  .section-head h2{
+    font-size:32px!important;
+  }
+
+  .rail-scroll{
+    margin-inline:-14px;
+    padding-inline:14px!important;
+    scroll-padding-inline:14px;
+  }
+  .rail-card{
+    width:78vw!important;
+    flex-basis:78vw!important;
+  }
+
+  .ps-grid{padding-inline:0}
+  .ps-tile-label{font-size:10px!important;padding:11px!important}
+
+  .gallery-grid{
+    column-count:2!important;
+  }
+
+  .ending-inner h2{
+    font-size:46px!important;
+  }
+  .ending-stats{
+    gap:20px 8px!important;
+  }
+  .ending-stat b{font-size:34px!important}
+  .ending-stat span{font-size:8px!important}
+  .ending-actions{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+  }
+  .ending-actions .btn{width:100%!important}
+
+  #musicPlayer{
+    width:calc(100vw - 20px)!important;
+    left:10px!important;
+    right:10px!important;
+  }
+}
+
+@media(hover:none){
+  .rail-card:hover,
+  .guest-card:hover,
+  .little-thing-card:hover{
+    transform:none!important;
+    box-shadow:none!important;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{
+    animation-duration:.001ms!important;
+    animation-iteration-count:1!important;
+    scroll-behavior:auto!important;
+    transition-duration:.001ms!important;
+  }
+}
+
+
+/* ================================================================
+   GIFTPiXEL — CINEMATIC COUPLE MASTER V5
+   Presentation-only layer. Existing API, parameters and render
+   functions remain untouched. New visual sections are driven only
+   from existing story fields.
+   ================================================================ */
+
+:root{
+  --gp-bg:#050505;
+  --gp-bg-2:#0a0a0b;
+  --gp-panel:#111113;
+  --gp-red:#e50914;
+  --gp-red-deep:#8b050c;
+  --gp-crimson:#5d0b13;
+  --gp-gold:#c9a96a;
+  --gp-cream:#f4eee5;
+  --gp-white:#f7f7f5;
+  --gp-muted:rgba(247,247,245,.62);
+  --gp-dim:rgba(247,247,245,.42);
+  --gp-line:rgba(255,255,255,.09);
+  --gp-max:1380px;
+  --gp-serif:Georgia,"Times New Roman",serif;
+  --gp-sans:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+/* ---------- typography: intentionally restrained weight ---------- */
+html,body{
+  background:var(--gp-bg)!important;
+  color:var(--gp-white);
+  font-family:var(--gp-sans);
+  font-weight:400;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+h1,h2,h3,h4,h5,p,span,a,button{
+  font-synthesis:none;
+}
+h1,h2,h3,h4{
+  font-weight:650;
+  letter-spacing:-.035em;
+}
+p{font-weight:400}
+button,.btn,.nav-link{font-weight:600}
+strong,b{font-weight:650}
+
+.wrap,
+.row-section>.wrap,
+#loveLetterSection>.wrap{
+  width:min(var(--gp-max),calc(100% - 88px));
+  margin-inline:auto;
+}
+
+/* ---------- film grain + atmospheric light ---------- */
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:9998;
+  pointer-events:none;
+  opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+  mix-blend-mode:screen;
+}
+body:after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:9997;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(229,9,20,.08),transparent 38%),
+    radial-gradient(circle at 100% 60%,rgba(110,0,15,.05),transparent 34%);
+}
+
+/* ---------- navigation ---------- */
+nav#mainNav{
+  height:76px;
+  padding-left:max(28px,calc((100vw - var(--gp-max))/2));
+  padding-right:max(28px,calc((100vw - var(--gp-max))/2));
+  background:linear-gradient(180deg,rgba(0,0,0,.82),rgba(0,0,0,0));
+  border-bottom:1px solid transparent;
+  transition:background .4s,border-color .4s,backdrop-filter .4s;
+}
+nav#mainNav.scrolled{
+  background:rgba(5,5,5,.88);
+  border-color:var(--gp-line);
+  backdrop-filter:blur(18px);
+}
+.brand{
+  font-weight:700!important;
+  letter-spacing:-.045em!important;
+}
+.nav-links{gap:28px}
+.nav-link{
+  position:relative;
+  font-size:12px;
+  letter-spacing:.03em;
+  color:rgba(255,255,255,.68);
+  transition:color .25s;
+}
+.nav-link:hover{color:#fff}
+.nav-link:after{
+  content:"";
+  position:absolute;
+  left:0;right:100%;bottom:-8px;
+  height:2px;
+  background:var(--gp-red);
+  transition:right .3s;
+}
+.nav-link:hover:after{right:0}
+
+/* ---------- profile selection ---------- */
+#profileSelect{
+  min-height:100svh;
+  background:
+    radial-gradient(circle at 50% 25%,rgba(229,9,20,.10),transparent 28%),
+    radial-gradient(circle at 50% 90%,rgba(201,169,106,.045),transparent 28%),
+    #050505;
+  padding:120px 28px 70px;
+}
+.ps-heading{
+  width:min(1100px,100%);
+  margin:auto;
+}
+.ps-heading h1{
+  font-weight:600!important;
+  letter-spacing:-.055em!important;
+  font-size:clamp(42px,6vw,78px);
+  line-height:.96;
+}
+.ps-heading p{
+  color:var(--gp-muted);
+  font-size:14px;
+}
+.ps-grid{
+  width:min(1120px,100%);
+  margin:44px auto 0;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:16px;
+}
+.ps-tile{
+  position:relative;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:5px;
+  background:#101010;
+  overflow:hidden;
+  box-shadow:0 22px 70px rgba(0,0,0,.35);
+  transition:transform .55s cubic-bezier(.2,.8,.2,1),border-color .35s,box-shadow .35s;
+}
+.ps-tile:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(125deg,transparent 20%,rgba(255,255,255,.11) 48%,transparent 58%);
+  transform:translateX(-130%);
+  transition:transform .8s;
+  pointer-events:none;
+}
+.ps-tile:hover:after{transform:translateX(130%)}
+.ps-tile:hover{
+  transform:translateY(-8px);
+  border-color:rgba(255,255,255,.20);
+  box-shadow:0 35px 90px rgba(0,0,0,.62);
+}
+.ps-tile-label{
+  background:linear-gradient(180deg,#121212,#0c0c0c);
+  font-weight:600!important;
+}
+
+/* ---------- hero ---------- */
+#hero{
+  position:relative;
+  min-height:clamp(720px,94svh,980px);
+  overflow:hidden;
+  isolation:isolate;
+}
+#hero:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(0,0,0,.76) 0%,rgba(0,0,0,.38) 43%,rgba(0,0,0,.05) 72%),
+    linear-gradient(0deg,#050505 0%,transparent 23%,rgba(0,0,0,.04) 68%,rgba(0,0,0,.36) 100%);
+}
+.hero-content{
+  position:relative;
+  z-index:3;
+  padding-bottom:clamp(100px,15vh,165px);
+  animation:gpHeroIn 1.05s cubic-bezier(.2,.75,.2,1) both;
+}
+#heroTitle{
+  max-width:980px;
+  font-family:var(--gp-sans);
+  font-weight:600!important;
+  font-size:clamp(58px,8.7vw,124px);
+  line-height:.88;
+  letter-spacing:-.065em!important;
+  text-wrap:balance;
+  text-shadow:0 12px 60px rgba(0,0,0,.48);
+}
+#heroDesc{
+  max-width:650px;
+  margin-top:24px;
+  color:rgba(255,255,255,.72);
+  font-size:15px;
+  line-height:1.75;
+}
+.hero-actions{gap:10px;margin-top:26px}
+.btn{
+  min-height:46px;
+  border-radius:4px;
+  padding:0 21px;
+  font-size:13px;
+  letter-spacing:.005em;
+  transition:transform .25s,box-shadow .25s,filter .25s;
+}
+.btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 30px rgba(0,0,0,.34);
+  filter:brightness(1.07);
+}
+.hero-mute{
+  z-index:4!important;
+  border-color:rgba(255,255,255,.35)!important;
+  background:rgba(0,0,0,.35)!important;
+  backdrop-filter:blur(12px);
+}
+#hero .scroll-cue,
+.hero-scroll-cue{
+  position:absolute;
+  z-index:4;
+  bottom:34px;
+  left:50%;
+  transform:translateX(-50%);
+  color:rgba(255,255,255,.5);
+  font-size:9px;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  animation:gpCue 2.2s ease-in-out infinite;
+}
+#hero .scroll-cue:after,
+.hero-scroll-cue:after{
+  content:"";
+  width:1px;height:38px;
+  background:linear-gradient(180deg,rgba(255,255,255,.55),transparent);
+}
+
+/* ---------- section rhythm ---------- */
+.row-section,
+#loveLetterSection,
+#ending{
+  position:relative;
+}
+.row-section{
+  padding-top:92px;
+  padding-bottom:20px;
+}
+.section-head{
+  position:relative;
+  margin-bottom:27px;
+}
+.section-head h2{
+  font-size:clamp(29px,3.2vw,43px);
+  font-weight:600!important;
+  letter-spacing:-.045em!important;
+  line-height:1;
+}
+.section-head .row-sub{
+  color:var(--gp-muted);
+  font-size:13px;
+  line-height:1.6;
+  margin-top:9px;
+}
+.section-head:before{
+  content:attr(data-section-number);
+  margin-right:12px;
+  color:var(--gp-red);
+  font:600 10px/1 var(--gp-sans);
+  letter-spacing:.18em;
+}
+
+/* ---------- rails ---------- */
+.rail-scroll{
+  display:flex;
+  gap:14px;
+  overflow-x:auto;
+  padding:5px 3px 25px;
+  scrollbar-width:none;
+  scroll-snap-type:x proximity;
+  -webkit-overflow-scrolling:touch;
+}
+.rail-scroll::-webkit-scrollbar{display:none}
+.rail-card{
+  position:relative;
+  scroll-snap-align:start;
+  transform-origin:center bottom;
+  transition:transform .38s cubic-bezier(.2,.8,.2,1),filter .38s,box-shadow .38s;
+}
+.rail-card:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:0;
+  background:linear-gradient(105deg,transparent 32%,rgba(255,255,255,.16) 48%,transparent 61%);
+  transform:translateX(-100%);
+  transition:opacity .2s,transform .7s;
+}
+.rail-card:hover:after{
+  opacity:1;
+  transform:translateX(100%);
+}
+.rail-card:hover{
+  transform:translateY(-9px) scale(1.035);
+  filter:brightness(1.06);
+  box-shadow:0 25px 70px rgba(0,0,0,.55);
+  z-index:4;
+}
+
+/* ---------- featured episode ---------- */
+#episodesSection .featured-episode{
+  position:relative;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:7px;
+  overflow:hidden;
+  box-shadow:0 35px 110px rgba(0,0,0,.55);
+  background:#0d0d0e;
+}
+#episodesSection .featured-episode:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(90deg,rgba(0,0,0,.8),transparent 65%),linear-gradient(0deg,rgba(0,0,0,.65),transparent 50%);
+}
+.episode-card{
+  position:relative;
+  border-radius:5px;
+  overflow:hidden;
+  background:#111;
+  border:1px solid rgba(255,255,255,.06);
+}
+.episode-card img{
+  transition:transform .65s cubic-bezier(.2,.8,.2,1),filter .5s;
+}
+.episode-card:hover img{transform:scale(1.07);filter:brightness(1.08)}
+
+/* ---------- photos / gallery ---------- */
+.gallery-grid{column-gap:12px}
+.gallery-item{
+  position:relative;
+  border-radius:4px;
+  overflow:hidden;
+  margin-bottom:12px;
+  background:#111;
+  box-shadow:0 15px 45px rgba(0,0,0,.30);
+}
+.gallery-item:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(120deg,transparent 35%,rgba(255,255,255,.10) 48%,transparent 59%);
+  transform:translateX(-130%);
+  transition:transform .9s;
+}
+.gallery-item:hover:after{transform:translateX(130%)}
+.gallery-item img{
+  transition:transform .7s cubic-bezier(.2,.8,.2,1),filter .45s;
+}
+.gallery-item:hover img{transform:scale(1.035);filter:brightness(1.07)}
+
+/* ---------- timeline ---------- */
+.timeline{
+  max-width:960px;
+  margin-inline:auto;
+}
+.tl-item h4{
+  font-family:var(--gp-serif);
+  font-weight:500!important;
+  letter-spacing:-.015em;
+  font-size:24px;
+}
+.tl-item p{
+  color:rgba(255,255,255,.65);
+  font-size:14px;
+  line-height:1.8;
+}
+.tl-date{
+  color:var(--gp-gold)!important;
+  font-size:10px!important;
+  letter-spacing:.16em!important;
+  text-transform:uppercase;
+}
+.tl-img{
+  border:1px solid rgba(201,169,106,.16);
+  box-shadow:0 24px 65px rgba(0,0,0,.48);
+}
+
+/* ---------- diary / intimate content ---------- */
+#diarySection{
+  background:
+    radial-gradient(circle at 20% 50%,rgba(93,11,19,.13),transparent 35%),
+    transparent;
+}
+.diary-card{
+  width:320px;
+  flex:0 0 320px;
+  min-height:285px;
+  padding:28px;
+  border:1px solid rgba(201,169,106,.16);
+  border-radius:5px;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+  box-shadow:0 25px 70px rgba(0,0,0,.35);
+  transition:transform .4s,box-shadow .4s,border-color .4s;
+}
+.diary-card:hover{
+  transform:translateY(-8px);
+  border-color:rgba(201,169,106,.34);
+  box-shadow:0 35px 85px rgba(0,0,0,.55);
+}
+.diary-title{
+  font-family:var(--gp-serif);
+  font-size:29px;
+  font-weight:500!important;
+  letter-spacing:-.025em;
+}
+.diary-text{
+  color:rgba(255,255,255,.67);
+  font-size:14px;
+  line-height:1.8;
+}
+
+/* ---------- love letter ---------- */
+#loveLetterSection{
+  min-height:78vh;
+  padding:110px 0;
+  background:
+    radial-gradient(circle at 50% 35%,rgba(125,8,20,.18),transparent 35%),
+    linear-gradient(180deg,#050505,#080607 55%,#050505);
+}
+.letter-wrap{max-width:800px;margin-inline:auto}
+.letter-card{
+  position:relative;
+  padding:clamp(36px,7vw,82px);
+  border:1px solid rgba(201,169,106,.22);
+  border-radius:6px;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.018));
+  box-shadow:0 40px 130px rgba(0,0,0,.58);
+  overflow:hidden;
+}
+.letter-card:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:radial-gradient(circle at 50% 0,rgba(201,169,106,.08),transparent 48%);
+}
+.letter-card:after{
+  content:"";
+  position:absolute;
+  width:45%;height:1px;
+  top:0;left:27.5%;
+  background:linear-gradient(90deg,transparent,var(--gp-gold),transparent);
+  box-shadow:0 0 30px rgba(201,169,106,.4);
+}
+.letter-text{
+  position:relative;
+  z-index:1;
+  font-family:var(--gp-serif);
+  font-size:clamp(19px,2.2vw,27px);
+  line-height:1.9;
+  color:#efe6d8;
+}
+.letter-sign{
+  font-family:var(--gp-serif);
+  color:var(--gp-gold);
+}
+
+/* ---------- guest messages ---------- */
+.guest-card{
+  width:min(350px,82vw);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:6px;
+  background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.018));
+  box-shadow:0 20px 55px rgba(0,0,0,.3);
+  transition:transform .35s,border-color .35s,box-shadow .35s;
+}
+.guest-card:hover{
+  transform:translateY(-7px);
+  border-color:rgba(229,9,20,.28);
+  box-shadow:0 30px 75px rgba(0,0,0,.48);
+}
+
+/* ---------- music ---------- */
+#musicPlayer{
+  width:min(600px,calc(100vw - 32px));
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(10,10,10,.84);
+  backdrop-filter:blur(20px);
+  box-shadow:0 20px 60px rgba(0,0,0,.55);
+}
+
+/* ---------- ending ---------- */
+#ending{
+  min-height:90svh;
+  display:flex;
+  align-items:center;
+  background:
+    radial-gradient(circle at 50% 35%,rgba(229,9,20,.12),transparent 34%),
+    linear-gradient(180deg,#050505,#090506,#050505);
+}
+.ending-inner h2{
+  font-weight:550!important;
+  letter-spacing:-.055em!important;
+}
+.ending-inner p{
+  color:rgba(255,255,255,.58);
+  line-height:1.75;
+}
+.ending-stat b{
+  font-weight:500!important;
+  letter-spacing:-.05em;
+}
+.ending-stat span{
+  color:var(--gp-gold)!important;
+  letter-spacing:.14em;
+}
+
+/* ---------- modal ---------- */
+.modal,.lightbox{
+  backdrop-filter:blur(18px);
+}
+.modal-content,.lightbox-content{
+  border:1px solid rgba(255,255,255,.10)!important;
+  box-shadow:0 45px 140px rgba(0,0,0,.72)!important;
+}
+
+/* ---------- 3D tilt helper ---------- */
+.gp-tilt{
+  transform-style:preserve-3d;
+  will-change:transform;
+}
+.gp-tilt>*{transform:translateZ(10px)}
+
+/* ---------- cinematic entrance ---------- */
+@keyframes gpHeroIn{
+  from{opacity:0;transform:translateY(28px)}
+  to{opacity:1;transform:none}
+}
+@keyframes gpCue{
+  0%,100%{opacity:.35;transform:translate(-50%,0)}
+  50%{opacity:1;transform:translate(-50%,7px)}
+}
+@keyframes gpReveal{
+  from{opacity:0;transform:translateY(24px)}
+  to{opacity:1;transform:none}
+}
+.gp-reveal{
+  animation:gpReveal .75s cubic-bezier(.2,.75,.2,1) both;
+}
+
+/* ---------- mobile: intentional composition, not shrinkage ---------- */
+@media(max-width:820px){
+  .wrap,.row-section>.wrap,#loveLetterSection>.wrap{
+    width:calc(100% - 32px);
+  }
+
+  nav#mainNav{
+    height:64px;
+    padding:11px 16px;
+  }
+  .nav-links{display:none}
+  .brand{font-size:21px}
+
+  #profileSelect{padding:92px 16px 48px}
+  .ps-heading h1{
+    font-size:clamp(38px,11vw,56px);
+    font-weight:600!important;
+  }
+  .ps-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+    margin-top:30px;
+  }
+
+  #hero{
+    min-height:760px;
+    height:100svh;
+    max-height:920px;
+  }
+  #hero:after{
+    background:
+      linear-gradient(0deg,#050505 0%,rgba(0,0,0,.12) 48%,rgba(0,0,0,.48) 100%),
+      linear-gradient(90deg,rgba(0,0,0,.48),transparent);
+  }
+  .hero-content{
+    width:calc(100% - 32px);
+    padding-bottom:102px;
+  }
+  #heroTitle{
+    max-width:100%;
+    font-size:clamp(49px,14vw,76px);
+    line-height:.9;
+  }
+  #heroDesc{
+    font-size:13px;
+    line-height:1.7;
+    max-width:100%;
+    display:-webkit-box;
+    -webkit-line-clamp:4;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .hero-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    width:100%;
+  }
+  .hero-actions .btn{width:100%}
+  #hero .scroll-cue,.hero-scroll-cue{
+    bottom:24px;
+  }
+
+  .row-section{padding-top:68px}
+  .section-head h2{
+    font-size:30px;
+    font-weight:600!important;
+  }
+  .section-head .row-sub{font-size:12px}
+
+  .rail-scroll{
+    margin-inline:-16px;
+    padding:4px 16px 20px;
+    gap:10px;
+    scroll-padding-inline:16px;
+  }
+  .rail-card{
+    width:78vw;
+    flex:0 0 78vw;
+  }
+
+  #episodesSection .featured-episode{
+    grid-template-columns:1fr!important;
+  }
+
+  .gallery-grid{
+    column-count:2;
+    column-gap:7px;
+  }
+  .gallery-item{
+    margin-bottom:7px;
+    border-radius:3px;
+  }
+
+  .timeline{
+    margin-left:0;
+  }
+  .timeline:before{
+    left:7px!important;
+    transform:none!important;
+  }
+  .tl-item,.tl-item:nth-child(odd),.tl-item:nth-child(even){
+    width:100%!important;
+    left:0!important;
+    text-align:left!important;
+    padding:0 0 44px 29px!important;
+  }
+  .tl-item:nth-child(odd) .tl-dot,.tl-item:nth-child(even) .tl-dot{
+    left:2px!important;
+    right:auto!important;
+  }
+  .tl-item h4{font-size:20px}
+  .tl-item p{font-size:13px;line-height:1.75}
+
+  .diary-card{
+    width:78vw;
+    flex-basis:78vw;
+    min-height:250px;
+    padding:24px;
+  }
+
+  #loveLetterSection{
+    min-height:auto;
+    padding:76px 0;
+  }
+  .letter-card{padding:34px 23px}
+  .letter-text{
+    font-size:18px;
+    line-height:1.8;
+  }
+
+  .guest-scroll{
+    overflow-x:auto;
+    scrollbar-width:none;
+    padding-bottom:12px;
+  }
+  .guest-scroll::-webkit-scrollbar{display:none}
+  .guest-track{
+    animation:none!important;
+    gap:10px;
+  }
+  .guest-card{width:82vw}
+
+  #musicPlayer{
+    width:calc(100vw - 24px);
+    bottom:max(10px,env(safe-area-inset-bottom));
+  }
+
+  #ending{
+    min-height:86svh;
+  }
+  .ending-inner{
+    width:calc(100% - 32px);
+  }
+  .ending-inner h2{
+    font-size:clamp(43px,12vw,64px);
+    line-height:.94;
+  }
+  .ending-stats{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:24px 12px;
+  }
+  .ending-stat b{font-size:34px}
+  .ending-actions{
+    display:grid;
+    grid-template-columns:1fr;
+    width:100%;
+  }
+  .ending-actions .btn{width:100%}
+}
+
+/* small phones */
+@media(max-width:390px){
+  .wrap,.row-section>.wrap,#loveLetterSection>.wrap{
+    width:calc(100% - 24px);
+  }
+  #heroTitle{font-size:44px}
+  .hero-content{width:calc(100% - 24px)}
+  .hero-actions{grid-template-columns:1fr}
+  .rail-scroll{
+    margin-inline:-12px;
+    padding-inline:12px;
+    scroll-padding-inline:12px;
+  }
+  .rail-card{width:82vw;flex-basis:82vw}
+  .gallery-grid{column-gap:5px}
+  .gallery-item{margin-bottom:5px}
+  .letter-card{padding:28px 18px}
+  .letter-text{font-size:17px}
+}
+
+/* touch: no desktop hover transforms */
+@media(hover:none){
+  .ps-tile:hover,.rail-card:hover,.diary-card:hover,.guest-card:hover,
+  .gallery-item:hover img,.episode-card:hover img{
+    transform:none;
+    filter:none;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{
+    animation-duration:.001ms!important;
+    animation-iteration-count:1!important;
+    scroll-behavior:auto!important;
+    transition-duration:.001ms!important;
+  }
+}
+
+
+/* =========================================================
+   PROFILE SELECT — premium streaming-style layout
+   Mobile-first: avatar + name, no dashboard/card treatment.
+   Keeps the existing profileImages/images data + click targets.
+   ========================================================= */
+#profileSelect{
+  background:
+    radial-gradient(ellipse at 50% 36%, rgba(229,9,20,.055) 0%, transparent 30%),
+    #050505 !important;
+  padding:0 24px !important;
+  gap:0 !important;
+  justify-content:center !important;
+  overflow:auto;
+}
+#profileSelect::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.32) 100%);
+}
+.ps-heading{
+  position:relative;
+  z-index:2;
+  width:auto !important;
+  margin:0 !important;
+  text-align:center;
+}
+.ps-heading .eyebrow{
+  display:none !important;
+}
+.ps-heading h1{
+  margin:0 !important;
+  color:#f5f5f5 !important;
+  font-family:var(--gp-sans,Inter,sans-serif) !important;
+  font-size:clamp(28px,4vw,46px) !important;
+  line-height:1.1 !important;
+  font-weight:400 !important;
+  letter-spacing:-.035em !important;
+  text-transform:none !important;
+}
+.ps-grid{
+  position:relative;
+  z-index:2;
+  width:min(760px,100%) !important;
+  margin:46px auto 0 !important;
+  display:grid !important;
+  grid-template-columns:repeat(4, minmax(110px, 150px)) !important;
+  justify-content:center !important;
+  gap:34px 28px !important;
+}
+.ps-tile{
+  min-width:0;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  overflow:visible !important;
+  cursor:pointer;
+  transform:none !important;
+  transition:none !important;
+  animation:profileFadeUp .65s cubic-bezier(.2,.75,.2,1) both;
+}
+.ps-tile::after{display:none !important;}
+.ps-tile-img{
+  width:clamp(96px,10vw,136px) !important;
+  height:clamp(96px,10vw,136px) !important;
+  aspect-ratio:1/1 !important;
+  margin:0 auto !important;
+  border-radius:6px !important;
+  overflow:hidden !important;
+  background:#181818 !important;
+  position:relative !important;
+  transform:none !important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.04), 0 16px 38px rgba(0,0,0,.38) !important;
+  transition:transform .22s ease, box-shadow .22s ease, outline-color .22s ease !important;
+}
+.ps-tile-img::before{
+  display:none !important;
+}
+.ps-tile-img::after{
+  content:"" !important;
+  display:block !important;
+  position:absolute !important;
+  inset:0 !important;
+  z-index:3 !important;
+  pointer-events:none !important;
+  opacity:0 !important;
+  background:linear-gradient(135deg,rgba(255,255,255,.16),transparent 34%,transparent 68%,rgba(229,9,20,.16)) !important;
+  transition:opacity .2s ease !important;
+}
+.ps-tile-img img{
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  display:block !important;
+  position:relative !important;
+  z-index:1 !important;
+  transition:transform .28s cubic-bezier(.2,.75,.2,1), filter .28s ease !important;
+}
+.ps-tile-label{
+  display:block !important;
+  width:100% !important;
+  margin-top:14px !important;
+  padding:0 !important;
+  background:none !important;
+  color:#8d8d8d !important;
+  font-family:var(--gp-sans,Inter,sans-serif) !important;
+  font-size:14px !important;
+  line-height:1.2 !important;
+  font-weight:400 !important;
+  letter-spacing:0 !important;
+  text-align:center !important;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  transition:color .2s ease !important;
+}
+.ps-tile:hover .ps-tile-img{
+  transform:scale(1.035) !important;
+  box-shadow:0 0 0 2px #fff, 0 18px 44px rgba(0,0,0,.52) !important;
+}
+.ps-tile:hover .ps-tile-img::after{opacity:1 !important;}
+.ps-tile:hover .ps-tile-img img{
+  transform:scale(1.025) !important;
+  filter:brightness(1.08) saturate(1.03) !important;
+}
+.ps-tile:hover .ps-tile-label{color:#fff !important;}
+.ps-tile:active .ps-tile-img{transform:scale(.975) !important;}
+.ps-tile.clicked .ps-tile-img{
+  animation:profileSelected .42s cubic-bezier(.2,.75,.2,1) both !important;
+}
+@keyframes profileFadeUp{
+  from{opacity:0;transform:translateY(18px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes profileSelected{
+  0%{transform:scale(1)}
+  45%{transform:scale(1.075)}
+  100%{transform:scale(.98)}
+}
+
+@media (max-width:820px){
+  #profileSelect{
+    padding:72px 20px 44px !important;
+    align-items:center !important;
+    justify-content:center !important;
+  }
+  .ps-heading h1{
+    font-size:30px !important;
+    font-weight:400 !important;
+    letter-spacing:-.025em !important;
+  }
+  .ps-grid{
+    width:min(360px,100%) !important;
+    margin-top:38px !important;
+    grid-template-columns:repeat(2, minmax(110px, 132px)) !important;
+    gap:34px 28px !important;
+  }
+  .ps-tile-img{
+    width:clamp(92px,25vw,112px) !important;
+    height:clamp(92px,25vw,112px) !important;
+    border-radius:5px !important;
+  }
+  .ps-tile-label{
+    margin-top:12px !important;
+    font-size:13px !important;
+  }
+}
+@media (max-width:380px){
+  #profileSelect{padding-left:14px !important;padding-right:14px !important;}
+  .ps-grid{
+    grid-template-columns:repeat(2,112px) !important;
+    gap:30px 20px !important;
+  }
+  .ps-tile-img{width:94px !important;height:94px !important;}
+}
+
 </style>
+
+<style id="giftpixel-v6-premium">
+/* =========================================================
+   GIFTPiXEL V6 — PREMIUM STREAMING / COUPLE CINEMA
+   Presentation-only enhancement. No API/data contract changes.
+   ========================================================= */
+:root{
+  --v6-black:#030303;
+  --v6-panel:#0d0d0f;
+  --v6-red:#e50914;
+  --v6-red2:#b20710;
+  --v6-gold:#d0b477;
+  --v6-white:#f5f3ef;
+  --v6-muted:rgba(245,243,239,.62);
+  --v6-line:rgba(255,255,255,.09);
+  --v6-ease:cubic-bezier(.16,1,.3,1);
+}
+body{
+  background:
+    radial-gradient(circle at 50% -15%,rgba(229,9,20,.075),transparent 34%),
+    var(--v6-black)!important;
+}
+body:before{opacity:.045!important}
+
+/* cinematic section separators */
+.row-section:before,
+#loveLetterSection:before,
+#littleThingsSection:before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:0;
+  width:min(92%,1180px);
+  height:1px;
+  transform:translateX(-50%);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.10),transparent);
+}
+
+/* Netflix-like rails */
+.rail-scroll{
+  scroll-behavior:smooth;
+  scroll-padding-inline:3vw;
+  perspective:1200px;
+}
+.rail-card{
+  isolation:isolate;
+}
+.rail-card:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:5;
+  pointer-events:none;
+  border-radius:inherit;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.035);
+}
+.rail-card:after{
+  background:
+    linear-gradient(110deg,transparent 25%,rgba(255,255,255,.18) 48%,transparent 63%)!important;
+}
+.rail-card:hover{
+  transform:translateY(-10px) scale(1.045)!important;
+  box-shadow:
+    0 32px 80px rgba(0,0,0,.68),
+    0 0 0 1px rgba(229,9,20,.12)!important;
+}
+
+/* episode labels */
+.episode-card,.featured-episode{
+  position:relative;
+}
+.episode-card:before{
+  content:"EPISODE";
+  position:absolute;
+  left:13px;
+  top:12px;
+  z-index:4;
+  padding:5px 7px;
+  border-radius:2px;
+  background:rgba(0,0,0,.72);
+  color:rgba(255,255,255,.72);
+  font:600 8px/1 Inter,system-ui,sans-serif;
+  letter-spacing:.16em;
+  backdrop-filter:blur(8px);
+}
+.episode-card:hover:before{
+  background:var(--v6-red);
+  color:#fff;
+}
+
+/* featured episode gets movie-poster depth */
+.featured-episode{
+  box-shadow:0 45px 120px rgba(0,0,0,.58)!important;
+}
+.featured-episode .fe-media:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 70% 35%,transparent 0,rgba(0,0,0,.06) 42%,rgba(0,0,0,.54) 100%),
+    linear-gradient(90deg,rgba(0,0,0,.30),transparent 58%);
+}
+
+/* continue watching progress language */
+#continueWatchingSection .section-head:after{
+  content:"CONTINUE WATCHING";
+  display:block;
+  margin-top:10px;
+  color:rgba(255,255,255,.34);
+  font:600 8px/1 Inter,system-ui,sans-serif;
+  letter-spacing:.22em;
+}
+
+/* secret letter unlock */
+#loveLetterSection .letter-card{
+  cursor:default;
+}
+#loveLetterSection .letter-lock button,
+#loveLetterSection .letter-lock .btn{
+  position:relative;
+  overflow:hidden;
+}
+#loveLetterSection .letter-lock button:before,
+#loveLetterSection .letter-lock .btn:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(110deg,transparent 25%,rgba(255,255,255,.25) 50%,transparent 75%);
+  transform:translateX(-120%);
+  transition:transform .8s var(--v6-ease);
+}
+#loveLetterSection .letter-lock button:hover:before,
+#loveLetterSection .letter-lock .btn:hover:before{
+  transform:translateX(120%);
+}
+@keyframes v6Unlock{
+  0%{transform:scale(1) rotate(0);filter:brightness(1)}
+  35%{transform:scale(1.08) rotate(-2deg);filter:brightness(1.7)}
+  65%{transform:scale(.97) rotate(2deg)}
+  100%{transform:scale(1) rotate(0);filter:brightness(1)}
+}
+.letter-card.v6-unlocking .letter-lock{
+  animation:v6Unlock .85s var(--v6-ease);
+}
+
+/* stats */
+#endingStats .ending-stat{
+  position:relative;
+  padding:20px 16px;
+  border:1px solid rgba(255,255,255,.065);
+  border-radius:5px;
+  background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.012));
+  overflow:hidden;
+}
+#endingStats .ending-stat:after{
+  content:"";
+  position:absolute;
+  left:0;right:0;bottom:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--v6-red),transparent);
+  transform:scaleX(0);
+  transform-origin:center;
+  transition:transform .7s var(--v6-ease);
+}
+#endingStats .ending-stat:hover:after{transform:scaleX(1)}
+#endingStats b{
+  display:block;
+  font-variant-numeric:tabular-nums;
+}
+
+/* Little Things luxury cards */
+#littleThingsSection .little-thing-card{
+  background:
+    radial-gradient(circle at 90% 0,rgba(229,9,20,.13),transparent 32%),
+    linear-gradient(145deg,#121214,#070707)!important;
+  box-shadow:0 22px 65px rgba(0,0,0,.30);
+}
+#littleThingsSection .little-thing-card:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(120deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);
+  transform:translateX(-120%);
+  transition:transform .9s var(--v6-ease);
+}
+#littleThingsSection .little-thing-card:hover:before{
+  transform:translateX(120%);
+}
+.little-thing-card:hover{
+  transform:translateY(-10px)!important;
+  box-shadow:0 38px 90px rgba(0,0,0,.52)!important;
+}
+
+/* Personality */
+#personalitySection .personality-card{
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 85% 10%,rgba(229,9,20,.15),transparent 35%),
+    linear-gradient(145deg,#121214,#070707);
+  box-shadow:0 28px 90px rgba(0,0,0,.48);
+}
+#personalitySection .personality-card:after{
+  content:"";
+  position:absolute;
+  width:240px;height:240px;
+  right:-110px;top:-120px;
+  border-radius:50%;
+  border:1px solid rgba(208,180,119,.18);
+  box-shadow:0 0 0 35px rgba(208,180,119,.025),0 0 0 70px rgba(208,180,119,.012);
+}
+#personalitySection .surprise-me{
+  box-shadow:0 10px 35px rgba(229,9,20,.18);
+}
+@keyframes v6Surprise{
+  0%{transform:rotateY(0) scale(1)}
+  45%{transform:rotateY(180deg) scale(1.03)}
+  100%{transform:rotateY(360deg) scale(1)}
+}
+.v6-surprise-spin{animation:v6Surprise .75s var(--v6-ease)}
+
+/* scroll reveal */
+.v6-reveal{
+  opacity:0;
+  transform:translateY(28px);
+  transition:opacity .8s var(--v6-ease),transform .8s var(--v6-ease);
+}
+.v6-reveal.v6-visible{opacity:1;transform:none}
+
+/* mobile-first rails */
+@media(max-width:820px){
+  .rail-scroll{
+    margin-left:-16px!important;
+    margin-right:-16px!important;
+    padding-left:16px!important;
+    padding-right:16px!important;
+    scroll-snap-type:x mandatory;
+  }
+  .rail-card{
+    scroll-snap-align:start;
+    transform:none!important;
+  }
+  .rail-card:active{transform:scale(.985)!important}
+  #endingStats .ending-stat{padding:17px 10px}
+  #littleThingsSection .little-things-rail{
+    display:flex!important;
+    overflow-x:auto;
+    gap:10px;
+    padding:4px 2px 20px;
+    scrollbar-width:none;
+    scroll-snap-type:x mandatory;
+  }
+  #littleThingsSection .little-things-rail::-webkit-scrollbar{display:none}
+  #littleThingsSection .little-thing-card{
+    flex:0 0 80vw;
+    min-height:250px;
+    scroll-snap-align:start;
+  }
+  #personalitySection .personality-card{
+    border-radius:5px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .v6-reveal{opacity:1;transform:none;transition:none}
+  .v6-surprise-spin{animation:none}
+}
+</style>
+
+
+<style id="giftpixel-v7-emotional">
+/* V7 — Emotional story modules. Presentation only; existing API contract preserved. */
+#v7EmotionalModules{position:relative;z-index:2;background:#030303;color:#fff}
+.v7-section{position:relative;padding:110px 0;overflow:hidden}
+.v7-wrap{width:min(1180px,calc(100% - 40px));margin:auto}
+.v7-kicker{font:600 10px/1 Inter,system-ui,sans-serif;letter-spacing:.28em;text-transform:uppercase;color:#d0b477;margin-bottom:15px}
+.v7-title{font-family:Fraunces,Georgia,serif;font-weight:500;font-size:clamp(34px,5vw,68px);line-height:.98;letter-spacing:-.035em;margin:0}
+.v7-sub{max-width:620px;color:rgba(255,255,255,.58);font-size:14px;line-height:1.8;margin:18px 0 0}
+.v7-number{position:absolute;right:5vw;top:80px;font:800 9vw/.8 Inter,sans-serif;color:rgba(255,255,255,.025);letter-spacing:-.08em;pointer-events:none}
+
+/* secret letter */
+.v7-letter-stage{min-height:610px;display:grid;place-items:center;position:relative;margin-top:45px}
+.v7-letter-stage:before{content:"";position:absolute;width:520px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(229,9,20,.16),transparent 68%);filter:blur(10px)}
+.v7-envelope{position:relative;width:min(570px,92vw);height:360px;cursor:pointer;perspective:1200px;filter:drop-shadow(0 40px 80px rgba(0,0,0,.7))}
+.v7-env-back{position:absolute;inset:0;border-radius:10px;background:linear-gradient(145deg,#3a070b,#120204);border:1px solid rgba(255,255,255,.12);overflow:hidden}
+.v7-env-back:after{content:"";position:absolute;inset:0;background:linear-gradient(125deg,transparent 28%,rgba(255,255,255,.09) 48%,transparent 62%);transform:translateX(-120%);transition:transform 1s cubic-bezier(.16,1,.3,1)}
+.v7-envelope:hover .v7-env-back:after{transform:translateX(120%)}
+.v7-flap{position:absolute;z-index:5;left:0;right:0;top:0;height:58%;transform-origin:top center;clip-path:polygon(0 0,100% 0,50% 100%);background:linear-gradient(160deg,#7d0c15,#250307);border-top:1px solid rgba(255,255,255,.12);transition:transform 1s cubic-bezier(.16,1,.3,1),filter .5s}
+.v7-envelope.open .v7-flap{transform:rotateX(180deg);filter:brightness(.7);z-index:1}
+.v7-paper{position:absolute;z-index:3;left:8%;right:8%;top:15%;height:68%;padding:38px 34px;background:linear-gradient(145deg,#f5efe3,#d9cdbb);color:#1b1512;border-radius:4px;box-shadow:0 20px 60px rgba(0,0,0,.35);transform:translateY(5%);transition:transform 1s cubic-bezier(.16,1,.3,1),height 1s;overflow:hidden}
+.v7-envelope.open .v7-paper{transform:translateY(-38%);height:92%;z-index:7}
+.v7-paper h3{font-family:Fraunces,Georgia,serif;font-size:25px;font-weight:500;margin:0 0 16px}
+.v7-paper p{font-family:Fraunces,Georgia,serif;font-size:16px;line-height:1.75;white-space:pre-line;max-height:220px;overflow:auto}
+.v7-paper small{font:600 9px/1 Inter,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#7b6651}
+.v7-seal{position:absolute;z-index:8;left:50%;top:50%;transform:translate(-50%,-50%);width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#ef3948,#8e0710 70%);box-shadow:0 15px 40px rgba(229,9,20,.28);transition:opacity .5s,transform .8s cubic-bezier(.16,1,.3,1)}
+.v7-envelope.open .v7-seal{opacity:0;transform:translate(-50%,-50%) scale(1.5) rotate(18deg)}
+.v7-seal span{font-size:28px}
+.v7-open-hint{position:absolute;z-index:9;bottom:28px;left:50%;transform:translateX(-50%);font:600 9px/1 Inter,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.62);transition:opacity .3s}
+.v7-envelope.open .v7-open-hint{opacity:0}
+
+/* stats */
+.v7-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:45px}
+.v7-stat{position:relative;min-height:190px;padding:28px 24px;display:flex;flex-direction:column;justify-content:flex-end;border:1px solid rgba(255,255,255,.08);background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.012));overflow:hidden}
+.v7-stat:before{content:"";position:absolute;width:160px;height:160px;right:-90px;top:-90px;border-radius:50%;background:rgba(229,9,20,.12);filter:blur(2px)}
+.v7-stat-value{font:800 clamp(42px,5vw,72px)/.9 Inter,sans-serif;letter-spacing:-.08em;font-variant-numeric:tabular-nums}
+.v7-stat-label{margin-top:13px;font:600 9px/1.4 Inter,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.48)}
+.v7-stat-note{margin-top:7px;font-family:Fraunces,Georgia,serif;color:#d0b477;font-size:13px}
+
+/* little things */
+.v7-things{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:45px}
+.v7-thing{min-height:300px;padding:30px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:#0b0b0d;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:0 25px 80px rgba(0,0,0,.4)}
+.v7-thing:after{content:"";position:absolute;inset:0;background:linear-gradient(130deg,transparent 30%,rgba(255,255,255,.08) 50%,transparent 68%);transform:translateX(-120%);transition:transform 1s cubic-bezier(.16,1,.3,1)}
+.v7-thing:hover:after{transform:translateX(120%)}
+.v7-thing-icon{font-size:25px;margin-bottom:auto;filter:drop-shadow(0 5px 15px rgba(229,9,20,.2))}
+.v7-thing h3{font-family:Fraunces,Georgia,serif;font-size:25px;font-weight:500;margin:0 0 8px}
+.v7-thing p{font-size:13px;line-height:1.7;color:rgba(255,255,255,.54);margin:0}
+
+/* personality */
+.v7-personality{margin-top:45px;display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
+.v7-personality-card,.v7-personality-side{border:1px solid rgba(255,255,255,.08);background:linear-gradient(145deg,#121214,#070707);min-height:330px;position:relative;overflow:hidden}
+.v7-personality-card{padding:45px;display:flex;flex-direction:column;justify-content:center}
+.v7-personality-card:before{content:"";position:absolute;width:380px;height:380px;border-radius:50%;right:-180px;top:-180px;border:1px solid rgba(208,180,119,.16);box-shadow:0 0 0 35px rgba(208,180,119,.025),0 0 0 70px rgba(208,180,119,.012)}
+.v7-personality-emoji{font-size:48px;margin-bottom:20px}
+.v7-personality-name{font-family:Fraunces,Georgia,serif;font-size:clamp(34px,5vw,58px);font-weight:500;line-height:.95}
+.v7-personality-desc{max-width:520px;margin-top:16px;color:rgba(255,255,255,.58);line-height:1.8;font-size:14px}
+.v7-personality-side{padding:35px;display:flex;flex-direction:column;justify-content:space-between}
+.v7-tag{display:inline-flex;width:max-content;padding:8px 11px;border:1px solid rgba(208,180,119,.2);color:#d0b477;font:600 8px/1 Inter,sans-serif;letter-spacing:.17em;text-transform:uppercase}
+.v7-surprise{width:100%;height:52px;border:1px solid rgba(229,9,20,.35);background:linear-gradient(90deg,#8d0710,#e50914);color:white;font:700 10px/1 Inter,sans-serif;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;box-shadow:0 12px 35px rgba(229,9,20,.18);transition:transform .35s,box-shadow .35s}
+.v7-surprise:hover{transform:translateY(-3px);box-shadow:0 20px 45px rgba(229,9,20,.3)}
+@keyframes v7Counter{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:none}}
+.v7-in .v7-stat-value{animation:v7Counter .8s cubic-bezier(.16,1,.3,1) both}
+@keyframes v7CardReveal{from{opacity:0;transform:translateY(35px)}to{opacity:1;transform:none}}
+.v7-reveal{opacity:0;transform:translateY(35px)}
+.v7-reveal.v7-in{animation:v7CardReveal .85s cubic-bezier(.16,1,.3,1) forwards}
+.v7-modal{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.78);backdrop-filter:blur(18px);display:none;align-items:center;justify-content:center;padding:20px}
+.v7-modal.show{display:flex}
+.v7-modal-card{width:min(650px,94vw);max-height:80vh;overflow:auto;background:linear-gradient(145deg,#171719,#080808);border:1px solid rgba(255,255,255,.12);padding:42px;box-shadow:0 40px 120px rgba(0,0,0,.8);animation:v7CardReveal .55s cubic-bezier(.16,1,.3,1)}
+.v7-modal-card p{font-family:Fraunces,Georgia,serif;font-size:20px;line-height:1.85;color:#eee;white-space:pre-line}
+.v7-close{float:right;background:none;border:0;color:#fff;font-size:25px;cursor:pointer}
+@media(max-width:820px){
+ .v7-section{padding:78px 0}.v7-wrap{width:min(100% - 28px,1180px)}
+ .v7-number{top:55px;font-size:18vw}
+ .v7-letter-stage{min-height:520px}.v7-envelope{height:300px}
+ .v7-paper{padding:28px 24px}.v7-paper p{font-size:14px;max-height:180px}
+ .v7-stats-grid{grid-template-columns:repeat(2,1fr)}
+ .v7-stat{min-height:155px;padding:22px 17px}
+ .v7-things{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;scrollbar-width:none;padding-bottom:10px}
+ .v7-things::-webkit-scrollbar{display:none}.v7-thing{flex:0 0 82vw;scroll-snap-align:start}
+ .v7-personality{grid-template-columns:1fr}.v7-personality-card{padding:32px;min-height:330px}.v7-personality-side{min-height:210px}
+}
+@media(prefers-reduced-motion:reduce){
+ .v7-reveal{opacity:1;transform:none}.v7-envelope *{transition:none!important}
+}
+</style>
+
 </head>
 <body>
 
@@ -813,7 +2951,7 @@ footer p{color:var(--ink-faint); font-size:12.5px;}
   <div id="profileSelect">
     <div class="ps-heading">
       <span class="eyebrow">Who's This For</span>
-      <h1>Choose Where To Begin</h1>
+      <h1>Who's watching?</h1>
     </div>
     <div class="ps-grid" id="psGrid"></div>
   </div>
@@ -946,6 +3084,17 @@ footer p{color:var(--ink-faint); font-size:12.5px;}
       </div>
     </section>
 
+    <section id="littleThingsSection" class="row-section premium-story-section">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">The Little Things</span>
+          <h2 style="margin-top:8px;">The moments that made it yours.</h2>
+          <div class="row-sub">From the diary — the small details worth keeping.</div>
+        </div>
+        <div class="little-things-rail" id="littleThingsRail"></div>
+      </div>
+    </section>
+
     <section id="loveLetterSection">
       <div class="wrap letter-wrap">
         <div class="wax-seal reveal-scale" id="waxSeal">
@@ -953,9 +3102,18 @@ footer p{color:var(--ink-faint); font-size:12.5px;}
         </div>
         <div class="letter-card reveal" id="letterCard">
           <div class="hearts-field" id="heartsField"></div>
-          <h3>A Letter, Just For You</h3>
-          <div class="letter-text" id="letterText"></div>
-          <div class="letter-sign" id="letterSign"></div>
+          <div class="letter-lock" id="letterLock">
+            <span class="letter-lock-kicker">PRIVATE MESSAGE</span>
+            <span class="letter-lock-icon">♥</span>
+            <h3>A Letter, Just For You</h3>
+            <p>Someone left a message inside your story.</p>
+            <button class="letter-unlock-btn" id="letterUnlockBtn">Open Letter</button>
+          </div>
+          <div class="letter-reveal-content" id="letterRevealContent">
+            <span class="letter-lock-kicker">A MESSAGE FROM YOUR STORY</span>
+            <div class="letter-text" id="letterText"></div>
+            <div class="letter-sign" id="letterSign"></div>
+          </div>
         </div>
       </div>
     </section>
@@ -1135,6 +3293,7 @@ function renderStory(story){
   renderPhotos(story);
   renderTimeline(story);
   renderDiary(story);
+  renderLittleThings(story);
   renderLoveLetter(story);
   renderMusicPlayer(story);
   renderGuestMessages(story);
@@ -1150,10 +3309,10 @@ function renderStory(story){
 function renderProfileSelect(story){
   const profiles = (story.profileImages && story.profileImages.length ? story.profileImages : story.images) || [];
   const tiles = [
-    {label:'❤️ Our Story', img: profiles[0], target:'#hero'},
-    {label:'📷 Gallery', img: profiles[1], target:'#gallerySection'},
-    {label:'🎬 Videos', img: profiles[2], target:'#episodesSection'},
-    {label:'🎵 Music', img: profiles[3], target:'#loveLetterSection'},
+    {label:'Our Story', img: profiles[0], target:'#hero'},
+    {label:'Gallery', img: profiles[1], target:'#gallerySection'},
+    {label:'Videos', img: profiles[2], target:'#episodesSection'},
+    {label:'Music', img: profiles[3], target:'#loveLetterSection'},
   ];
   const grid = qs('#psGrid');
   grid.innerHTML = tiles.map((t,i) => `
@@ -1230,10 +3389,10 @@ function renderHero(story){
   const year = new Date().getFullYear();
   const chapterCount = Math.max(story.episodes.length, story.videos.length, 1);
   qs('#heroMeta').innerHTML = `
-    <span class="match">${98 + ((story.recipient||'').length % 2)}% Match</span>
+    <span class="premium-meta">ORIGINAL</span>
     <span class="plain">${year}</span>
-    <span class="tag">For Two ❤</span>
-    <span class="plain">${chapterCount} Chapter${chapterCount === 1 ? '' : 's'}</span>
+    <span class="tag">FOR TWO</span>
+    ${chapterCount > 0 ? `<span class="plain">${chapterCount} CHAPTER${chapterCount === 1 ? '' : 'S'}</span>` : ''}
     <span class="tag">HD</span>`;
 
   qs('#playStoryBtn').onclick = () => {
@@ -1271,7 +3430,7 @@ function buildHoverCard({ videoSrc, thumb, title, desc, rank }){
           <button class="chp-icon-btn" title="Add to My Memories"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></button>
           <button class="chp-icon-btn" title="Love this"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.2-4.5-9.8-9.1C.4 7.8 2 3.8 5.8 3.8c2.1 0 3.6 1.1 4.3 2.3.7-1.2 2.2-2.3 4.3-2.3 3.8 0 5.4 4 3.6 8.1C19.2 16.5 12 21 12 21z" stroke="#fff" stroke-width="1.8"/></svg></button>
         </div>
-        <div class="chp-meta"><span class="match">${94 + (title.length % 6)}% Match</span><span class="tag">HD</span></div>
+        <div class="chp-meta"><span class="premium-meta">ORIGINAL</span><span class="tag">HD</span></div>
         <div class="chp-title">${escapeHtml(title)}</div>
         ${desc ? `<div class="chp-desc">${escapeHtml(desc)}</div>` : ''}
       </div>
@@ -1454,13 +3613,12 @@ function renderDiary(story) {
 
     const rail = document.getElementById("diaryRail");
 
-    const entries = (story.diary && story.diary.length)
-        ? story.diary
-        : [{
-            date: "No Memories Yet",
-            title: "Start Your Journey",
-            description: "Create your first diary entry."
-        }];
+    const entries = Array.isArray(story.diary) ? story.diary : [];
+    if (!entries.length) {
+      const section = document.getElementById("diarySection");
+      if (section) section.style.display = "none";
+      return;
+    }
 
     rail.innerHTML = "";
 
@@ -1514,6 +3672,44 @@ function renderDiary(story) {
 
 }
 
+
+/* ---------- Little Things — ONLY diary content returned by the API ---------- */
+function renderLittleThings(story){
+  const section = qs('#littleThingsSection');
+  const rail = qs('#littleThingsRail');
+  const entries = Array.isArray(story.diary) ? story.diary.filter(Boolean) : [];
+  if(!entries.length){
+    section.style.display = 'none';
+    return;
+  }
+
+  rail.innerHTML = entries.map((item, i) => {
+    const date = item.date || '';
+    const title = item.title || '';
+    const description = item.description || '';
+    return `
+      <article class="little-thing-card reveal" style="--delay:${Math.min(i,8)*70}ms">
+        <div class="little-thing-index">${String(i+1).padStart(2,'0')}</div>
+        ${date ? `<div class="little-thing-date">${escapeHtml(date)}</div>` : ''}
+        ${title ? `<h3>${escapeHtml(title)}</h3>` : ''}
+        ${description ? `<p>${escapeHtml(description)}</p>` : ''}
+        <div class="little-thing-line"></div>
+      </article>`;
+  }).join('');
+
+  qsa('.little-thing-card', rail).forEach(card=>{
+    card.addEventListener('mousemove', e=>{
+      if(window.matchMedia('(hover:hover)').matches){
+        const r=card.getBoundingClientRect();
+        const x=(e.clientX-r.left)/r.width-.5;
+        const y=(e.clientY-r.top)/r.height-.5;
+        card.style.transform=`perspective(900px) rotateX(${(-y*2.2).toFixed(2)}deg) rotateY(${(x*2.2).toFixed(2)}deg) translateY(-5px)`;
+      }
+    });
+    card.addEventListener('mouseleave', ()=>card.style.transform='');
+  });
+}
+
 /* ---------- Timeline ---------- */
 function renderTimeline(story){
   const list = qs('#timelineList');
@@ -1529,20 +3725,36 @@ function renderTimeline(story){
 
 /* ---------- Love Letter ---------- */
 function renderLoveLetter(story){
+  const section = qs('#loveLetterSection');
+  if(!story.loveLetter){ section.style.display='none'; return; }
+
   qs('#letterSign').textContent = story.sender ? `— ${story.sender}` : '';
   const textEl = qs('#letterText');
   const seal = qs('#waxSeal');
+  const lock = qs('#letterLock');
+  const content = qs('#letterRevealContent');
+  const unlock = qs('#letterUnlockBtn');
+
+  let opened = false;
+  const openLetter = ()=>{
+    if(opened) return;
+    opened = true;
+    lock.classList.add('opened');
+    content.classList.add('open');
+    seal.classList.add('cracked');
+    setTimeout(()=> typeLetter(textEl, story.loveLetter), 280);
+    startFloatingHearts();
+  };
+  unlock.onclick = openLetter;
+
   const io = new IntersectionObserver((entries)=>{
     entries.forEach(entry=>{
       if(entry.isIntersecting){
-        seal.classList.add('cracked');
-        setTimeout(()=> typeLetter(textEl, story.loveLetter), 500);
-        startFloatingHearts();
         io.disconnect();
       }
     });
-  }, {threshold:0.4});
-  io.observe(qs('#loveLetterSection'));
+  }, {threshold:0.25});
+  io.observe(section);
 }
 function typeLetter(el, text){
   if(!text){ el.textContent=''; return; }
@@ -1676,6 +3888,7 @@ function hideEmptySections(story){
   if(!galleryImages.length) qs('#gallerySection').style.display = 'none';
   if(!photoRailImages.length) qs('#photosSection').style.display = 'none';
   if(!story.timeline.length) qs('#timelineSection').style.display = 'none';
+  if(!story.diary.length) { qs('#diarySection').style.display = 'none'; qs('#littleThingsSection').style.display = 'none'; }
   if(!story.loveLetter) qs('#loveLetterSection').style.display = 'none';
   if(!story.guestMessages.length) qs('#guestSection').style.display = 'none';
 }
@@ -1884,5 +4097,398 @@ function fireConfetti(){
 
 boot();
 </script>
+
+<script>
+/* GIFTPiXEL V5 presentation helpers.
+   No API calls, fields, parameters or backend functions are changed. */
+(function(){
+  function sectionNumbers(){
+    const ids = [
+      ['episodesSection','01'],
+      ['continueSection','02'],
+      ['gallerySection','03'],
+      ['timelineSection','04'],
+      ['diarySection','05'],
+      ['guestSection','06']
+    ];
+    ids.forEach(([id,num])=>{
+      const el=document.getElementById(id);
+      const head=el && el.querySelector('.section-head');
+      if(head && !head.hasAttribute('data-section-number')) head.setAttribute('data-section-number',num);
+    });
+  }
+
+  function reveal(){
+    const targets=document.querySelectorAll(
+      '.row-section,.letter-card,.guest-card,.diary-card,.timeline .tl-item'
+    );
+    if(!('IntersectionObserver' in window)){
+      targets.forEach(x=>x.classList.add('gp-reveal'));
+      return;
+    }
+    const io=new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.classList.add('gp-reveal');
+          io.unobserve(e.target);
+        }
+      });
+    },{threshold:.10,rootMargin:'0px 0px -8% 0px'});
+    targets.forEach(x=>io.observe(x));
+  }
+
+  function tilt(){
+    if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+    const cards=document.querySelectorAll('.rail-card,.episode-card,.diary-card,.guest-card,.ps-tile');
+    cards.forEach(card=>{
+      card.classList.add('gp-tilt');
+      card.addEventListener('pointermove',e=>{
+        const r=card.getBoundingClientRect();
+        const x=(e.clientX-r.left)/r.width-.5;
+        const y=(e.clientY-r.top)/r.height-.5;
+        card.style.transform=
+          `perspective(900px) rotateX(${(-y*3.2).toFixed(2)}deg) rotateY(${(x*3.2).toFixed(2)}deg) translateY(-5px)`;
+      });
+      card.addEventListener('pointerleave',()=>{
+        card.style.transform='';
+      });
+    });
+  }
+
+  function parallax(){
+    const hero=document.getElementById('hero');
+    if(!hero || !window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+    const bg=hero.querySelector('img,video,[style*="background"]');
+    if(!bg) return;
+    let ticking=false;
+    window.addEventListener('mousemove',e=>{
+      if(ticking)return;
+      ticking=true;
+      requestAnimationFrame(()=>{
+        const x=(e.clientX/window.innerWidth-.5);
+        const y=(e.clientY/window.innerHeight-.5);
+        bg.style.transform=`scale(1.045) translate3d(${x*-10}px,${y*-7}px,0)`;
+        ticking=false;
+      });
+    },{passive:true});
+  }
+
+  function scrollCue(){
+    const hero=document.getElementById('hero');
+    if(!hero || hero.querySelector('.scroll-cue,.hero-scroll-cue')) return;
+    const cue=document.createElement('div');
+    cue.className='hero-scroll-cue';
+    cue.textContent='Scroll to explore';
+    cue.addEventListener('click',()=>window.scrollTo({
+      top:window.innerHeight*.82,behavior:'smooth'
+    }));
+    hero.appendChild(cue);
+  }
+
+  document.addEventListener('DOMContentLoaded',()=>{
+    sectionNumbers();
+    reveal();
+    tilt();
+    parallax();
+    scrollCue();
+  });
+})();
+</script>
+
+
+<script id="giftpixel-v6-motion">
+(function(){
+  const ready = fn => document.readyState === 'loading'
+    ? document.addEventListener('DOMContentLoaded',fn,{once:true})
+    : fn();
+
+  ready(()=>{
+    /* Scroll reveal: visual only */
+    const els=document.querySelectorAll(
+      '.row-section,.little-thing-card,.diary-card,.guest-card,.letter-card,#endingStats .ending-stat'
+    );
+    els.forEach((el,i)=>{
+      el.classList.add('v6-reveal');
+      el.style.transitionDelay=Math.min(i%6,5)*55+'ms';
+    });
+    if('IntersectionObserver' in window){
+      const io=new IntersectionObserver(entries=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){
+            e.target.classList.add('v6-visible');
+            io.unobserve(e.target);
+          }
+        });
+      },{threshold:.08,rootMargin:'0px 0px -8% 0px'});
+      els.forEach(e=>io.observe(e));
+    }else els.forEach(e=>e.classList.add('v6-visible'));
+
+    /* Cinematic mouse lighting */
+    if(matchMedia('(hover:hover) and (pointer:fine)').matches){
+      document.querySelectorAll('.little-thing-card,.personality-card,.diary-card,.guest-card')
+        .forEach(card=>{
+          card.addEventListener('pointermove',e=>{
+            const r=card.getBoundingClientRect();
+            card.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+            card.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
+          });
+        });
+    }
+
+    /* If a Surprise Me button already exists, add a cinematic flip only. */
+    document.querySelectorAll(
+      '#personalitySection button, #personalitySection .surprise-me'
+    ).forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const card=document.querySelector('#personalitySection .personality-card');
+        if(!card)return;
+        card.classList.remove('v6-surprise-spin');
+        void card.offsetWidth;
+        card.classList.add('v6-surprise-spin');
+      });
+    });
+
+    /* Secret letter: never creates new data; only animates the existing unlock. */
+    document.querySelectorAll(
+      '#loveLetterSection button, #loveLetterSection .btn'
+    ).forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const card=document.querySelector('#loveLetterSection .letter-card');
+        if(!card)return;
+        card.classList.remove('v6-unlocking');
+        void card.offsetWidth;
+        card.classList.add('v6-unlocking');
+      });
+    });
+  });
+})();
+</script>
+
+
+<script id="giftpixel-v7-emotional">
+(function(){
+  const ready=fn=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',fn,{once:true}):fn();
+
+  ready(()=>{
+    const main=document.querySelector('#mainContent');
+    if(!main || document.querySelector('#v7EmotionalModules')) return;
+
+    const mod=document.createElement('div');
+    mod.id='v7EmotionalModules';
+    mod.innerHTML=`
+      <section class="v7-section v7-secret">
+        <div class="v7-number">01</div>
+        <div class="v7-wrap">
+          <div class="v7-kicker">Private • Just Between You Two</div>
+          <h2 class="v7-title">A letter that<br><em>waited for you.</em></h2>
+          <p class="v7-sub">Some things deserve more than a text message. Open this when you're ready.</p>
+          <div class="v7-letter-stage">
+            <div class="v7-envelope v7-reveal" id="v7Envelope" role="button" tabindex="0" aria-label="Open secret love letter">
+              <div class="v7-env-back"></div>
+              <div class="v7-paper">
+                <small>To my favorite person</small>
+                <h3 id="v7LetterTitle">A little piece of us</h3>
+                <p id="v7LetterText"></p>
+                <small id="v7LetterFrom"></small>
+              </div>
+              <div class="v7-flap"></div>
+              <div class="v7-seal"><span>♥</span></div>
+              <div class="v7-open-hint">Tap to open • your secret letter awaits</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="v7-section v7-stats">
+        <div class="v7-number">02</div>
+        <div class="v7-wrap">
+          <div class="v7-kicker">More Than Numbers</div>
+          <h2 class="v7-title">Your story,<br><em>in little numbers.</em></h2>
+          <p class="v7-sub">Every photo, chapter and message becomes part of the story you are building together.</p>
+          <div class="v7-stats-grid" id="v7StatsGrid"></div>
+        </div>
+      </section>
+
+      <section class="v7-section v7-little">
+        <div class="v7-number">03</div>
+        <div class="v7-wrap">
+          <div class="v7-kicker">The Details That Stay</div>
+          <h2 class="v7-title">The Little Things<br><em>that feel like everything.</em></h2>
+          <p class="v7-sub">Tiny moments are often the ones we remember longest.</p>
+          <div class="v7-things" id="v7Things"></div>
+        </div>
+      </section>
+
+      <section class="v7-section v7-personality">
+        <div class="v7-number">04</div>
+        <div class="v7-wrap">
+          <div class="v7-kicker">If Your Love Had A Personality</div>
+          <h2 class="v7-title">Meet the two of you.</h2>
+          <p class="v7-sub">A playful little personality generator, created from the story already inside this gift.</p>
+          <div class="v7-personality">
+            <div class="v7-personality-card v7-reveal" id="v7PersonalityCard">
+              <div class="v7-personality-emoji" id="v7PersonalityEmoji">💞</div>
+              <div class="v7-personality-name" id="v7PersonalityName">The Soft Chaos Couple</div>
+              <div class="v7-personality-desc" id="v7PersonalityDesc">Best friends, accidental comedians, professional memory collectors.</div>
+            </div>
+            <div class="v7-personality-side v7-reveal">
+              <span class="v7-tag">Couple personality</span>
+              <div>
+                <div class="v7-kicker" style="margin-bottom:8px">Surprise me</div>
+                <p style="color:rgba(255,255,255,.55);font-size:13px;line-height:1.7;margin:0 0 20px">Because sometimes the best description of your relationship is the one you didn't expect.</p>
+                <button class="v7-surprise" id="v7Surprise">✦ Surprise Me</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="v7-modal" id="v7LetterModal" aria-hidden="true">
+        <div class="v7-modal-card">
+          <button class="v7-close" id="v7ModalClose" aria-label="Close">×</button>
+          <div class="v7-kicker">Your secret letter</div>
+          <h2 class="v7-title" style="font-size:42px;margin-bottom:20px">For ${'you'}</h2>
+          <p id="v7ModalText"></p>
+        </div>
+      </div>
+    `;
+
+    /* Put the emotional modules before the existing love-letter section.
+       No existing section/function is removed or renamed. */
+    const anchor=document.querySelector('#loveLetterSection');
+    anchor ? main.insertBefore(mod,anchor) : main.appendChild(mod);
+
+    function esc(s){
+      return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+    function getStory(){
+      return window.STORY || (typeof STORY!=='undefined'?STORY:null);
+    }
+    function mediaCount(s){
+      return new Set([...(s.gallery||[]),...(s.images||[])]).size;
+    }
+
+    function renderV7(s){
+      if(!s) return;
+      const letter=s.loveLetter||'';
+      const letterText=document.querySelector('#v7LetterText');
+      const modalText=document.querySelector('#v7ModalText');
+      letterText.textContent=letter || 'Some stories are better felt than explained. This one is yours.';
+      modalText.textContent=letter || 'Some stories are better felt than explained. This one is yours.';
+      document.querySelector('#v7LetterFrom').textContent=s.sender?`— ${s.sender}`:'— with love';
+      document.querySelector('#v7LetterTitle').textContent=s.recipient?`For ${s.recipient}`:'A little piece of us';
+
+      const photos=mediaCount(s), videos=(s.videos||[]).length, episodes=(s.episodes||[]).length,
+            moments=(s.timeline||[]).length, diary=(s.diary||[]).length, guests=(s.guestMessages||[]).length;
+
+      const stats=[
+        [photos,'Memories saved',photos===1?'One moment worth keeping forever':`${photos} pieces of your story`],
+        [videos,'Scenes captured',videos?`${videos} moments you can press play on`:'Your memories are waiting'],
+        [episodes||moments,'Chapters together',`${episodes||moments} little chapters in your journey`],
+        [guests||diary,'Love notes & moments',`${guests||diary} reasons this story feels personal`]
+      ].filter(x=>x[0]>0);
+      document.querySelector('#v7StatsGrid').innerHTML=stats.map(x=>`
+        <div class="v7-stat v7-reveal"><div class="v7-stat-value" data-v7-count="${x[0]}">0</div>
+        <div class="v7-stat-label">${esc(x[1])}</div><div class="v7-stat-note">${esc(x[2])}</div></div>`).join('');
+
+      const source=[];
+      (s.timeline||[]).slice(0,4).forEach((x,i)=>source.push({
+        icon:['🫶','✨','☕','🌙'][i%4],title:x.title||`Moment ${i+1}`,
+        text:x.description||'A little moment that became part of your story.'
+      }));
+      (s.diary||[]).slice(0,3).forEach((x,i)=>source.push({
+        icon:['💌','🎞️','🥂'][i%3],title:x.title||'From the diary',
+        text:x.text||x.description||'One of those little things worth remembering.'
+      }));
+      if(!source.length){
+        const fallback=[
+          ['🫶','The way you laugh','The kind of little thing that makes an ordinary day feel like yours.'],
+          ['☕','Your tiny rituals','The small routines that quietly become part of a relationship.'],
+          ['🌙','The moments between','Sometimes the best memories are the ones nobody planned.']
+        ];
+        source.push(...fallback.map(x=>({icon:x[0],title:x[1],text:x[2]})));
+      }
+      document.querySelector('#v7Things').innerHTML=source.slice(0,6).map(x=>`
+        <article class="v7-thing v7-reveal"><div class="v7-thing-icon">${x.icon}</div>
+        <h3>${esc(x.title)}</h3><p>${esc(x.text)}</p></article>`).join('');
+
+      setupReveal();
+      animateCounters();
+    }
+
+    const personalities=[
+      ['💞','The Soft Chaos Couple','Best friends, accidental comedians, and professional collectors of tiny memories.'],
+      ['🍿','The Main Character Couple','Every ordinary plan somehow turns into a story worth replaying.'],
+      ['🌙','The Midnight Soulmates','Deep conversations, quiet looks, and a suspicious amount of “one more episode.”'],
+      ['☕','The Comfort Couple','Home is less of a place and more of a person — preferably sitting right beside you.'],
+      ['🎞️','The Cinematic Two','If your relationship had a soundtrack, even the boring days would have an opening scene.'],
+      ['🫶','The Forever Teammates','Different personalities, same team — especially when deciding what to eat.'],
+      ['✨','The Little-Moments Couple','You do not need grand gestures. You turn tiny moments into the good stuff.'],
+      ['🔥','The Cute Trouble Duo','A little chaos, a lot of chemistry, and absolutely no shortage of inside jokes.']
+    ];
+
+    let personalityIndex=0;
+    function pickPersonality(random=true){
+      const s=getStory();
+      const seed=((s?.title||'').length+(s?.images||[]).length*3+(s?.videos||[]).length*5+(s?.timeline||[]).length*7);
+      personalityIndex=random?Math.floor(Math.random()*personalities.length):seed%personalities.length;
+      const p=personalities[personalityIndex];
+      document.querySelector('#v7PersonalityEmoji').textContent=p[0];
+      document.querySelector('#v7PersonalityName').textContent=p[1];
+      document.querySelector('#v7PersonalityDesc').textContent=p[2];
+      const card=document.querySelector('#v7PersonalityCard');
+      card.classList.remove('v7-in'); void card.offsetWidth; card.classList.add('v7-in');
+    }
+
+    function setupReveal(){
+      const els=document.querySelectorAll('#v7EmotionalModules .v7-reveal');
+      if(!('IntersectionObserver' in window)){els.forEach(x=>x.classList.add('v7-in'));return}
+      const io=new IntersectionObserver(entries=>{
+        entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('v7-in');io.unobserve(e.target)}})
+      },{threshold:.12});
+      els.forEach(x=>io.observe(x));
+    }
+
+    function animateCounters(){
+      document.querySelectorAll('[data-v7-count]').forEach(el=>{
+        if(el.dataset.done)return;
+        el.dataset.done='1';
+        const target=Number(el.dataset.v7Count)||0;
+        const start=performance.now(),dur=1100;
+        const tick=now=>{
+          const p=Math.min(1,(now-start)/dur);
+          const eased=1-Math.pow(1-p,3);
+          el.textContent=Math.round(target*eased);
+          if(p<1)requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      });
+    }
+
+    /* Open/close secret envelope. The actual letter is still story.loveLetter. */
+    const env=document.querySelector('#v7Envelope');
+    const toggle=()=>{
+      env.classList.toggle('open');
+      if(env.classList.contains('open')){
+        setTimeout(()=>document.querySelector('#v7LetterModal').classList.add('show'),1050);
+      }
+    };
+    env.addEventListener('click',toggle);
+    env.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle()}});
+
+    document.querySelector('#v7ModalClose').addEventListener('click',()=>document.querySelector('#v7LetterModal').classList.remove('show'));
+    document.querySelector('#v7LetterModal').addEventListener('click',e=>{if(e.target.id==='v7LetterModal')e.currentTarget.classList.remove('show')});
+    document.querySelector('#v7Surprise').addEventListener('click',()=>pickPersonality(true));
+
+    /* STORY is populated by the existing boot/render pipeline. */
+    const wait=setInterval(()=>{
+      const s=getStory();
+      if(s){clearInterval(wait);renderV7(s);pickPersonality(false)}
+    },100);
+    setTimeout(()=>clearInterval(wait),12000);
+  });
+})();
+</script>
+
 </body>
 </html>
