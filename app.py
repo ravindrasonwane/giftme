@@ -54,7 +54,7 @@ BASE_DIR = Path(__file__).parent
 
 GIFT_BASE_URL = os.getenv(
     "GIFT_BASE_URL",
-    "http://127.0.0.1:8000"
+    "https://giftpixel.in"
 )
 
 EMAIL_FROM = "GiftPixel <hello@giftpixel.in>"
