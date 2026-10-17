@@ -1,0 +1,268 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GiftFlix Creator</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0f0f14;color:#fff;font-family:Arial,sans-serif}
+.container{max-width:1100px;margin:30px auto;padding:20px}
+.card{background:#181821;border:1px solid #2b2b36;border-radius:14px;padding:20px;margin-bottom:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px}
+.upload{height:180px;border:2px dashed #555;border-radius:12px;display:flex;justify-content:center;align-items:center;position:relative;overflow:hidden}
+.upload input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.upload img{width:100%;height:100%;object-fit:cover;display:none}
+label{display:block;margin:10px 0 5px;font-weight:bold}
+input[type=text],textarea{width:100%;padding:12px;border-radius:8px;border:1px solid #444;background:#101015;color:#fff}
+textarea{min-height:120px}
+button{padding:14px 28px;border:none;border-radius:10px;background:#e50914;color:#fff;font-size:16px;font-weight:bold;cursor:pointer}
+#status{margin-top:15px;color:#5cff87}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<form id="giftForm" enctype="multipart/form-data">
+
+<div class="card">
+<h2>Basic Information</h2>
+
+<label>Title</label>
+<input type="text" name="title" required>
+
+<label>Recipient</label>
+<input type="text" name="recipient_name" required>
+
+<label>Sender</label>
+<input type="text" name="sender_name" required>
+
+<label>Description</label>
+<textarea name="description"></textarea>
+
+</div>
+
+<div class="card">
+
+<h2>Login/Profile Images (Exactly 4)</h2>
+
+<div class="grid">
+
+<div class="upload">
+<span>Profile 1</span>
+<img>
+<input type="file" name="images" accept="image/*" required onchange="preview(this)">
+</div>
+
+<div class="upload">
+<span>Profile 2</span>
+<img>
+<input type="file" name="images" accept="image/*" required onchange="preview(this)">
+</div>
+
+<div class="upload">
+<span>Profile 3</span>
+<img>
+<input type="file" name="images" accept="image/*" required onchange="preview(this)">
+</div>
+
+<div class="upload">
+<span>Profile 4</span>
+<img>
+<input type="file" name="images" accept="image/*" required onchange="preview(this)">
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+    <h2>📖 Diary Entries</h2>
+
+    <div id="diaryContainer"></div>
+
+    <button type="button" onclick="addDiaryEntry()">
+        + Add Memory
+    </button>
+
+</div>
+
+<div class="card">
+
+<h2>📸 Gallery</h2>
+<p>Choose exactly 4 images for the profile selection screen.</p>
+
+<input
+    type="file"
+    name="gallery"
+    accept="image/*"
+    multiple>
+
+</div>
+
+<div class="card">
+
+<h2>🎥 Videos</h2>
+<p>Choose exactly 4 Videos for the profile selection screen.</p>
+
+<input
+    type="file"
+    name="videos"
+    accept="video/*"
+    multiple>
+
+</div>
+
+<div class="card">
+<h2>Music</h2>
+<input type="file" name="music" accept="audio/*">
+</div>
+
+<div class="card">
+<h2>Love Letter</h2>
+<textarea name="love_letter"></textarea>
+</div>
+
+<button type="submit">Generate GiftFlix</button>
+
+<div id="status"></div>
+
+</form>
+
+</div>
+
+<script>
+
+function addDiaryEntry(data = {}) {
+
+    const container = document.getElementById("diaryContainer");
+
+    const div = document.createElement("div");
+
+    div.className = "card diary-entry";
+    div.style.marginTop = "20px";
+
+    div.innerHTML = `
+
+<label>Date</label>
+<input
+    type="text"
+    class="diary-date"
+    placeholder="Example: First Date"
+    value="${data.date || ""}">
+
+<label>Title</label>
+<input
+    type="text"
+    class="diary-title"
+    placeholder="Memory title"
+    value="${data.title || ""}">
+
+<label>Description</label>
+<textarea
+    class="diary-description"
+    placeholder="Describe this memory...">${data.description || ""}</textarea>
+
+<button
+type="button"
+onclick="this.parentElement.remove()">
+
+Delete
+
+</button>
+
+`;
+
+    container.appendChild(div);
+
+}
+
+addDiaryEntry();
+
+
+function preview(input){
+
+const img=input.parentElement.querySelector("img");
+const txt=input.parentElement.querySelector("span");
+
+if(input.files.length){
+
+img.src=URL.createObjectURL(input.files[0]);
+img.style.display="block";
+txt.style.display="none";
+
+}
+
+}
+
+document.getElementById("giftForm").addEventListener("submit",async(e)=>{
+
+e.preventDefault();
+
+const form=e.target;
+const diary = [];
+
+
+document.querySelectorAll(".diary-entry").forEach(entry=>{
+
+    diary.push({
+
+        date: entry.querySelector(".diary-date").value,
+
+        title: entry.querySelector(".diary-title").value,
+
+        description: entry.querySelector(".diary-description").value
+
+    });
+
+});
+
+
+const data=new FormData(form);
+
+data.append("diary", JSON.stringify(diary));
+
+const status=document.getElementById("status");
+
+status.innerHTML="Uploading...";
+
+try{
+
+const response = await fetch("http://127.0.0.1:8000/gift/create",{
+    method:"POST",
+    body:data
+});
+
+const result = await response.json();
+
+if(response.ok){
+
+    status.innerHTML = "✅ Gift Created! Redirecting...";
+
+    setTimeout(() => {
+        window.location.href = result.redirect_url;
+    },1000);
+
+}else{
+
+    status.innerHTML = "❌ " + result.detail;
+}
+
+}catch(err){
+
+status.innerHTML="❌ Unable to connect to FastAPI.";
+
+console.error(err);
+
+}
+
+});
+
+</script>
+
+</body>
+</html>

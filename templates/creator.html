@@ -1,133 +1,646 @@
-
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GiftFlix Creator</title>
+
+<title>GiftFlix — Create Something Special</title>
+
+<!-- Google Fonts -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#0f0f14;color:#fff;font-family:Arial,sans-serif}
-.container{max-width:1100px;margin:30px auto;padding:20px}
-.card{background:#181821;border:1px solid #2b2b36;border-radius:14px;padding:20px;margin-bottom:20px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px}
-.upload{height:180px;border:2px dashed #555;border-radius:12px;display:flex;justify-content:center;align-items:center;position:relative;overflow:hidden}
-.upload input{position:absolute;inset:0;opacity:0;cursor:pointer}
-.upload img{width:100%;height:100%;object-fit:cover;display:none}
-label{display:block;margin:10px 0 5px;font-weight:bold}
-input[type=text],textarea{width:100%;padding:12px;border-radius:8px;border:1px solid #444;background:#101015;color:#fff}
-textarea{min-height:120px}
-button{padding:14px 28px;border:none;border-radius:10px;background:#e50914;color:#fff;font-size:16px;font-weight:bold;cursor:pointer}
-#status{margin-top:15px;color:#5cff87}
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    background:
+        radial-gradient(circle at top left, #ffe8ef 0%, transparent 35%),
+        radial-gradient(circle at bottom right, #f9e5d8 0%, transparent 35%),
+        #fffaf7;
+
+    color:#3d3034;
+    font-family:"DM Sans",sans-serif;
+}
+
+.generate-field {
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.generate-text-btn {
+    align-self:flex-start;
+
+    padding:10px 18px;
+
+    background:#fff0f4;
+    color:#a83f61;
+
+    border:1px solid #efcbd6;
+
+    box-shadow:none;
+
+    font-size:13px;
+    font-weight:700;
+}
+
+.generate-text-btn:hover {
+    background:#ffe3eb;
+    color:#8f304e;
+    transform:none;
+}
+
+.container{
+    max-width:1050px;
+    margin:0 auto;
+    padding:40px 20px 70px;
+}
+
+/* HEADER */
+
+.hero{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.logo{
+    font-family:"Playfair Display",serif;
+    font-size:42px;
+    font-weight:700;
+    color:#a83f61;
+    margin-bottom:8px;
+}
+
+.hero p{
+    margin:0;
+    color:#806b72;
+    font-size:16px;
+}
+
+.hero .heart{
+    font-size:22px;
+    margin-bottom:10px;
+}
+
+/* CARDS */
+
+.card{
+    background:rgba(255,255,255,0.88);
+    border:1px solid #f0dce1;
+    border-radius:20px;
+    padding:26px;
+    margin-bottom:22px;
+
+    box-shadow:
+        0 10px 35px rgba(168,63,97,0.07);
+}
+
+.card h2{
+    margin-top:0;
+    font-family:"Playfair Display",serif;
+    font-size:25px;
+    color:#6f3349;
+}
+
+/* GRID */
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:18px;
+}
+
+/* FORM */
+
+label{
+    display:block;
+    margin:15px 0 7px;
+    font-weight:600;
+    color:#5a4149;
+}
+
+input[type=text],
+input[type=email],
+textarea,
+select{
+
+    width:100%;
+    padding:13px 14px;
+
+    border-radius:11px;
+    border:1px solid #e7ccd4;
+
+    background:#fffdfc;
+    color:#3d3034;
+
+    font-family:"DM Sans",sans-serif;
+    font-size:15px;
+
+    outline:none;
+
+    transition:all .2s ease;
+}
+
+input[type=text]:focus,
+input[type=email]:focus,
+textarea:focus,
+select:focus{
+
+    border-color:#c75b7c;
+
+    box-shadow:
+        0 0 0 3px rgba(199,91,124,.10);
+}
+
+textarea{
+    min-height:120px;
+    resize:vertical;
+}
+
+/* UPLOAD */
+
+.upload{
+    height:180px;
+
+    border:2px dashed #e2b8c5;
+    border-radius:16px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    position:relative;
+    overflow:hidden;
+
+    background:#fff9fa;
+
+    color:#9c6677;
+    font-weight:600;
+}
+
+.upload input{
+    position:absolute;
+    inset:0;
+    opacity:0;
+    cursor:pointer;
+}
+
+.generate-field {
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.generate-text-btn {
+    align-self:flex-start;
+
+    padding:10px 16px;
+
+    background:#fff0f4;
+    color:#a83f61;
+
+    border:1px solid #efcbd6;
+
+    box-shadow:none;
+
+    font-size:13px;
+}
+
+.generate-text-btn:hover {
+    background:#ffe3eb;
+    color:#8f304e;
+}
+
+.generate-field textarea {
+    min-height:140px;
+}
+.upload img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+}
+
+
+.upload span {
+    position: relative;
+    z-index: 1;
+}
+/* BUTTONS */
+
+button{
+    padding:13px 22px;
+
+    border:none;
+    border-radius:12px;
+
+    background:#b94e70;
+    color:white;
+
+    font-family:"DM Sans",sans-serif;
+    font-size:15px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:all .2s ease;
+
+    box-shadow:
+        0 8px 20px rgba(185,78,112,.18);
+}
+
+button:hover{
+    background:#9f3f5f;
+    transform:translateY(-1px);
+}
+
+.generate-btn{
+    width:100%;
+    padding:17px;
+
+    font-size:17px;
+
+    border-radius:14px;
+
+    background:linear-gradient(
+        135deg,
+        #b94e70,
+        #d66b83
+    );
+}
+
+.generate-btn:hover{
+    background:linear-gradient(
+        135deg,
+        #a43f61,
+        #c95772
+    );
+}
+
+/* DIARY */
+
+.diary-entry{
+    background:#fff9fa;
+    border:1px solid #f1dfe4;
+}
+
+/* STATUS */
+
+#status{
+    margin-top:18px;
+    text-align:center;
+    color:#a83f61;
+    font-weight:600;
+}
+
+/* SMALL TEXT */
+
+.helper{
+    color:#927b83;
+    font-size:13px;
+    margin-top:6px;
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+    .container{
+        padding:25px 14px 50px;
+    }
+
+    .logo{
+        font-size:34px;
+    }
+
+    .card{
+        padding:20px;
+        border-radius:16px;
+    }
+
+}
+
 </style>
+
 </head>
+
 <body>
 
 <div class="container">
 
+```
+<div class="hero">
+
+    <div class="heart">♡</div>
+
+    <div class="logo">
+        GiftFlix
+    </div>
+
+    <p>
+        Turn your memories into a story they'll never forget.
+    </p>
+
+</div>
+```
+
 <form id="giftForm" enctype="multipart/form-data">
 
+<!-- BASIC INFORMATION -->
+
 <div class="card">
-<h2>Basic Information</h2>
+
+<h2>💌 Tell Us About The Gift</h2>
+
+<label>Occasion</label>
+
+<select name="occasion" required>
+
+<option value="">Choose an occasion</option>
+
+<option value="birthday">
+🎂 Birthday
+</option>
+
+<option value="anniversary">
+💍 Anniversary
+</option>
+
+<option value="valentines">
+❤️ Valentine's Day
+</option>
+
+<option value="special_day">
+✨ Special Day
+</option>
+
+<option value="just_because">
+🌸 Just Because
+</option>
+
+<option value="other">
+💫 Other
+</option>
+
+</select>
 
 <label>Title</label>
-<input type="text" name="title" required>
+
+<div class="generate-field">
+
+    <input
+        type="text"
+        id="title"
+        name="title"
+        placeholder="Example: Our Beautiful Story"
+        required
+    >
+
+    <button
+        type="button"
+        class="generate-text-btn"
+        onclick="generateText('title')"
+    >
+        ✨ Generate
+    </button>
+
+</div>
 
 <label>Recipient</label>
-<input type="text" name="recipient_name" required>
+
+<input
+type="text"
+name="recipient_name"
+placeholder="Who is this special gift for?"
+required
+
+>
+
+<label>Recipient Email</label>
+
+<input
+type="email"
+name="recipient_email"
+placeholder="Where should we send the gift?"
+required
+
+>
+
+<div class="helper">
+We'll send the finished GiftFlix experience to this email.
+</div>
 
 <label>Sender</label>
-<input type="text" name="sender_name" required>
+
+<input
+type="text"
+name="sender_name"
+placeholder="Your name"
+required
+
+>
+
 
 <label>Description</label>
-<textarea name="description"></textarea>
+
+<div class="generate-field">
+
+    <textarea
+        id="description"
+        name="description"
+        placeholder="Tell us a little about your story..."
+    ></textarea>
+
+    <button
+        type="button"
+        class="generate-text-btn"
+        onclick="generateText('description')"
+    >
+        ✨ Generate
+    </button>
 
 </div>
+
+<!-- PROFILE PICTURES -->
+<div class="card">
+
+    <h2>👩‍❤️‍👨 Profile Pictures</h2>
+
+    <p class="helper">
+        Choose 4 special photos that will represent your story.
+        These will be used for the profile selection screen.
+    </p>
+
+    <div class="grid">
+
+        <div class="upload">
+            <span>Profile 1</span>
+            <img>
+            <input type="file" name="images" accept="image/*" required onchange="preview(this)">
+            </div>
+
+            <div class="upload">
+            <span>Profile 2</span>
+            <img>
+            <input type="file" name="images" accept="image/*" required onchange="preview(this)">
+            </div>
+
+            <div class="upload">
+            <span>Profile 3</span>
+            <img>
+            <input type="file" name="images" accept="image/*" required onchange="preview(this)">
+            </div>
+
+            <div class="upload">
+            <span>Profile 4</span>
+            <img>
+            <input type="file" name="images" accept="image/*" required onchange="preview(this)">
+            </div>
+
+    </div>
+
+</div>
+
+
+<!-- VIDEOS -->
 
 <div class="card">
 
-<h2>Login/Profile Images (Exactly 4)</h2>
+<h2>🎥 Special Moments - Your Movies</h2>
 
-<div class="grid">
+<p class="helper">
+Add videos that bring your memories to life.
+</p>
 
-<div class="upload">
-<span>Profile 1</span>
-<img>
-<input type="file" name="images" accept="image/*" required onchange="preview(this)">
-</div>
+<input
+type="file"
+name="videos"
+accept="video/*"
+multiple
 
-<div class="upload">
-<span>Profile 2</span>
-<img>
-<input type="file" name="images" accept="image/*" required onchange="preview(this)">
-</div>
-
-<div class="upload">
-<span>Profile 3</span>
-<img>
-<input type="file" name="images" accept="image/*" required onchange="preview(this)">
-</div>
-
-<div class="upload">
-<span>Profile 4</span>
-<img>
-<input type="file" name="images" accept="image/*" required onchange="preview(this)">
-</div>
+>
 
 </div>
 
-</div>
 
+<!-- GALLERY -->
 
 <div class="card">
 
-    <h2>📖 Diary Entries</h2>
+<h2>🌸 Gallery</h2>
+
+<p class="helper">
+Add up to your chosen gallery memories.
+</p>
+
+<input
+type="file"
+name="gallery"
+accept="image/*"
+multiple
+
+>
+
+</div>
+
+<!-- STORY & DIARY -->
+
+<div class="card">
+
+    <h2>📖 Our Story & Diary</h2>
+
+    <p class="helper">
+        Add the little moments, dates and memories that made your
+        relationship special.
+    </p>
 
     <div id="diaryContainer"></div>
 
-    <button type="button" onclick="addDiaryEntry()">
+    <button
+        type="button"
+        class="secondary-btn"
+        onclick="addDiaryEntry()"
+    >
         + Add Memory
     </button>
 
 </div>
 
+
+
+<!-- MUSIC -->
+
 <div class="card">
 
-<h2>📸 Gallery</h2>
-<p>Choose exactly 4 images for the profile selection screen.</p>
+<h2>🎵 Your Song</h2>
+
+<p class="helper">
+Add a song that reminds you of them.
+</p>
 
 <input
-    type="file"
-    name="gallery"
-    accept="image/*"
-    multiple>
+type="file"
+name="music"
+accept="audio/*"
+
+>
 
 </div>
+
+<!-- LOVE LETTER -->
 
 <div class="card">
 
-<h2>🎥 Videos</h2>
-<p>Choose exactly 4 Videos for the profile selection screen.</p>
+    <h2>💌 A Letter From The Heart</h2>
 
-<input
-    type="file"
-    name="videos"
-    accept="video/*"
-    multiple>
+    <p class="helper">
+        Not sure what to write? Let GiftFlix help you find the words.
+    </p>
+
+    <div class="generate-field">
+
+        <textarea
+            id="love_letter"
+            name="love_letter"
+            placeholder="Write something you want them to remember forever..."
+        ></textarea>
+
+        <button
+            type="button"
+            class="generate-text-btn"
+            onclick="generateText('love_letter')"
+        >
+            ✨ Generate Love Letter
+        </button>
+
+    </div>
 
 </div>
 
-<div class="card">
-<h2>Music</h2>
-<input type="file" name="music" accept="audio/*">
-</div>
 
-<div class="card">
-<h2>Love Letter</h2>
-<textarea name="love_letter"></textarea>
-</div>
+<button
+type="submit"
+class="generate-btn"
 
-<button type="submit">Generate GiftFlix</button>
+>
+
+```
+✨ Create Our Story
+```
+
+</button>
 
 <div id="status"></div>
 
@@ -137,132 +650,682 @@ button{padding:14px 28px;border:none;border-radius:10px;background:#e50914;color
 
 <script>
 
+
+
+
+
 function addDiaryEntry(data = {}) {
 
     const container = document.getElementById("diaryContainer");
 
+    if (!container) {
+        console.error("Diary container not found.");
+        return;
+    }
+
     const div = document.createElement("div");
 
-    div.className = "card diary-entry";
-    div.style.marginTop = "20px";
+    div.className = "diary-entry";
 
     div.innerHTML = `
+        
+        <div class="diary-header">
 
-<label>Date</label>
-<input
-    type="text"
-    class="diary-date"
-    placeholder="Example: First Date"
-    value="${data.date || ""}">
+            <div>
+                <span class="diary-number">
+                    Memory
+                </span>
+            </div>
 
-<label>Title</label>
-<input
-    type="text"
-    class="diary-title"
-    placeholder="Memory title"
-    value="${data.title || ""}">
+            <button
+                type="button"
+                class="delete-btn"
+                onclick="removeDiaryEntry(this)"
+            >
+                Remove
+            </button>
 
-<label>Description</label>
-<textarea
-    class="diary-description"
-    placeholder="Describe this memory...">${data.description || ""}</textarea>
+        </div>
 
-<button
-type="button"
-onclick="this.parentElement.remove()">
+        <label>Date / Moment</label>
 
-Delete
+        <input
+            type="text"
+            class="diary-date"
+            placeholder="Example: 14 February 2024"
+            value="${escapeHtml(data.date || "")}"
+        >
 
-</button>
+        <label>Memory Title</label>
 
-`;
+        <input
+            type="text"
+            class="diary-title"
+            placeholder="Example: Our First Date"
+            value="${escapeHtml(data.title || "")}"
+        >
+
+        <label>What happened?</label>
+
+        <textarea
+            class="diary-description"
+            placeholder="Tell us about this beautiful memory..."
+        >${escapeHtml(data.description || "")}</textarea>
+
+    `;
 
     container.appendChild(div);
 
+    updateDiaryNumbers();
 }
+
+
+function removeDiaryEntry(button) {
+
+    const entry = button.closest(".diary-entry");
+
+    if (entry) {
+        entry.remove();
+    }
+
+    updateDiaryNumbers();
+}
+
+
+function updateDiaryNumbers() {
+
+    document
+        .querySelectorAll(".diary-entry")
+        .forEach((entry, index) => {
+
+            const number =
+                entry.querySelector(".diary-number");
+
+            if (number) {
+
+                number.textContent =
+                    `Memory ${index + 1}`;
+
+            }
+
+        });
+
+}
+
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
 
 addDiaryEntry();
 
 
-function preview(input){
 
-const img=input.parentElement.querySelector("img");
-const txt=input.parentElement.querySelector("span");
 
-if(input.files.length){
 
-img.src=URL.createObjectURL(input.files[0]);
-img.style.display="block";
-txt.style.display="none";
+function preview(input) {
 
+    const uploadBox = input.parentElement;
+    const img = uploadBox.querySelector("img");
+    const txt = uploadBox.querySelector("span");
+
+    if (input.files && input.files.length > 0) {
+
+        const file = input.files[0];
+
+        img.src = URL.createObjectURL(file);
+        img.style.display = "block";
+
+        if (txt) {
+            txt.style.display = "none";
+        }
+
+    } else {
+
+        img.style.display = "none";
+
+        if (txt) {
+            txt.style.display = "block";
+        }
+
+    }
 }
 
-}
+document
+.getElementById("giftForm")
+.addEventListener("submit",async(e)=>{
 
-document.getElementById("giftForm").addEventListener("submit",async(e)=>{
-
+```
 e.preventDefault();
 
-const form=e.target;
+const form = e.target;
+
 const diary = [];
 
 
-document.querySelectorAll(".diary-entry").forEach(entry=>{
+document
+.querySelectorAll(".diary-entry")
+.forEach(entry=>{
 
     diary.push({
 
-        date: entry.querySelector(".diary-date").value,
+        date:
+            entry
+            .querySelector(".diary-date")
+            .value,
 
-        title: entry.querySelector(".diary-title").value,
+        title:
+            entry
+            .querySelector(".diary-title")
+            .value,
 
-        description: entry.querySelector(".diary-description").value
+        description:
+            entry
+            .querySelector(".diary-description")
+            .value
 
     });
 
 });
 
 
-const data=new FormData(form);
+const data =
+    new FormData(form);
 
-data.append("diary", JSON.stringify(diary));
+data.append(
+    "diary",
+    JSON.stringify(diary)
+);
 
-const status=document.getElementById("status");
 
-status.innerHTML="Uploading...";
+const status =
+    document.getElementById("status");
+
+
+status.innerHTML =
+    "✨ Creating your special GiftFlix...";
+
 
 try{
 
-const response = await fetch("http://127.0.0.1:8000/gift/create",{
-    method:"POST",
-    body:data
-});
+    const response =
+        await fetch(
+            "http://127.0.0.1:8000/gift/create",
+            {
+                method:"POST",
+                body:data
+            }
+        );
 
-const result = await response.json();
 
-if(response.ok){
+    const result =
+        await response.json();
 
-    status.innerHTML = "✅ Gift Created! Redirecting...";
 
-    setTimeout(() => {
-        window.location.href = result.redirect_url;
-    },1000);
+    if(response.ok){
 
-}else{
+        status.innerHTML =
+            "💗 Your GiftFlix is ready! Redirecting...";
 
-    status.innerHTML = "❌ " + result.detail;
-}
+
+        setTimeout(()=>{
+
+            window.location.href =
+                result.redirect_url;
+
+        },1000);
+
+
+    }else{
+
+        status.innerHTML =
+            "❌ " + result.detail;
+
+    }
+
 
 }catch(err){
 
-status.innerHTML="❌ Unable to connect to FastAPI.";
+    status.innerHTML =
+        "❌ Unable to connect to GiftFlix.";
 
-console.error(err);
+    console.error(err);
 
 }
+```
 
 });
 
+
 </script>
 
+
+
+<script>
+
+let phraseLibrary = {};
+
+
+// ===============================
+// PROFILE IMAGE PREVIEW
+// ===============================
+
+function preview(input) {
+
+    const box = input.closest(".upload");
+
+    const img =
+        box.querySelector("img");
+
+    const text =
+        box.querySelector("span");
+
+    if (
+        input.files &&
+        input.files.length > 0
+    ) {
+
+        const file =
+            input.files[0];
+
+        if (!file.type.startsWith("image/")) {
+
+            alert("Please select an image.");
+
+            input.value = "";
+
+            return;
+        }
+
+        img.src =
+            URL.createObjectURL(file);
+
+        img.style.display =
+            "block";
+
+        text.style.display =
+            "none";
+
+    }
+
+}
+
+
+// ===============================
+// DIARY
+// ===============================
+
+function addDiaryEntry(data = {}) {
+
+    const container =
+        document.getElementById(
+            "diaryContainer"
+        );
+
+    const div =
+        document.createElement("div");
+
+    div.className =
+        "diary-entry";
+
+    div.innerHTML = `
+
+        <label>Date / Moment</label>
+
+        <input
+            type="text"
+            class="diary-date"
+            placeholder="Example: Our First Date"
+            value="${escapeHtml(data.date || "")}"
+        >
+
+        <label>Memory Title</label>
+
+        <input
+            type="text"
+            class="diary-title"
+            placeholder="Example: Our First Date"
+            value="${escapeHtml(data.title || "")}"
+        >
+
+        <label>What happened?</label>
+
+        <textarea
+            class="diary-description"
+            placeholder="Tell us about this memory..."
+        >${escapeHtml(data.description || "")}</textarea>
+
+        <button
+            type="button"
+            onclick="this.closest('.diary-entry').remove()"
+        >
+            Remove
+        </button>
+
+    `;
+
+    container.appendChild(div);
+}
+
+
+function escapeHtml(value) {
+
+    return String(value)
+
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+addDiaryEntry();
+
+
+// ===============================
+// LOAD PHRASES
+// ===============================
+
+async function loadPhrases() {
+
+    try {
+
+        const response =
+            await fetch("/gift/phrases");
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP " + response.status
+            );
+
+        }
+
+        phraseLibrary =
+            await response.json();
+
+        console.log(
+            "GiftFlix phrases loaded:",
+            phraseLibrary
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Could not load phrases:",
+            error
+        );
+
+    }
+
+}
+
+
+// ===============================
+// RANDOM ITEM
+// ===============================
+
+function randomItem(array) {
+
+    return array[
+        Math.floor(
+            Math.random() * array.length
+        )
+    ];
+
+}
+
+
+// ===============================
+// PERSONALIZATION
+// ===============================
+
+function personalizeText(text) {
+
+    const recipient =
+        document.querySelector(
+            '[name="recipient_name"]'
+        ).value.trim();
+
+    const sender =
+        document.querySelector(
+            '[name="sender_name"]'
+        ).value.trim();
+
+    return text
+
+        .replaceAll(
+            "{{recipient_name}}",
+            recipient || "you"
+        )
+
+        .replaceAll(
+            "{{sender_name}}",
+            sender || "me"
+        );
+
+}
+
+
+// ===============================
+// GENERATE TEXT
+// ===============================
+
+function generateText(type) {
+
+    const occasion =
+        document.querySelector(
+            '[name="occasion"]'
+        ).value;
+
+    console.log(
+        "Generating:",
+        type,
+        "occasion:",
+        occasion
+    );
+
+    if (!occasion) {
+
+        alert(
+            "Please select an occasion first ❤️"
+        );
+
+        return;
+    }
+
+
+    if (!phraseLibrary[occasion]) {
+
+        console.error(
+            "Available occasions:",
+            Object.keys(phraseLibrary)
+        );
+
+        alert(
+            "We don't have phrases for this occasion yet."
+        );
+
+        return;
+    }
+
+
+    const phrases =
+        phraseLibrary[occasion][type];
+
+
+    if (
+        !phrases ||
+        phrases.length === 0
+    ) {
+
+        alert(
+            "No phrases available yet."
+        );
+
+        return;
+    }
+
+
+    const text =
+        personalizeText(
+            randomItem(phrases)
+        );
+
+
+    const field =
+        document.getElementById(type);
+
+
+    field.value =
+        text;
+
+
+    field.focus();
+
+}
+
+
+// ===============================
+// FORM SUBMISSION
+// ===============================
+
+document
+    .getElementById("giftForm")
+    .addEventListener(
+        "submit",
+        async function(e) {
+
+            e.preventDefault();
+
+            const form =
+                e.target;
+
+            const diary = [];
+
+
+            document
+                .querySelectorAll(
+                    ".diary-entry"
+                )
+                .forEach(entry => {
+
+                    diary.push({
+
+                        date:
+                            entry
+                            .querySelector(
+                                ".diary-date"
+                            )
+                            .value,
+
+                        title:
+                            entry
+                            .querySelector(
+                                ".diary-title"
+                            )
+                            .value,
+
+                        description:
+                            entry
+                            .querySelector(
+                                ".diary-description"
+                            )
+                            .value
+
+                    });
+
+                });
+
+
+            const data =
+                new FormData(form);
+
+
+            data.append(
+                "diary",
+                JSON.stringify(diary)
+            );
+
+
+            const status =
+                document.getElementById(
+                    "status"
+                );
+
+
+            status.innerHTML =
+                "✨ Creating your special GiftFlix...";
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "http://127.0.0.1:8000/gift/create",
+                        {
+                            method: "POST",
+                            body: data
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if (response.ok) {
+
+                    status.innerHTML =
+                        "💗 Your GiftFlix is ready!";
+
+
+                    setTimeout(() => {
+
+                        window.location.href =
+                            result.redirect_url;
+
+                    }, 1000);
+
+
+                } else {
+
+                    status.innerHTML =
+                        "❌ " +
+                        (
+                            result.detail ||
+                            "Something went wrong."
+                        );
+
+                }
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                status.innerHTML =
+                    "❌ Unable to connect to GiftFlix.";
+
+            }
+
+        }
+    );
+
+
+// Start loading phrase library
+
+loadPhrases();
+
+</script>
 </body>
 </html>

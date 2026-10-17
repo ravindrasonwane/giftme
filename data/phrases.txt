@@ -1,0 +1,106 @@
+[birthday]
+
+TITLE
+Happy Birthday, My Favorite Person
+A Birthday Story Made Just For You
+Celebrating You Today
+Another Beautiful Chapter
+A Little Gift Full of Memories
+
+DESCRIPTION
+Today isn't just about celebrating your birthday. It's about celebrating the beautiful person you are and all the happiness you bring into my life.
+Another year, another beautiful chapter. I wanted to fill this little story with some of our favorite memories, laughter and moments worth remembering.
+From silly moments to unforgettable adventures, every memory with you is something worth celebrating.
+
+LOVE_LETTER
+Happy Birthday, {{recipient_name}}! I hope this little gift reminds you of how loved, appreciated and special you truly are.
+Dear {{recipient_name}}, today is your day, but I feel lucky too because I get to celebrate someone as wonderful as you.
+{{recipient_name}}, here's to another beautiful year of your journey. Keep smiling, keep dreaming and keep being the amazing person you are.
+
+[anniversary]
+
+TITLE
+Our Beautiful Journey Together
+Forever Starts With Us
+Another Chapter Of Our Love
+Our Story, Our Forever
+Still Choosing You, Every Day
+
+DESCRIPTION
+Every moment with you has become a memory worth keeping. From the little conversations to unforgettable adventures, our journey together is beautiful.
+Another year, another chapter of our beautiful journey. Through every laugh and every moment, our story continues to grow.
+Some stories are written in books, but ours is written in memories, laughter and countless little moments.
+
+LOVE_LETTER
+My love, every moment with you reminds me how lucky I am to have you in my life. Here's to everything we've shared and everything still waiting for us.
+{{recipient_name}}, our journey together has given me some of the most beautiful memories of my life.
+To my favorite person, thank you for every smile, every conversation and every beautiful memory.
+
+[valentines]
+
+TITLE
+Our Little Love Story
+Made With Love, Just For You
+You And Me, Always
+A Story Written With Love
+Love Looks Like Us
+
+DESCRIPTION
+Somewhere between all the conversations, laughs and little moments, you became one of the most important people in my life.
+Love isn't always about grand gestures. Sometimes it's the random conversations, silly laughs and quiet moments that mean the most.
+Every memory with you feels like a page from my favorite story.
+
+LOVE_LETTER
+My love, if I had to choose my favorite place in the world, it would always be wherever you are.
+{{recipient_name}}, loving you has made ordinary days feel extraordinary.
+If memories were stars, we'd have an entire sky of them.
+
+[special_day]
+
+TITLE
+A Special Story For Someone Special
+A Little Celebration Of Us
+Moments Worth Remembering
+Our Beautiful Memories
+
+DESCRIPTION
+Some moments deserve to be remembered forever. This little collection is filled with memories, smiles and moments that make our story special.
+Life gives us countless moments, but only a few become memories we want to keep forever.
+This is a little reminder of all the beautiful moments we've shared.
+
+LOVE_LETTER
+{{recipient_name}}, I wanted to create something that could remind you of all the beautiful moments we've shared.
+Thank you for being part of my story and for making so many ordinary moments unforgettable.
+Some people come into our lives and make everything a little brighter. You are one of those people for me.
+
+[just_because]
+
+TITLE
+Just Because You Mean So Much
+A Little Surprise For You
+No Occasion Needed
+Just A Little Reminder
+
+DESCRIPTION
+There doesn't always need to be a reason to celebrate someone. Sometimes, you simply want them to know how much they mean to you.
+No birthday. No anniversary. No special occasion. Just a little reminder that you are loved and appreciated.
+
+LOVE_LETTER
+There doesn't need to be a special day for me to tell you how much you mean to me.
+{{recipient_name}}, thank you for being you. For the laughs, conversations and memories.
+No occasion, no reason, just love. ❤️
+
+[other]
+
+TITLE
+Our Beautiful Story
+Memories We Will Keep Forever
+A Story Worth Remembering
+
+DESCRIPTION
+Every relationship has moments that deserve to be remembered.
+A collection of moments, memories and little things that became a beautiful part of our journey.
+
+LOVE_LETTER
+{{recipient_name}}, this little gift is a collection of moments that mean more to me than I can explain.
+Thank you for every moment, every laugh and every memory.
