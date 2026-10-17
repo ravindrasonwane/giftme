@@ -339,8 +339,6 @@ button:hover{
 <body>
 
 <div class="container">
-
-```
 <div class="hero">
 
     <div class="heart">♡</div>
@@ -354,8 +352,6 @@ button:hover{
     </p>
 
 </div>
-```
-
 <form id="giftForm" enctype="multipart/form-data">
 
 <!-- BASIC INFORMATION -->
@@ -635,11 +631,7 @@ type="submit"
 class="generate-btn"
 
 >
-
-```
 ✨ Create Our Story
-```
-
 </button>
 
 <div id="status"></div>
@@ -798,110 +790,6 @@ function preview(input) {
     }
 }
 
-document
-.getElementById("giftForm")
-.addEventListener("submit",async(e)=>{
-
-```
-e.preventDefault();
-
-const form = e.target;
-
-const diary = [];
-
-
-document
-.querySelectorAll(".diary-entry")
-.forEach(entry=>{
-
-    diary.push({
-
-        date:
-            entry
-            .querySelector(".diary-date")
-            .value,
-
-        title:
-            entry
-            .querySelector(".diary-title")
-            .value,
-
-        description:
-            entry
-            .querySelector(".diary-description")
-            .value
-
-    });
-
-});
-
-
-const data =
-    new FormData(form);
-
-data.append(
-    "diary",
-    JSON.stringify(diary)
-);
-
-
-const status =
-    document.getElementById("status");
-
-
-status.innerHTML =
-    "✨ Creating your special GiftFlix...";
-
-
-try{
-
-    const response =
-        await fetch(
-            "https://giftpixel.in/gift/create",
-            {
-                method:"POST",
-                body:data
-            }
-        );
-
-
-    const result =
-        await response.json();
-
-
-    if(response.ok){
-
-        status.innerHTML =
-            "💗 Your GiftFlix is ready! Redirecting...";
-
-
-        setTimeout(()=>{
-
-            window.location.href =
-                result.redirect_url;
-
-        },1000);
-
-
-    }else{
-
-        status.innerHTML =
-            "❌ " + result.detail;
-
-    }
-
-
-}catch(err){
-
-    status.innerHTML =
-        "❌ Unable to connect to GiftFlix.";
-
-    console.error(err);
-
-}
-```
-
-});
 
 
 </script>
@@ -1234,19 +1122,17 @@ document
                     await response.json();
 
 
-                if (response.ok) {
+                if (response.ok && result.success && result.slug) {
 
                     status.innerHTML =
-                        "💗 Your GiftFlix is ready!";
+                        "💗 Your GiftFlix is ready! Redirecting...";
 
+                    // Always send visitors to the public GiftPixel domain,
+                    // even if an old backend response contains a localhost URL.
+                    const publicStoryUrl =
+                        `https://giftpixel.in/story/${encodeURIComponent(result.slug)}`;
 
-                    setTimeout(() => {
-
-                        window.location.href =
-                            result.redirect_url;
-
-                    }, 1000);
-
+                    window.location.assign(publicStoryUrl);
 
                 } else {
 
@@ -1254,7 +1140,8 @@ document
                         "❌ " +
                         (
                             result.detail ||
-                            "Something went wrong."
+                            result.error ||
+                            "Something went wrong. Please try again."
                         );
 
                 }
