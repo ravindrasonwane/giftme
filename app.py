@@ -105,7 +105,7 @@ DATABASE = BASE_DIR / "database.json"
 
 # Text file that stores every created GiftFlix response as JSON Lines.
 DATA_DIR = BASE_DIR / "data"
-RESPONSE_FILE = DATA_DIR / "response.txt"
+RESPONSE_FILE = "/root/giftme/data/response.txt"
 
 MAX_IMAGES = 20
 MAX_VIDEOS = 10
@@ -232,7 +232,7 @@ def validate_video(filename):
 @app.get("/gift/phrases")
 async def get_phrases():
 
-    file_path = Path("data/phrases.txt")
+    file_path = Path("/root/giftme/data/phrases.txt")
 
     if not file_path.exists():
         return JSONResponse(
