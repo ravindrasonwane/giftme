@@ -24,6 +24,10 @@ from datetime import datetime
 from typing import List
 import secrets
 import html
+import hashlib
+import hmac
+import base64
+import time
 
 import resend
 from fastapi import FastAPI
@@ -31,11 +35,10 @@ from fastapi import UploadFile
 from fastapi import File
 from fastapi import Form
 from fastapi import HTTPException
-from fastapi import Request
+from fastapi import Request, Body, Response
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import JSONResponse
-from fastapi.staticfiles import StaticFiles
 from fastapi import Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from PIL import Image
@@ -52,7 +55,10 @@ BASE_DIR = Path(__file__).parent
 # APP / EMAIL CONFIGURATION
 # =====================================================
 
-GIFT_BASE_URL = "https://giftpixel.in"
+GIFT_BASE_URL = os.getenv(
+    "GIFT_BASE_URL",
+    "https://giftpixel.in"
+)
 
 EMAIL_FROM = "GiftPixel <hello@giftpixel.in>"
 
@@ -88,9 +94,14 @@ def load_api_key():
     return api_key
 
 
-RESEND_API_KEY = load_api_key()
-
-resend.api_key = RESEND_API_KEY
+RESEND_API_KEY = os.getenv("RESEND_API_KEY", "").strip()
+if not RESEND_API_KEY and API_KEY_FILE.exists():
+    try:
+        RESEND_API_KEY = load_api_key()
+    except RuntimeError:
+        RESEND_API_KEY = ""
+if RESEND_API_KEY:
+    resend.api_key = RESEND_API_KEY
 
 
 UPLOAD_DIR = BASE_DIR / "uploads"
@@ -100,10 +111,22 @@ MUSIC_DIR = UPLOAD_DIR / "music"
 
 DATABASE = BASE_DIR / "database.json"
 
+# A persistent signing secret for short-lived gift-access cookies. Keep this file private.
+SESSION_SECRET_FILE = BASE_DIR / ".gift_session_secret"
+if not SESSION_SECRET_FILE.exists():
+    SESSION_SECRET_FILE.write_text(secrets.token_hex(32), encoding="utf-8")
+try:
+    SESSION_SECRET = SESSION_SECRET_FILE.read_text(encoding="utf-8").strip().encode("utf-8")
+except OSError as exc:
+    raise RuntimeError("Could not read .gift_session_secret") from exc
+if len(SESSION_SECRET) < 32:
+    raise RuntimeError(".gift_session_secret must contain a strong random secret")
+SESSION_COOKIE = "giftpixel_access"
+SESSION_TTL_SECONDS = 12 * 60 * 60
+
 # Text file that stores every created GiftFlix response as JSON Lines.
 DATA_DIR = BASE_DIR / "data"
-
-RESPONSE_FILE = BASE_DIR / "data" / "response.txt"
+RESPONSE_FILE = DATA_DIR / "response.txt"
 
 MAX_IMAGES = 20
 MAX_VIDEOS = 10
@@ -160,7 +183,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+# Uploads are deliberately NOT mounted as a public static directory.
+# Gift media is served through /gift-media/{slug}/{filename}, which checks access.
 
 
 # =====================================================
@@ -198,6 +222,82 @@ def save_response(gift):
         )
 
 
+def hash_gift_password(password: str) -> str:
+    """Return a salted PBKDF2 hash; never store the raw password."""
+    salt = secrets.token_bytes(16)
+    digest = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, 310_000)
+    return "pbkdf2_sha256$310000$" + base64.urlsafe_b64encode(salt).decode() + "$" + base64.urlsafe_b64encode(digest).decode()
+
+
+def verify_gift_password(password: str, stored_hash: str) -> bool:
+    try:
+        algorithm, rounds_text, salt_text, digest_text = stored_hash.split("$", 3)
+        if algorithm != "pbkdf2_sha256":
+            return False
+        salt = base64.urlsafe_b64decode(salt_text.encode())
+        expected = base64.urlsafe_b64decode(digest_text.encode())
+        actual = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, int(rounds_text))
+        return hmac.compare_digest(actual, expected)
+    except (ValueError, TypeError):
+        return False
+
+
+def make_session_token(slug: str) -> str:
+    expires = int(time.time()) + SESSION_TTL_SECONDS
+    payload = f"{slug}:{expires}".encode("utf-8")
+    signature = hmac.new(SESSION_SECRET, payload, hashlib.sha256).digest()
+    return base64.urlsafe_b64encode(payload).decode().rstrip("=") + "." + base64.urlsafe_b64encode(signature).decode().rstrip("=")
+
+
+def session_allows(slug: str, token: str | None) -> bool:
+    if not token or "." not in token:
+        return False
+    try:
+        payload_part, signature_part = token.split(".", 1)
+        payload = base64.urlsafe_b64decode(payload_part + "=" * (-len(payload_part) % 4))
+        signature = base64.urlsafe_b64decode(signature_part + "=" * (-len(signature_part) % 4))
+        expected = hmac.new(SESSION_SECRET, payload, hashlib.sha256).digest()
+        if not hmac.compare_digest(signature, expected):
+            return False
+        token_slug, expires_text = payload.decode("utf-8").rsplit(":", 1)
+        return token_slug == slug and int(expires_text) > int(time.time())
+    except (ValueError, UnicodeDecodeError):
+        return False
+
+
+def find_gift(slug: str):
+    for item in load_database():
+        if item.get("slug") == slug:
+            return item
+    return None
+
+
+def gift_requires_password(gift: dict) -> bool:
+    return bool(gift.get("password_hash"))
+
+
+def gift_access_allowed(gift: dict, request: Request) -> bool:
+    if not gift_requires_password(gift):
+        return True
+    return session_allows(gift.get("slug", ""), request.cookies.get(SESSION_COOKIE))
+
+
+def public_gift_payload(gift: dict) -> dict:
+    """Remove password hash and rewrite media URLs to guarded endpoints."""
+    safe = {k: v for k, v in gift.items() if k != "password_hash"}
+    slug = str(gift.get("slug", ""))
+    for field in ("images", "gallery", "videos"):
+        safe[field] = [media_path_for_gift(slug, item) for item in gift.get(field, [])]
+    if gift.get("music"):
+        safe["music"] = media_path_for_gift(slug, gift["music"])
+    return safe
+
+
+def media_path_for_gift(slug: str, stored_path: str) -> str:
+    filename = Path(str(stored_path)).name
+    return f"/gift-media/{slug}/{filename}"
+
+
 def generate_slug():
 
     return uuid.uuid4().hex[:8]
@@ -230,7 +330,7 @@ def validate_video(filename):
 @app.get("/gift/phrases")
 async def get_phrases():
 
-    file_path = BASE_DIR / "data" / "phrases.txt"
+    file_path = Path("data/phrases.txt")
 
     if not file_path.exists():
         return JSONResponse(
@@ -577,6 +677,7 @@ async def create_gift(
 
     diary: str = Form("[]"),
 
+    gift_password: str = Form(""),
 
     images: List[UploadFile] = File(...),      # 4 profile images
 
@@ -602,6 +703,12 @@ async def create_gift(
             400,
             "Maximum 10 videos allowed."
         )
+
+    gift_password = gift_password.strip()
+    if gift_password and len(gift_password) < 4:
+        raise HTTPException(status_code=400, detail="Gift password must be at least 4 characters.")
+    if len(gift_password) > 128:
+        raise HTTPException(status_code=400, detail="Gift password must be 128 characters or fewer.")
 
     slug = generate_slug()
 
@@ -695,6 +802,9 @@ async def create_gift(
     }
 
 
+    if gift_password:
+        gift["password_hash"] = hash_gift_password(gift_password)
+
     database = load_database()
 
     database.append(gift)
@@ -703,7 +813,7 @@ async def create_gift(
 
     # Also append the complete gift ID + data to:
     # data/response.txt
-    save_response(gift)
+    save_response({k: v for k, v in gift.items() if k != "password_hash"})
 
     gift_url = f"{GIFT_BASE_URL.rstrip('/')}/story/{slug}"
 
@@ -775,20 +885,57 @@ async def create_gift(
 # =====================================================
 
 @app.get("/gift/{slug}")
-def get_gift(slug: str):
+def get_gift(slug: str, request: Request):
+    gift = find_gift(slug)
+    if not gift:
+        raise HTTPException(status_code=404, detail="Gift not found.")
+    if not gift_access_allowed(gift, request):
+        raise HTTPException(status_code=401, detail="This gift is password protected.")
+    return public_gift_payload(gift)
 
-    database = load_database()
 
-    for gift in database:
-
-        if gift["slug"] == slug:
-
-            return gift
-
-    raise HTTPException(
-        404,
-        "Gift not found."
+@app.post("/gift/{slug}/unlock")
+def unlock_gift(slug: str, request: Request, response: Response, payload: dict = Body(...)):
+    gift = find_gift(slug)
+    if not gift:
+        raise HTTPException(status_code=404, detail="Gift not found.")
+    if not gift_requires_password(gift):
+        return {"success": True, "already_unlocked": True}
+    password = payload.get("password", "")
+    if not isinstance(password, str) or not verify_gift_password(password, gift["password_hash"]):
+        raise HTTPException(status_code=401, detail="Incorrect password.")
+    response.set_cookie(
+        key=SESSION_COOKIE,
+        value=make_session_token(slug),
+        max_age=SESSION_TTL_SECONDS,
+        httponly=True,
+        secure=GIFT_BASE_URL.lower().startswith("https://"),
+        samesite="lax",
+        path="/",
     )
+    return {"success": True}
+
+
+@app.get("/gift-media/{slug}/{filename}")
+def gift_media(slug: str, filename: str, request: Request):
+    gift = find_gift(slug)
+    if not gift:
+        raise HTTPException(status_code=404, detail="Gift not found.")
+    if not gift_access_allowed(gift, request):
+        raise HTTPException(status_code=401, detail="This gift is password protected.")
+    allowed_paths = []
+    for field in ("images", "gallery", "videos"):
+        allowed_paths.extend(gift.get(field, []))
+    if gift.get("music"):
+        allowed_paths.append(gift["music"])
+    matched = next((item for item in allowed_paths if Path(str(item)).name == filename), None)
+    if not matched:
+        raise HTTPException(status_code=404, detail="Media not found for this gift.")
+    media_path = (BASE_DIR / matched).resolve()
+    if not media_path.is_relative_to(BASE_DIR.resolve()) or not media_path.is_file():
+        raise HTTPException(status_code=404, detail="Media not found.")
+    return FileResponse(media_path)
+
 
 from fastapi.responses import FileResponse
 
