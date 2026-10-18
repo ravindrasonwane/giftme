@@ -556,14 +556,10 @@ async def create_gift(
             "Maximum 10 videos allowed."
         )
 
-    gift_password = gift_password.strip()
-    if gift_password and len(gift_password) < 4:
-        raise HTTPException(status_code=400, detail="Gift password must be at least 4 characters.")
-    if len(gift_password) > 128:
-        raise HTTPException(status_code=400, detail="Gift password must be 128 characters or fewer.")
-    print(gift_password)
-    exit()
+
     slug = generate_slug()
+
+
 
     image_urls = []
 
@@ -650,13 +646,13 @@ async def create_gift(
 
         "diary": diary_entries,
 
+        "password_hash" : gift_password,
+
         "created_at": datetime.now().isoformat()
 
     }
 
 
-    if gift_password:
-        gift["password_hash"] = hash_gift_password(gift_password)
 
     database = load_database()
 
