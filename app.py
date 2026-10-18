@@ -569,6 +569,15 @@ async def create_gift(
 
     music_url = None
 
+    gift_password = gift_password.strip()
+    if gift_password and len(gift_password) < 4:
+        raise HTTPException(status_code=400, detail="Gift password must be at least 4 characters.")
+    if len(gift_password) > 128:
+        raise HTTPException(status_code=400, detail="Gift password must be 128 characters or fewer.")
+    
+    if gift_password:
+        passhash_text = hash_gift_password(gift_password)
+
     # Save Images
 
     for image in images:
@@ -646,7 +655,7 @@ async def create_gift(
 
         "diary": diary_entries,
 
-        "password_hash" : gift_password,
+        "password_hash" : passhash_text,
 
         "created_at": datetime.now().isoformat()
 
