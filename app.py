@@ -790,6 +790,8 @@ async def create_gift(
 
 
     
+    gift_password = (gift_password or "").strip()
+
     if gift_password:
         passhash_text = hash_gift_password(gift_password)
 
@@ -823,6 +825,8 @@ async def create_gift(
         "music": music_url,
 
         "diary": diary_entries,
+
+        "password_hash" : passhash_text,
 
         "created_at": datetime.now().isoformat()
 
