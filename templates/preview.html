@@ -57,7 +57,7 @@ h1{margin:18px 0 12px;font-size:clamp(31px,4.5vw,52px);line-height:1.07;letter-s
   
 
   // Use a fixed end timestamp so the countdown stays accurate if a tab is throttled.
-  const endAt = Date.now() + 60_000;
+  const endAt = Date.now() + 120_000;
   let expired = false;
   function tick() {
     const seconds = Math.max(0, Math.ceil((endAt - Date.now()) / 1000));
