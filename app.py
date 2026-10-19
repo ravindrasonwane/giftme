@@ -691,51 +691,8 @@ async def create_gift(
     # data/response.txt
     save_response({k: v for k, v in gift.items() if k != "password_hash"})
 
-    gift_url = f"http://127.0.0.1:8000/story/{slug}"
+    gift_url = f"https://giftpixel.in/story/{slug}"
 
-    email_status = "not_sent"
-    email_id = None
-    email_error = None
-
-    print("\n" + "=" * 60)
-    print("📧 EMAIL DELIVERY")
-    print("=" * 60)
-    print(f"From      : {EMAIL_FROM}")
-    print(f"To        : {recipient_email}")
-    print(f"Recipient : {recipient_name}")
-    print(f"Occasion  : {occasion}")
-    print(f"Gift URL  : {gift_url}")
-    print("Status    : Sending...")
-
-    try:
-
-        email_result = await send_gift_email(
-            recipient_email=recipient_email,
-            recipient_name=recipient_name,
-            sender_name=sender_name,
-            gift_url=gift_url,
-            occasion=occasion
-        )
-
-        email_status = "sent"
-
-        if isinstance(email_result, dict):
-            email_id = email_result.get("id")
-
-        print("Status    : ✅ SENT")
-        print(f"Email ID  : {email_id}")
-        print("Provider  : Resend")
-        print("=" * 60 + "\n")
-
-    except Exception as e:
-
-        email_status = "failed"
-        email_error = str(e)
-
-        print("Status    : ❌ FAILED")
-        print(f"Error     : {email_error}")
-        print("Provider  : Resend")
-        print("=" * 60 + "\n")
 
     return {
 
