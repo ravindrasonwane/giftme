@@ -54,6 +54,7 @@ h1{margin:18px 0 12px;font-size:clamp(31px,4.5vw,52px);line-height:1.07;letter-s
   expiredBuy.href = paymentUrl;
   if (slug) frame.src = `/story/${encodeURIComponent(slug)}`;
   else frame.remove();
+  
 
   // Use a fixed end timestamp so the countdown stays accurate if a tab is throttled.
   const endAt = Date.now() + 60_000;
