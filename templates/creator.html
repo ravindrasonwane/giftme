@@ -625,6 +625,16 @@ accept="audio/*"
 
 </div>
 
+<!-- OPTIONAL PASSWORD PROTECTION -->
+<div class="card" id="giftPasswordCard">
+  <h2>🔐 Protect This Gift (Optional)</h2>
+  <p class="helper">Set a password so only someone who knows it can open this gift. Share the password with the recipient separately.</p>
+  <label for="gift_password">Gift password</label>
+  <input type="password" id="gift_password" name="gift_password" minlength="4" maxlength="128" autocomplete="new-password" placeholder="Leave blank for a public gift">
+  <label for="confirm_gift_password">Confirm password</label>
+  <input type="password" id="confirm_gift_password" name="confirm_gift_password" minlength="4" maxlength="128" autocomplete="new-password" placeholder="Re-enter the password">
+  <div class="helper">Use at least 4 characters. The password itself should never be included in the gift email.</div>
+</div>
 
 <button
 type="submit"
@@ -1049,6 +1059,19 @@ document
             const form =
                 e.target;
 
+            const giftPassword = document.getElementById("gift_password").value;
+            const confirmGiftPassword = document.getElementById("confirm_gift_password").value;
+            if (giftPassword !== confirmGiftPassword) {
+                document.getElementById("status").textContent = "The passwords do not match. Please check and try again.";
+                document.getElementById("confirm_gift_password").focus();
+                return;
+            }
+            if (giftPassword && giftPassword.length < 4) {
+                document.getElementById("status").textContent = "Please use a password with at least 4 characters.";
+                document.getElementById("gift_password").focus();
+                return;
+            }
+
             const diary = [];
 
 
@@ -1088,7 +1111,7 @@ document
 
             const data =
                 new FormData(form);
-
+            data.delete("confirm_gift_password");
 
             data.append(
                 "diary",
