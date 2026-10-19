@@ -57,7 +57,7 @@ BASE_DIR = Path(__file__).parent
 
 GIFT_BASE_URL = os.getenv(
     "GIFT_BASE_URL",
-    "https://giftpixel.in"
+    "https://giftpixel.in/"
 )
 
 EMAIL_FROM = "GiftPixel <hello@giftpixel.in>"
@@ -505,9 +505,178 @@ async def creategift(template: str = Query(None)):
 # EMAIL
 # =====================================================
 
+async def send_gift_email(
+    recipient_email: str,
+    recipient_name: str,
+    sender_name: str,
+    gift_url: str,
+    occasion: str = ""
+):
+    """Send the GiftFlix share link to the recipient."""
+
+    if not RESEND_API_KEY:
+        raise RuntimeError(
+            "RESEND_API_KEY is not configured."
+        )
+
+    safe_recipient = html.escape(recipient_name)
+    safe_sender = html.escape(sender_name)
+    safe_occasion = html.escape(occasion)
+    safe_url = html.escape(gift_url, quote=True)
+
+    # Keep the subject personal and simple.
+    if occasion:
+        subject = (
+            f"{sender_name} made something special for you"
+        )
+    else:
+        subject = (
+            f"{sender_name} made something special for you"
+        )
+
+    email_html = f"""
+    <!DOCTYPE html>
+    <html>
+    <body style="
+        margin:0;
+        padding:0;
+        background:#ffffff;
+        font-family:Arial, Helvetica, sans-serif;
+        color:#333333;
+    ">
+
+        <div style="
+            max-width:560px;
+            margin:0 auto;
+            padding:35px 24px;
+        ">
+
+            <p style="
+                margin:0 0 24px;
+                font-size:16px;
+                color:#333333;
+            ">
+                Hey {safe_recipient},
+            </p>
+
+            <p style="
+                margin:0 0 18px;
+                font-size:16px;
+                line-height:1.7;
+                color:#333333;
+            ">
+                {safe_sender} made something special for you
+                and wanted to share it with you.
+            </p>
+
+            {f'''
+            <p style="
+                margin:0 0 18px;
+                font-size:16px;
+                line-height:1.7;
+                color:#333333;
+            ">
+                It's a little GiftFlix made for your
+                {safe_occasion.lower()}.
+            </p>
+            ''' if occasion else ""}
+
+            <p style="
+                margin:0 0 28px;
+                font-size:16px;
+                line-height:1.7;
+                color:#333333;
+            ">
+                There are some memories and moments
+                waiting for you.
+            </p>
+
+            <p style="margin:0 0 28px;">
+                <a href="{safe_url}"
+                   style="
+                    color:#b43d68;
+                    font-size:16px;
+                    font-weight:bold;
+                    text-decoration:underline;
+                ">
+                    Open your GiftFlix
+                </a>
+            </p>
+
+            <p style="
+                margin:0 0 6px;
+                font-size:16px;
+                color:#333333;
+            ">
+                Hope it makes you smile ❤️
+            </p>
+
+            <p style="
+                margin:0;
+                font-size:16px;
+                color:#333333;
+            ">
+                — {safe_sender}
+            </p>
+
+        </div>
+
+    </body>
+    </html>
+    """
+
+    # Plain-text version
+    email_text = f"""
+Hey {recipient_name},
+
+{sender_name} made something special for you and wanted to share it with you.
+
+{"It's a little GiftFlix made for your " + occasion.lower() + "." if occasion else ""}
+
+There are some memories and moments waiting for you.
+
+Open your GiftFlix:
+{gift_url}
+
+Hope it makes you smile ❤️
+
+— {sender_name}
+"""
+
+    params: resend.Emails.SendParams = {
+        "from": EMAIL_FROM,
+        "to": [recipient_email],
+        "subject": subject,
+        "html": email_html,
+        "text": email_text,
+    }
+
+    return await resend.Emails.send_async(params)
+
 # =====================================================
 # CREATE GIFT
 # =====================================================
+
+
+from pathlib import Path
+from fastapi import HTTPException
+from fastapi.responses import HTMLResponse
+
+@app.get("/preview/{slug}", response_class=HTMLResponse)
+async def preview_gift(slug: str):
+    database = load_database()
+
+    if not any(g.get("slug") == slug for g in database):
+        raise HTTPException(status_code=404, detail="Gift not found")
+
+    preview_path = Path("templates/preview.html")
+    if not preview_path.exists():
+        raise HTTPException(status_code=404, detail="Preview page not found")
+
+    return HTMLResponse(
+        preview_path.read_text(encoding="utf-8")
+    )
+
 
 @app.post("/gift/create")
 async def create_gift(
@@ -556,10 +725,13 @@ async def create_gift(
             "Maximum 10 videos allowed."
         )
 
+    gift_password = gift_password.strip()
+    if gift_password and len(gift_password) < 4:
+        raise HTTPException(status_code=400, detail="Gift password must be at least 4 characters.")
+    if len(gift_password) > 128:
+        raise HTTPException(status_code=400, detail="Gift password must be 128 characters or fewer.")
 
     slug = generate_slug()
-
-
 
     image_urls = []
 
@@ -568,15 +740,6 @@ async def create_gift(
     gallery_urls = []
 
     music_url = None
-
-    gift_password = gift_password.strip()
-    if gift_password and len(gift_password) < 4:
-        raise HTTPException(status_code=400, detail="Gift password must be at least 4 characters.")
-    if len(gift_password) > 128:
-        raise HTTPException(status_code=400, detail="Gift password must be 128 characters or fewer.")
-    
-    if gift_password:
-        passhash_text = hash_gift_password(gift_password)
 
     # Save Images
 
@@ -625,6 +788,12 @@ async def create_gift(
         )
     diary_entries = json.loads(diary)
 
+
+    
+    if gift_password:
+        passhash_text = hash_gift_password(gift_password)
+
+
     gift = {
 
         "id": str(uuid.uuid4()),
@@ -655,12 +824,9 @@ async def create_gift(
 
         "diary": diary_entries,
 
-        "password_hash" : passhash_text,
-
         "created_at": datetime.now().isoformat()
 
     }
-
 
 
     database = load_database()
@@ -673,7 +839,7 @@ async def create_gift(
     # data/response.txt
     save_response({k: v for k, v in gift.items() if k != "password_hash"})
 
-    gift_url = f"{GIFT_BASE_URL.rstrip('/')}/story/{slug}"
+    gift_url = f"http://127.0.0.1:8000/story/{slug}"
 
     email_status = "not_sent"
     email_id = None
