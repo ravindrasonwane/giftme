@@ -702,11 +702,7 @@ async def create_gift(
 
         "gift_url": gift_url,
 
-        "redirect_url": gift_url,
-
-        "email_id": email_id,
-
-        "email_error": email_error
+        "redirect_url": gift_url
 
     }
 
