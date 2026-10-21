@@ -704,8 +704,6 @@ async def create_gift(
 
         "redirect_url": gift_url,
 
-        "email_status": email_status,
-
         "email_id": email_id,
 
         "email_error": email_error
